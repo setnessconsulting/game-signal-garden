@@ -1,0 +1,22 @@
+* text=auto eol=lf
+*.asset text
+*.meta text
+*.unity text
+*.prefab text
+*.mat text
+*.inputactions text
+*.asmdef text
+*.cs text
+*.json text
+*.md text
+*.shader text
+*.jslib text
+*.html text
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.fbx binary
+*.wav binary
+*.asset whitespace=-blank-at-eol
+*.meta whitespace=-blank-at-eol
+*.unity whitespace=-blank-at-eol

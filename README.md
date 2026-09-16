@@ -1,1 +1,36 @@
-# game-signal-garden
+# Signal Garden
+
+Signal Garden is a small, single-player Unity game about routing a living signal through a pocket-sized garden. Two people can take turns on the same computer; the game has no multiplayer, account, network, or progression system.
+
+## First playable
+
+The first playable is one WebGL scene, SignalGarden, built for desktop Chrome and Edge. A player drags a signal from the coral source to the blue receiver along the garden's gold trail. A short blind spur tests recovery. WASD pans the bounded camera; Esc cancels an active route or pauses/resumes the game. The cursor stays visible and is never locked.
+
+The playable target is hosted at https://games.setnessconsulting.com/signal-garden/play/. This repository owns the Unity project, source, tests, and build evidence. The games site owns the catalog and release pointer.
+
+## Open in Unity
+
+1. Install Unity 6000.6.0f1 with the WebGL Build Support module.
+2. In Unity Hub, add this repository directory as a project and open it with that editor.
+3. Run **Signal Garden → Generate First Playable Scene** once to save the authored diorama, then open `Assets/Scenes/SignalGarden.unity` and press Play. The WebGL build method generates this scene automatically if it is missing.
+
+## Build and test
+
+Run these from PowerShell after Unity has opened the project once and resolved packages:
+
+    $unity = "C:\Program Files\Unity\Hub\Editor\6000.6.0f1\Editor\Unity.exe"
+    $project = (Get-Location).Path
+    & $unity -batchmode -quit -projectPath $project -runTests -testPlatform EditMode -testResults "$project\Temp\editmode-results.xml" -logFile "$project\Temp\editmode.log"
+    & $unity -batchmode -quit -projectPath $project -executeMethod SignalGarden.Editor.SignalGardenProjectSetup.BuildWebGL -logFile "$project\Temp\webgl-build.log"
+
+The WebGL build is written under ignored Builds/WebGL/. Never commit the generated build. The tests/host-preview harness serves the build at /signal-garden/play/ and uses the same /game-assets/signal-garden/<version>/Build/ asset-base shape as the games site. See docs/local-build-evidence.md for the most recent local build identity and checks.
+
+## Scope and release contract
+
+- [Game vision and GDD](docs/signal-garden-gdd.md)
+- [Fresh-player playtest script](docs/playtest-script.md)
+- [GAME-278 Epic](https://setnessconsulting.atlassian.net/browse/GAME-278)
+- [GAME-279 SG-01](https://setnessconsulting.atlassian.net/browse/GAME-279) · [GAME-280 SG-02](https://setnessconsulting.atlassian.net/browse/GAME-280) · [GAME-281 SG-03](https://setnessconsulting.atlassian.net/browse/GAME-281) · [GAME-282 SG-04](https://setnessconsulting.atlassian.net/browse/GAME-282)
+- [Games site release contract](https://github.com/setnessconsulting/games-site/blob/main/docs/game-release-contract.md)
+
+The Unity WebGL files are released under the immutable private-R2 prefix signal-garden/<version>/Build/. The host supplies an asset base URL; the player must load its loader, data, framework, and WASM files from <assetBase>/Build/<exact-filename>. Brotli builds require Content-Encoding: br on compressed files and the correct Content-Type (in particular application/wasm for compressed WebAssembly). The production bucket and catalog stay unchanged until a separately reviewed release PR.
