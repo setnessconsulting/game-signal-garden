@@ -27,7 +27,7 @@ The first release is a single-player browser game. A parent and child can take t
 - **Reference display:** 1920×1080 desktop; responsive layout keeps the board and controls readable at nearby desktop sizes.
 - **Input:** left mouse drag draws a route; WASD pans the bounded camera when not drawing; Esc cancels a route or pauses/resumes. The pointer remains visible and is not locked. A route begins only at the source.
 - **Runtime:** Unity 6000.6.0f1, URP 17.6.0, Input System 1.19.0, UGUI 2.6.0, Test Framework 1.8.0; WebGL build with Brotli compression. Exact resolved versions are in Packages/packages-lock.json.
-- **Asset pipeline:** first-slice geometry and materials are original procedural Unity assets. Later authored Blender assets use FBX and will record source, export hash, import identity, scale, coordinate convention, license/provenance, and human-modification status under SG-05.
+- **Asset pipeline:** the SG-01 diorama remains authored from deterministic Unity scene code, while the receiver visual now has the SG-05 Blender source → FBX → Unity prefab provenance chain. Later authored Blender assets follow the same FBX, hash, import identity, scale, coordinate, license/provenance, and human-modification record.
 - **Distribution:** the game repository owns Unity source and generated builds. Release builds use immutable private-R2 prefixes signal-garden/<version>/Build/; the site supplies an asset base and exact artifact filenames. Generated builds are not checked into Git or the site repository.
 
 ### One-scene challenge
@@ -77,7 +77,7 @@ These references set qualities to check, not designs to copy:
 
 Included: one SignalGarden scene, one source, one receiver, one route, one short dead end, one player, desktop browser input, accessible status text, pause/cancel/recovery/reset, local automated rules tests, one repeatable playtest script, and a local WebGL build.
 
-Excluded: persistent progression, multiple puzzles or a campaign, multiplayer, accounts, monetization, leaderboards, remote analytics, LevelBest integration, localization, music, Rive, Figma integration, Blender source production, and production upload/catalog promotion.
+Excluded: persistent progression, multiple puzzles or a campaign, multiplayer, accounts, monetization, leaderboards, remote analytics, LevelBest integration, localization, music, Rive, Figma integration, further Blender source production beyond the SG-05 receiver, and production upload/catalog promotion.
 
 ## Technical and release notes
 

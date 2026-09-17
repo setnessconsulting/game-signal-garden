@@ -2,7 +2,8 @@
   "name": "SignalGarden.EditModeTests",
   "rootNamespace": "SignalGarden.Tests",
   "references": [
-    "SignalGarden.Runtime"
+    "SignalGarden.Runtime",
+    "SignalGarden.Editor"
   ],
   "includePlatforms": [
     "Editor"

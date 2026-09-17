@@ -19,6 +19,7 @@ namespace SignalGarden.Editor
         public static void GenerateFirstPlayableScene()
         {
             ConfigureProject();
+            SignalGardenAssetProvenanceEditor.EnsureReceiverPrefab();
             EnsureFolder("Assets/Generated");
             EnsureFolder("Assets/Generated/Meshes");
             EnsureFolder("Assets/Materials");
@@ -103,6 +104,8 @@ namespace SignalGarden.Editor
             {
                 GenerateFirstPlayableScene();
             }
+
+            SignalGardenAssetProvenanceEditor.ValidateForBuild();
 
             EditorBuildSettings.scenes = new[]
             {
@@ -317,21 +320,7 @@ namespace SignalGarden.Editor
             var root = new GameObject("Blue Receiver");
             root.transform.SetParent(parent, false);
             root.transform.position = new Vector3(point.x, 0f, point.y);
-            CreatePrimitive(PrimitiveType.Cylinder, "Receiver stone socket", root.transform,
-                new Vector3(0f, 0.52f, 0f), new Vector3(0.98f, 0.075f, 0.98f), materials.receiverBase);
-            CreatePrimitive(PrimitiveType.Cylinder, "Receiver glass dish", root.transform,
-                new Vector3(0f, 0.64f, 0f), new Vector3(0.72f, 0.045f, 0.72f), materials.trailStone);
-            var crystalMesh = StoreMesh(BuildCrystalMesh(), "Assets/Generated/Meshes/ReceiverCrystal.asset");
-            var crystal = new GameObject("Receiver crystal");
-            crystal.transform.SetParent(root.transform, false);
-            crystal.transform.localPosition = new Vector3(0f, 1.06f, 0f);
-            crystal.transform.localScale = new Vector3(0.72f, 0.78f, 0.72f);
-            crystal.AddComponent<MeshFilter>().sharedMesh = crystalMesh;
-            crystal.AddComponent<MeshRenderer>().sharedMaterial = materials.receiverCrystal;
-            CreatePrimitive(PrimitiveType.Sphere, "Receiver heart", root.transform,
-                new Vector3(0f, 0.87f, 0f), new Vector3(0.26f, 0.26f, 0.26f), materials.receiverCrystal);
-            CreatePrimitive(PrimitiveType.Sphere, "Receiver sparkle", root.transform,
-                new Vector3(0.16f, 1.20f, -0.17f), new Vector3(0.08f, 0.08f, 0.08f), materials.flowerCream);
+            SignalGardenAssetProvenanceEditor.InstantiateReceiverVisual(root.transform);
             return root.transform;
         }
 

@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "assetId": "signal-garden.receiver-shrine",
+  "source": {
+    "relativePath": "SourceArt/Blender/SignalGardenReceiver/SignalGardenReceiver.blend",
+    "sha256": "8D008A257324682A891DDC69DBE046BAD41DE34BCD817FF417ED79DC74B82D6A",
+    "byteLength": 106993,
+    "blenderVersion": "5.2.1 LTS (9e2066aef7ef)",
+    "sceneName": "SignalGardenReceiver",
+    "license": "Original Setness Consulting asset; no third-party content.",
+    "humanModificationStatus": "Script-assisted original design; owner visual review required."
+  },
+  "export": {
+    "format": "FBX",
+    "relativePath": "Assets/Art/SignalGarden/SignalGardenReceiver.fbx",
+    "sha256": "A1EA560763D1ED19DC5078E9960CB05CC2EF4BBDFC79E08D433FF7A261D1D168",
+    "byteLength": 53116,
+    "exporter": "Blender 5.2.1 LTS FBX exporter",
+    "options": "use_selection=true; object_types=MESH; use_mesh_modifiers=true; apply_unit_scale=true; apply_scale_options=FBX_SCALE_ALL; axis_forward=-Z; axis_up=Y; bake_anim=false; add_leaf_bones=false; use_custom_props=true; embed_textures=false.",
+    "coordinateSystem": "Blender right-handed Z-up exported with axis_forward=-Z and axis_up=Y for Unity.",
+    "unitScale": "1.0 meters",
+    "namingConvention": "SM_ mesh names and MAT_ material names.",
+    "materialDecision": "Three material slots mapped to existing URP materials; no texture files.",
+    "animationDecision": "none",
+    "collisionDecision": "none; route interaction uses the existing screen-space receiver marker."
+  },
+  "unity": {
+    "fbxMetaRelativePath": "Assets/Art/SignalGarden/SignalGardenReceiver.fbx.meta",
+    "fbxGuid": "63f683010e9b41b42b041a64ed0de3af",
+    "prefabRelativePath": "Assets/Art/SignalGarden/SignalGardenReceiver.prefab",
+    "prefabGuid": "f099b6efa9b18a14381474f8d29e8bb8",
+    "sceneRelativePath": "Assets/Scenes/SignalGarden.unity",
+    "receiverChildName": "SignalGardenReceiver",
+    "scaleFactor": 1.0,
+    "useFileScale": true,
+    "meshCompression": "Off",
+    "isReadable": false,
+    "importAnimation": false,
+    "importCameras": false,
+    "importLights": false,
+    "generateColliders": false,
+    "preserveHierarchy": true,
+    "materialMap": "Base -> Assets/Materials/Receiver-Pedestal.mat; Crystal -> Assets/Materials/Receiver-Sea-Glass.mat; Inlay/crown/fins -> Assets/Materials/Trail-Thread-Gold.mat."
+  },
+  "budgets": {
+    "maxTriangles": 5000,
+    "maxMaterialSlots": 4,
+    "maxTextureDimension": 1024,
+    "maxTextureBytes": 0,
+    "maxSourceBytes": 10000000,
+    "maxExportBytes": 2000000,
+    "measuredTriangles": 1024,
+    "measuredMaterialSlots": 3,
+    "measuredTextureCount": 0,
+    "measuredMaxTextureDimension": 0
+  },
+  "api10": {
+    "repository": "setnessconsulting/project-blender-api",
+    "repositorySha": "9783b64379c5bb3220cabda7018056d3fbef2a0c",
+    "validationProfile": "prop",
+    "sceneInspectCommand": "blender-api --repo-root \"C:\\Users\\setne\\Desktop\\AI Projects\\github\\setnessconsulting\\project-blender-api\" scene inspect --input \"SourceArt/Blender/SignalGardenReceiver/SignalGardenReceiver.blend\" --executable \"C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe\"",
+    "assetValidateCommand": "blender-api --repo-root \"C:\\Users\\setne\\Desktop\\AI Projects\\github\\setnessconsulting\\project-blender-api\" asset validate --input \"SourceArt/Blender/SignalGardenReceiver/SignalGardenReceiver.blend\" --profile-path \"C:\\Users\\setne\\Desktop\\AI Projects\\github\\setnessconsulting\\project-blender-api/config/validation-profiles/prop.json\" --executable \"C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe\"",
+    "auxiliaryGltfCommand": "blender-api --repo-root \"C:\\Users\\setne\\Desktop\\AI Projects\\github\\setnessconsulting\\project-blender-api\" export gltf --input \"SourceArt/Blender/SignalGardenReceiver/SignalGardenReceiver.blend\" --output Artifacts/SG-05/SignalGardenReceiver.glb --profile-path \"C:\\Users\\setne\\Desktop\\AI Projects\\github\\setnessconsulting\\project-blender-api/config/export-profiles/realtime.json\" --validation-profile-path \"C:\\Users\\setne\\Desktop\\AI Projects\\github\\setnessconsulting\\project-blender-api/config/validation-profiles/prop.json\" --manifest Artifacts/SG-05/SignalGardenReceiver.export.manifest.json --allow-overwrite --executable \"C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe\"",
+    "handoffCommand": "blender-api --repo-root \"C:\\Users\\setne\\Desktop\\AI Projects\\github\\setnessconsulting\\project-blender-api\" handoff manifest --artifact Artifacts/SG-05/SignalGardenReceiver.glb --export-manifest Artifacts/SG-05/SignalGardenReceiver.export.manifest.json --output Artifacts/SG-05/SignalGardenReceiver.handoff.json --profile realtime --allow-overwrite",
+    "status": "PASS",
+    "evidencePath": "Artifacts/SG-05/scene-inspect.json; Artifacts/SG-05/asset-validate.json; Artifacts/SG-05/SignalGardenReceiver.export.manifest.json; Artifacts/SG-05/SignalGardenReceiver.handoff.json"
+  }
+}
