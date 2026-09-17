@@ -17,6 +17,7 @@ sysinfo.txt
 *.buildreport
 *.bac
 *.meta.bak
+*.blend1
 
 # Unity test runner scratch resources
 /Assets/Resources/PerformanceTestRun*.json

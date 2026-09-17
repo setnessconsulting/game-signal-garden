@@ -14,6 +14,8 @@ The playable target is hosted at https://games.setnessconsulting.com/signal-gard
 2. In Unity Hub, add this repository directory as a project and open it with that editor.
 3. Run **Signal Garden → Generate First Playable Scene** once to save the authored diorama, then open `Assets/Scenes/SignalGarden.unity` and press Play. The WebGL build method generates this scene automatically if it is missing.
 
+The receiver visual is the SG-05 production chain. The Blender source and repeatable authoring script live under `SourceArt/Blender/SignalGardenReceiver/`; Unity consumes `Assets/Art/SignalGarden/SignalGardenReceiver.fbx` through the tracked prefab at `Assets/Art/SignalGarden/SignalGardenReceiver.prefab`. Run **Signal Garden → Validate SG-05 Asset Provenance** before review or a build. The validator checks the source/export hashes, Unity metadata and importer settings, naming/UV/budget rules, and prefab placement under `Blue Receiver`.
+
 ## Build and test
 
 Run these from PowerShell after Unity has opened the project once and resolved packages:
@@ -28,9 +30,11 @@ The WebGL build is written under ignored Builds/WebGL/. Never commit the generat
 ## Scope and release contract
 
 - [Game vision and GDD](docs/signal-garden-gdd.md)
+- [SG-05 receiver asset record](docs/sg-05-asset-record.md)
 - [Fresh-player playtest script](docs/playtest-script.md)
 - [GAME-278 Epic](https://setnessconsulting.atlassian.net/browse/GAME-278)
 - [GAME-279 SG-01](https://setnessconsulting.atlassian.net/browse/GAME-279) · [GAME-280 SG-02](https://setnessconsulting.atlassian.net/browse/GAME-280) · [GAME-281 SG-03](https://setnessconsulting.atlassian.net/browse/GAME-281) · [GAME-282 SG-04](https://setnessconsulting.atlassian.net/browse/GAME-282)
+- [GAME-283 SG-05](https://setnessconsulting.atlassian.net/browse/GAME-283)
 - [Games site release contract](https://github.com/setnessconsulting/games-site/blob/main/docs/game-release-contract.md)
 
 The Unity WebGL files are released under the immutable private-R2 prefix signal-garden/<version>/Build/. The host supplies an asset base URL; the player must load its loader, data, framework, and WASM files from <assetBase>/Build/<exact-filename>. Brotli builds require Content-Encoding: br on compressed files and the correct Content-Type (in particular application/wasm for compressed WebAssembly). The production bucket and catalog stay unchanged until a separately reviewed release PR.

@@ -4,7 +4,11 @@
 
 The first playable WebGL slice was imported, compiled, tested, built, and served locally with Unity `6000.6.0f1`. The project uses the assigned Unity Personal entitlement. No production R2 object was uploaded and the games-site catalog remains unchanged.
 
-Source commit: `cb7a8ff` (`Build SG-01 first playable slice`).
+Source commit: `58fd28e` (`Merge SG-01 first playable slice`).
+
+The earlier SG-01 evidence was captured from `cb7a8ff` before that work was
+merged. The original evidence remains below; this correction identifies the
+merged baseline used for SG-05.
 
 ## Unity and packages
 
@@ -52,7 +56,7 @@ Exact files in `Builds/WebGL/Build`:
 | `WebGL.framework.js.br` | 66,565 | `7A3B10FF77AA44F32185F084B9EE41AA21EE01A106446223893D1AF7B44207D9` |
 | `WebGL.wasm.br` | 6,722,182 | `6356855AD8F7978CB8A142788933824C325208F1012562EDAB9152884856131F` |
 
-The loader references the exact four files above. The project setting is persisted as Brotli (`webGLCompressionFormat: 2`) and the build method also sets `PlayerSettings.WebGL.compressionFormat` to Brotli.
+The loader references the exact four files above. Unity `6000.6.0f1` persists Brotli as `webGLCompressionFormat: 0` (the enum probe confirms value `0` is `Brotli`), and the build method also sets `PlayerSettings.WebGL.compressionFormat` to Brotli.
 
 ## Host harness and HTTP headers
 
@@ -86,3 +90,24 @@ The IAB viewport was `1280x662` for the Unity canvas. The target `1920x1080` pre
 The local result is the SG-01 vertical slice only: one scene, one source, one receiver, one winding route, one dead end, deterministic observe/route/recovery/verify/pause phases, and the confirmed mouse/WASD/Esc mapping. No Rive, music, Blender/Figma integration, Unity API qualification, production upload, catalog promotion, merge, or deploy was performed.
 
 The next issue after review is [GAME-283 / SG-05](https://setnessconsulting.atlassian.net/browse/GAME-283), the Blender source and Unity import provenance chain.
+
+## SG-05 asset-chain addendum (2026-09-17)
+
+The SG-05 branch now carries the original receiver shrine through the tracked chain
+`SignalGardenReceiver.blend → SignalGardenReceiver.fbx → SignalGardenReceiver.prefab → SignalGarden.unity`.
+The source is 106,993 bytes (`8D008A257324682A891DDC69DBE046BAD41DE34BCD817FF417ED79DC74B82D6A`) and the FBX is 53,116 bytes (`A1EA560763D1ED19DC5078E9960CB05CC2EF4BBDFC79E08D433FF7A261D1D168`). The full provenance record is [docs/sg-05-asset-record.md](sg-05-asset-record.md).
+
+The current clean Unity `6000.6.0f1` WebGL build completed with result `Success` and total build size `10,555,173` bytes. In this Unity version the serialized Brotli setting is `webGLCompressionFormat: 0`; the editor enum probe identifies value `0` as `Brotli`.
+
+| File | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `WebGL.loader.js` | 27,914 | `7A837D73235844DA886F6CA938EAEADB5096D9CDA00F5CBD80981775F75153FB` |
+| `WebGL.data.br` | 3,640,545 | `F0B807FBE5E3A335DF016389FD28E36C61D00A2C7190F7CCD6BB72775A2542DC` |
+| `WebGL.framework.js.br` | 66,565 | `7A3B10FF77AA44F32185F084B9EE41AA21EE01A106446223893D1AF7B44207D9` |
+| `WebGL.wasm.br` | 6,799,640 | `83D17F42887772260D3EFA74ED9698E9A22C46EA7FFB7BBB579CC6250DCE1151` |
+
+The loader names those exact four files. The local host harness served them beneath the nested asset base and returned `text/javascript; charset=utf-8` for the loader and framework, `application/octet-stream` for the data file, and `application/wasm` for the WebAssembly file. The `.br` files returned `Content-Encoding: br`.
+
+The final EditMode run passed all 18 tests: 11 existing route/state cases and 7 SG-05 provenance cases, including missing and stale source, mismatched FBX, GUID mismatch, missing prefab, and budget failure. API-10 read-only inspection and `prop` validation passed at commit `9783b64379c5bb3220cabda7018056d3fbef2a0c`; the auxiliary GLB and handoff manifest remain ignored validation artifacts.
+
+The fresh Chrome preview at `http://127.0.0.1:4175/signal-garden/play/` rendered the imported receiver, accepted source input, showed blind-spur recovery, and displayed pause/resume and restart controls. The [SG-05 browser review record](sg-05-browser-review.md) captures the visual evidence and keeps human timing, sustained 60 fps, focus-loss, and owner approval as separate gates. The generated build remains ignored under `Builds/WebGL/`; no production R2 object, site catalog entry, deployment, or Jira status changed.
