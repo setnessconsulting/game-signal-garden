@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "kind": "signal-garden-design-system",
+  "asset_id": "signal-garden.hud.sg06",
+  "viewport": { "width": 1920, "height": 1080, "scale": 1 },
+  "typography": {
+    "family": "Inter (design intent); LegacyRuntime.ttf runtime fallback",
+    "heading": { "size_px": 25, "weight": 700, "line_height_px": 30 },
+    "body": { "size_px": 16, "weight": 400, "line_height_px": 22 },
+    "label": { "size_px": 13, "weight": 700, "line_height_px": 18 }
+  },
+  "spacing_px": { "xs": 8, "sm": 16, "md": 24, "lg": 32, "xl": 48 },
+  "minimum_interactive_target_px": 40,
+  "colors": {
+    "ink": "#F0F2E6",
+    "muted_ink": "#C7DCCF",
+    "panel": "#091619",
+    "teal_accent": "#6BDCB8",
+    "coral_signal": "#FA705F",
+    "gold_route": "#F4D88B",
+    "error_signal": "#FF9A75",
+    "success_signal": "#DBF9B3"
+  },
+  "contrast": {
+    "ink_on_panel": 14.1,
+    "muted_ink_on_panel": 10.3,
+    "teal_on_panel": 9.0,
+    "method": "WCAG 2 contrast intent, verified from token values",
+    "state_communication": "uppercase phase text, shaped panels, and status copy accompany color"
+  },
+  "icons": {
+    "mute": "speaker with slash, paired with Sound cues label",
+    "reduced_motion": "still leaf, paired with Motion label",
+    "retry": "circular arrow, paired with Try again label",
+    "pause": "two bars, paired with Paused label"
+  },
+  "focus_order": ["sound-cues-button", "reduced-motion-button", "try-again-button", "overlay-primary-button", "overlay-secondary-button"],
+  "states": ["Observe", "Routing", "Recovery", "Verified", "Paused"],
+  "touch_target_rule": "All buttons are at least 40 by 40 px; desktop runtime uses 52 to 56 px controls."
+}

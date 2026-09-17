@@ -1,0 +1,332 @@
+{
+  "kind": "figma-normalized-snapshot",
+  "schema_version": "1.0",
+  "file_key": "fixture-signal-garden-sg06-hud-001",
+  "version": "1",
+  "lastModified": "2026-09-17T00:00:00Z",
+  "name": "Signal Garden HUD — SG-06 offline handoff",
+  "source": {
+    "kind": "repository-owned-offline-fixture",
+    "live_file": false,
+    "reason": "No Figma connector or credential was available during SG-06 implementation."
+  },
+  "pages": [
+    {
+      "id": "0:1",
+      "name": "Signal Garden HUD",
+      "type": "CANVAS",
+      "children": [
+        {
+          "id": "1:1",
+          "name": "Signal Garden HUD",
+          "type": "FRAME",
+          "absoluteBoundingBox": { "x": 0, "y": 0, "width": 1920, "height": 1080 },
+          "exportSettings": [
+            { "format": "PNG", "constraint": { "type": "SCALE", "value": 1 } }
+          ],
+          "fills": [
+            { "type": "SOLID", "color": { "r": 0.035, "g": 0.085, "b": 0.092, "a": 1 } }
+          ],
+          "plugin_metadata": {
+            "com.setnessconsulting.figma_api": {
+              "logical_screen_id": "signal_garden_hud",
+              "role": "hud",
+              "safe_area_intent": "top-and-bottom",
+              "schema_version": "1.0"
+            }
+          },
+          "accessibility": {
+            "announce_phase_and_status": true,
+            "state_not_color_only": true,
+            "spatial_route_visual_only": true,
+            "reference_viewport": "1920x1080"
+          },
+          "focus_order": [
+            "sound-cues-button",
+            "reduced-motion-button",
+            "try-again-button",
+            "overlay-primary-button",
+            "overlay-secondary-button"
+          ],
+          "children": [
+            {
+              "id": "1:10",
+              "name": "Objective / Start",
+              "type": "FRAME",
+              "absoluteBoundingBox": { "x": 26, "y": 26, "width": 560, "height": 164 },
+              "state": "Observe",
+              "description": "Explain the source-to-receiver objective before the first drag.",
+              "children": [
+                {
+                  "id": "1:11",
+                  "name": "Objective eyebrow",
+                  "type": "TEXT",
+                  "characters": "SIGNAL GARDEN / FIELD STUDY 01",
+                  "style": { "fontFamily": "Inter", "fontSize": 13, "fontWeight": 700, "lineHeightPx": 18 }
+                },
+                {
+                  "id": "1:12",
+                  "name": "Objective title",
+                  "type": "TEXT",
+                  "characters": "Wake the garden with one clear line.",
+                  "style": { "fontFamily": "Inter", "fontSize": 25, "fontWeight": 700, "lineHeightPx": 30 }
+                },
+                {
+                  "id": "1:13",
+                  "name": "Objective instruction",
+                  "type": "TEXT",
+                  "characters": "Drag coral to blue along the gold stones. WASD pans. Esc cancels or pauses."
+                },
+                {
+                  "id": "1:14",
+                  "name": "Begin Route Button",
+                  "type": "COMPONENT",
+                  "absoluteBoundingBox": { "x": 42, "y": 126, "width": 176, "height": 44 },
+                  "exportSettings": [
+                    { "format": "PNG", "constraint": { "type": "SCALE", "value": 1 } }
+                  ],
+                  "semantic_role": "instructional"
+                }
+              ]
+            },
+            {
+              "id": "1:20",
+              "name": "Routing / Active",
+              "type": "FRAME",
+              "absoluteBoundingBox": { "x": 26, "y": 214, "width": 560, "height": 120 },
+              "state": "Routing",
+              "description": "Keep the route instruction visible while the signal is held.",
+              "children": [
+                {
+                  "id": "1:21",
+                  "name": "Routing status",
+                  "type": "TEXT",
+                  "characters": "Hold and trace the gold stones to the blue receiver."
+                },
+                {
+                  "id": "1:22",
+                  "name": "Cancel Route Button",
+                  "type": "COMPONENT",
+                  "absoluteBoundingBox": { "x": 42, "y": 270, "width": 168, "height": 44 },
+                  "exportSettings": [
+                    { "format": "PNG", "constraint": { "type": "SCALE", "value": 1 } }
+                  ],
+                  "semantic_role": "cancel"
+                }
+              ]
+            },
+            {
+              "id": "1:30",
+              "name": "Recovery / Invalid",
+              "type": "FRAME",
+              "absoluteBoundingBox": { "x": 26, "y": 354, "width": 560, "height": 120 },
+              "state": "Recovery",
+              "description": "Name the recovery action after a miss, early release, or dead end.",
+              "children": [
+                {
+                  "id": "1:31",
+                  "name": "Recovery status",
+                  "type": "TEXT",
+                  "characters": "The signal faded at the blind spur. Begin again at the coral source."
+                },
+                {
+                  "id": "1:32",
+                  "name": "Try Again Button",
+                  "type": "COMPONENT",
+                  "absoluteBoundingBox": { "x": 42, "y": 410, "width": 158, "height": 52 },
+                  "exportSettings": [
+                    { "format": "PNG", "constraint": { "type": "SCALE", "value": 1 } }
+                  ],
+                  "semantic_role": "recovery"
+                }
+              ]
+            },
+            {
+              "id": "1:40",
+              "name": "Verified / Completion",
+              "type": "FRAME",
+              "absoluteBoundingBox": { "x": 660, "y": 26, "width": 480, "height": 310 },
+              "state": "Verified",
+              "description": "Confirm the receiver is awake and offer a clear replay action.",
+              "children": [
+                {
+                  "id": "1:41",
+                  "name": "Verified status",
+                  "type": "TEXT",
+                  "characters": "The garden is awake. A new player can take the next turn here."
+                },
+                {
+                  "id": "1:42",
+                  "name": "Play Again Button",
+                  "type": "COMPONENT",
+                  "absoluteBoundingBox": { "x": 694, "y": 238, "width": 412, "height": 52 },
+                  "exportSettings": [
+                    { "format": "PNG", "constraint": { "type": "SCALE", "value": 1 } }
+                  ],
+                  "semantic_role": "replay"
+                }
+              ]
+            },
+            {
+              "id": "1:50",
+              "name": "Replay / Reset",
+              "type": "FRAME",
+              "absoluteBoundingBox": { "x": 660, "y": 354, "width": 480, "height": 180 },
+              "state": "Reset",
+              "description": "Reset returns the garden to a fresh turn without a page reload.",
+              "children": [
+                {
+                  "id": "1:51",
+                  "name": "Reset explanation",
+                  "type": "TEXT",
+                  "characters": "Reset clears the signal line and gives the next player a fresh turn."
+                },
+                {
+                  "id": "1:52",
+                  "name": "Reset Garden Button",
+                  "type": "COMPONENT",
+                  "absoluteBoundingBox": { "x": 694, "y": 438, "width": 412, "height": 52 },
+                  "exportSettings": [
+                    { "format": "PNG", "constraint": { "type": "SCALE", "value": 1 } }
+                  ],
+                  "semantic_role": "reset"
+                }
+              ]
+            },
+            {
+              "id": "1:60",
+              "name": "Pause / Resume",
+              "type": "FRAME",
+              "absoluteBoundingBox": { "x": 1180, "y": 26, "width": 480, "height": 310 },
+              "state": "Paused",
+              "description": "Pause preserves the turn and makes the resume action explicit.",
+              "children": [
+                {
+                  "id": "1:61",
+                  "name": "Pause status",
+                  "type": "TEXT",
+                  "characters": "Your turn is safe. Resume, or reset the garden for the next player."
+                },
+                {
+                  "id": "1:62",
+                  "name": "Resume Button",
+                  "type": "COMPONENT",
+                  "absoluteBoundingBox": { "x": 1214, "y": 238, "width": 412, "height": 52 },
+                  "exportSettings": [
+                    { "format": "PNG", "constraint": { "type": "SCALE", "value": 1 } }
+                  ],
+                  "semantic_role": "resume"
+                },
+                {
+                  "id": "1:63",
+                  "name": "Restart Turn Button",
+                  "type": "COMPONENT",
+                  "absoluteBoundingBox": { "x": 1214, "y": 292, "width": 412, "height": 42 },
+                  "exportSettings": [
+                    { "format": "PNG", "constraint": { "type": "SCALE", "value": 1 } }
+                  ],
+                  "semantic_role": "reset"
+                }
+              ]
+            },
+            {
+              "id": "1:70",
+              "name": "Mute Controls",
+              "type": "FRAME",
+              "absoluteBoundingBox": { "x": 1340, "y": 950, "width": 250, "height": 64 },
+              "state": "Settings",
+              "description": "Optional feedback cues are off by default and can be muted or enabled.",
+              "children": [
+                {
+                  "id": "1:71",
+                  "name": "Sound Cues Button",
+                  "type": "COMPONENT",
+                  "absoluteBoundingBox": { "x": 1340, "y": 950, "width": 168, "height": 56 },
+                  "exportSettings": [
+                    { "format": "PNG", "constraint": { "type": "SCALE", "value": 1 } }
+                  ],
+                  "semantic_role": "toggle"
+                }
+              ]
+            },
+            {
+              "id": "1:80",
+              "name": "Reduced Motion Controls",
+              "type": "FRAME",
+              "absoluteBoundingBox": { "x": 1520, "y": 950, "width": 172, "height": 64 },
+              "state": "Settings",
+              "description": "Reduced motion freezes ambient pulses while preserving route feedback.",
+              "children": [
+                {
+                  "id": "1:81",
+                  "name": "Reduced Motion Button",
+                  "type": "COMPONENT",
+                  "absoluteBoundingBox": { "x": 1520, "y": 950, "width": 172, "height": 56 },
+                  "exportSettings": [
+                    { "format": "PNG", "constraint": { "type": "SCALE", "value": 1 } }
+                  ],
+                  "semantic_role": "toggle"
+                }
+              ]
+            },
+            {
+              "id": "1:90",
+              "name": "Status / Phase",
+              "type": "FRAME",
+              "absoluteBoundingBox": { "x": 26, "y": 978, "width": 1868, "height": 76 },
+              "state": "All phases",
+              "description": "Text and shape communicate phase and recovery status without color alone."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "components": [
+    { "id": "component:status-pill", "name": "StatusPill", "description": "Text-labelled phase badge" },
+    { "id": "component:primary-action", "name": "PrimaryAction", "description": "Keyboard-focusable button" },
+    { "id": "component:settings-toggle", "name": "SettingsToggle", "description": "Labeled sound or motion toggle" },
+    { "id": "component:phase-badge", "name": "PhaseBadge", "description": "Shape plus text, never color alone" }
+  ],
+  "styles": [
+    { "id": "style:heading", "name": "HUD / Heading", "styleType": "TEXT", "fontFamily": "Inter", "fontSize": 25, "fontWeight": 700 },
+    { "id": "style:body", "name": "HUD / Body", "styleType": "TEXT", "fontFamily": "Inter", "fontSize": 16, "fontWeight": 400 },
+    { "id": "style:label", "name": "HUD / Label", "styleType": "TEXT", "fontFamily": "Inter", "fontSize": 13, "fontWeight": 700 }
+  ],
+  "tokens": {
+    "spacing": { "xs": 8, "sm": 16, "md": 24, "lg": 32, "xl": 48 },
+    "touch_target_min_px": 40,
+    "colors": {
+      "ink": "#F0F2E6",
+      "muted_ink": "#C7DCCF",
+      "panel": "#091619",
+      "teal_accent": "#6BDCB8",
+      "coral_signal": "#FA705F",
+      "gold_route": "#F4D88B",
+      "error_signal": "#FF9A75",
+      "success_signal": "#DBF9B3"
+    },
+    "contrast": {
+      "ink_on_panel_ratio": 14.1,
+      "muted_ink_on_panel_ratio": 10.3,
+      "teal_on_panel_ratio": 9.0,
+      "success_shape_and_label": true
+    }
+  },
+  "accessibility": {
+    "focus_order": [
+      "Sound Cues Button",
+      "Reduced Motion Button",
+      "Try Again Button",
+      "Resume Button",
+      "Restart Turn Button",
+      "Play Again Button"
+    ],
+    "keyboard": ["Tab", "Shift+Tab", "Enter", "Space", "Esc"],
+    "screen_reader": { "live_region": "polite", "status_role": "status", "spatial_route": "visual-only" },
+    "motion": "Reduced motion freezes ambient pulses; state text remains immediate.",
+    "color_independence": "Every phase has an uppercase text label and a shaped panel or action."
+  },
+  "variable_bindings_unresolved": true,
+  "variables_api": "enterprise_gated"
+}

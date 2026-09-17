@@ -111,3 +111,39 @@ The loader names those exact four files. The local host harness served them bene
 The final EditMode run passed all 18 tests: 11 existing route/state cases and 7 SG-05 provenance cases, including missing and stale source, mismatched FBX, GUID mismatch, missing prefab, and budget failure. API-10 read-only inspection and `prop` validation passed at commit `9783b64379c5bb3220cabda7018056d3fbef2a0c`; the auxiliary GLB and handoff manifest remain ignored validation artifacts.
 
 The fresh Chrome preview at `http://127.0.0.1:4175/signal-garden/play/` rendered the imported receiver, accepted source input, showed blind-spur recovery, and displayed pause/resume and restart controls. The [SG-05 browser review record](sg-05-browser-review.md) captures the visual evidence and keeps human timing, sustained 60 fps, focus-loss, and owner approval as separate gates. The generated build remains ignored under `Builds/WebGL/`; no production R2 object, site catalog entry, deployment, or Jira status changed.
+
+## SG-06 UGUI HUD addendum (2026-09-17)
+
+The SG-06 branch replaces the first slice's IMGUI presentation with a
+serialized UGUI Canvas HUD. The normalized design handoff, explicit UGUI
+exception, and API-37 evidence are recorded in
+[docs/sg-06-ui-record.md](sg-06-ui-record.md). The browser visual review is
+captured in [docs/sg-06-browser-review.md](sg-06-browser-review.md).
+
+The Unity `6000.6.0f1` build used URP `17.6.0`, Input System `1.19.0`, UGUI
+`2.6.0`, and Unity Test Framework `1.8.0`. EditMode completed with 24 of 24
+tests passed (11 existing route/state cases, 5 HUD phase-label cases, 1 HUD
+binding case, and 7 SG-05 provenance cases). PlayMode completed with 1 of 1
+HUD scene binding smoke tests passed. The WebGL build reported
+`Success`, `10,490,846` bytes, and remains ignored under `Builds/WebGL/`.
+
+| File | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `WebGL.loader.js` | 27,914 | `9CB76EE8B628A2293CCAA215ECE27B2B5FDC5E6EDE02405E246DFD74157A3BCC` |
+| `WebGL.data.br` | 3,632,297 | `F5CFDE0A3F983232EB4959CDEFD64A04CCE926347DBE64E5542242E0CC7D955F` |
+| `WebGL.framework.js.br` | 66,565 | `7A3B10FF77AA44F32185F084B9EE41AA21EE01A106446223893D1AF7B44207D9` |
+| `WebGL.wasm.br` | 6,743,561 | `F8C908BD653B332838786EB2E33FC577CC3C5FE69E2CD4D5A2F808D9AC40D229` |
+
+The local host at `http://127.0.0.1:4176/signal-garden/play/` returned `200`
+for the nested play route and all four artifacts. The loader and framework
+returned `text/javascript; charset=utf-8`, the data file returned
+`application/octet-stream`, and the WASM file returned `application/wasm`;
+each `.br` artifact returned `Content-Encoding: br`. The browser rendered the
+new HUD and imported receiver at the nested route; the state observations and
+remaining owner-gated qualifications are in the SG-06 browser record.
+
+API-37 `hud` profile validation passed offline with zero blocking findings.
+Live qualification was attempted and classified `BLOCKED` because no Figma
+credential was available. No generated WebGL files are tracked, and no R2,
+games-site, deployment, or Jira mutation was made. After SG-06 review, the
+next focused issue is GAME-285 / SG-07 (record the v1 Rive decision).
