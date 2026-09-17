@@ -151,7 +151,8 @@ namespace SignalGarden.Tests
         [Test]
         public void RunStateSurvivesJsonRoundTripAndSceneReloadStartsFresh()
         {
-            var state = NewRoutingState();
+            var state = new GardenRunState();
+            state.BeginRoute(RouteRules.StandardTrail[0]);
             state.AppendRoutePoint(RouteRules.StandardTrail[1]);
             var json = JsonUtility.ToJson(state);
             var restored = JsonUtility.FromJson<GardenRunState>(json);

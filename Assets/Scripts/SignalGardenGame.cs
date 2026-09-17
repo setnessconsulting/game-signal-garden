@@ -29,6 +29,7 @@ namespace SignalGarden
         private Vector3 cameraHomeFocus;
         private Vector3 cameraPanOffset;
         private Vector2 lastPointerWorld;
+        private bool suppressPointerUntilRelease;
         private float measurementSeconds;
         private int measurementFrames;
         private bool soundEnabled;
@@ -170,6 +171,17 @@ namespace SignalGarden
             var mouse = Mouse.current;
             if (mouse == null || gardenCamera == null || sourceMarker == null)
             {
+                return;
+            }
+
+            if (suppressPointerUntilRelease)
+            {
+                if (!mouse.leftButton.isPressed)
+                {
+                    suppressPointerUntilRelease = false;
+                    return;
+                }
+
                 return;
             }
 
@@ -599,6 +611,7 @@ namespace SignalGarden
                 var retry = new Rect(card.xMax - 176f * scale, card.y + 12f * scale, 158f * scale, 52f * scale);
                 if (GUI.Button(retry, "Try again", buttonStyle))
                 {
+                    suppressPointerUntilRelease = true;
                     statusText = "Begin at the coral source and follow the gold trail.";
                     Announce(statusText);
                 }
@@ -622,11 +635,13 @@ namespace SignalGarden
             var replay = new Rect(card.x + 34f * scale, card.y + 258f * scale, width - 68f * scale, 36f * scale);
             if (GUI.Button(resume, "Resume  /  Esc", buttonStyle))
             {
+                suppressPointerUntilRelease = true;
                 ResumeGame();
             }
 
             if (GUI.Button(replay, "Restart this turn", buttonStyle))
             {
+                suppressPointerUntilRelease = true;
                 ResetGame();
             }
         }
@@ -647,6 +662,7 @@ namespace SignalGarden
             var replay = new Rect(card.x + 32f * scale, card.y + 192f * scale, width - 64f * scale, 56f * scale);
             if (GUI.Button(replay, "Play again", buttonStyle))
             {
+                suppressPointerUntilRelease = true;
                 ResetGame();
             }
 

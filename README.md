@@ -20,7 +20,7 @@ Run these from PowerShell after Unity has opened the project once and resolved p
 
     $unity = "C:\Program Files\Unity\Hub\Editor\6000.6.0f1\Editor\Unity.exe"
     $project = (Get-Location).Path
-    & $unity -batchmode -quit -projectPath $project -runTests -testPlatform EditMode -testResults "$project\Temp\editmode-results.xml" -logFile "$project\Temp\editmode.log"
+    & $unity -batchmode -projectPath $project -runTests -testPlatform EditMode -testResults "$project\Temp\editmode-results.xml" -logFile "$project\Temp\editmode.log"
     & $unity -batchmode -quit -projectPath $project -executeMethod SignalGarden.Editor.SignalGardenProjectSetup.BuildWebGL -logFile "$project\Temp\webgl-build.log"
 
 The WebGL build is written under ignored Builds/WebGL/. Never commit the generated build. The tests/host-preview harness serves the build at /signal-garden/play/ and uses the same /game-assets/signal-garden/<version>/Build/ asset-base shape as the games site. See docs/local-build-evidence.md for the most recent local build identity and checks.
