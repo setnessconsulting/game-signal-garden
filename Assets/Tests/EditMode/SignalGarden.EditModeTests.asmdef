@@ -1,0 +1,21 @@
+{
+  "name": "SignalGarden.EditModeTests",
+  "rootNamespace": "SignalGarden.Tests",
+  "references": [
+    "SignalGarden.Runtime"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false,
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

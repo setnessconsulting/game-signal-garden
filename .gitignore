@@ -1,0 +1,45 @@
+# Unity generated state
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Ll]ogs/
+[Uu]serSettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+[Cc]rashReports/
+sysinfo.txt
+
+# Local and generated builds (especially WebGL)
+/Build/
+/Builds/
+/Artifacts/
+/Data/
+*.buildreport
+*.bac
+*.meta.bak
+
+# Unity test runner scratch resources
+/Assets/Resources/PerformanceTestRun*.json
+
+# IDE and generated solution files
+.vs/
+.idea/
+.vscode/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svclog
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.tmp
+
+# Unity generated crash and profiler captures
+*.stacktrace
+*.profiler
+*.data
