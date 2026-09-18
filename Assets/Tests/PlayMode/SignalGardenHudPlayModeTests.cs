@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Reflection;
 using NUnit.Framework;
 using SignalGarden;
 using UnityEngine;
@@ -29,15 +30,20 @@ namespace SignalGarden.Tests
             Assert.That(canvasScaler.referenceResolution.y, Is.EqualTo(1080f));
 
             var soundRect = hud.transform.Find("Sound Cues Button").GetComponent<RectTransform>();
+            var volumeRect = hud.transform.Find("Sound Volume Slider").GetComponent<RectTransform>();
             var motionRect = hud.transform.Find("Reduced Motion Button").GetComponent<RectTransform>();
             AssertTopRightControl(soundRect, 210f, 26f);
+            AssertTopRightControl(volumeRect, 26f, 116f);
             AssertTopRightControl(motionRect, 26f, 26f);
+            Assert.That(volumeRect.rect.width, Is.GreaterThanOrEqualTo(340f));
             Assert.That(Application.targetFrameRate, Is.GreaterThanOrEqualTo(60));
 
             var eventSystem = EventSystem.current;
             Assert.That(eventSystem, Is.Not.Null);
             hud.MoveKeyboardFocus(false);
             Assert.That(eventSystem.currentSelectedGameObject.name, Is.EqualTo("Sound Cues Button"));
+            hud.MoveKeyboardFocus(false);
+            Assert.That(eventSystem.currentSelectedGameObject.name, Is.EqualTo("Sound Volume Slider"));
             hud.MoveKeyboardFocus(false);
             Assert.That(eventSystem.currentSelectedGameObject.name, Is.EqualTo("Reduced Motion Button"));
             hud.MoveKeyboardFocus(false);
@@ -55,6 +61,142 @@ namespace SignalGarden.Tests
             Assert.That(eventSystem.currentSelectedGameObject.name, Is.EqualTo("Overlay Secondary Button"));
             hud.MoveKeyboardFocus(true);
             Assert.That(eventSystem.currentSelectedGameObject.name, Is.EqualTo("Overlay Primary Button"));
+        }
+
+        [UnityTest]
+        public IEnumerator SoundStartsMutedAndTheVolumeControlChangesOnlyAudioPreference()
+        {
+            yield return SceneManager.LoadSceneAsync("SignalGarden");
+            yield return null;
+
+            var game = UnityEngine.Object.FindAnyObjectByType<SignalGardenGame>();
+            var hud = UnityEngine.Object.FindAnyObjectByType<SignalGardenHud>();
+            Assert.That(game, Is.Not.Null);
+            Assert.That(hud, Is.Not.Null);
+            Assert.That(game.SoundEnabled, Is.False);
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Observe));
+
+            var volumeSlider = hud.transform.Find("Sound Volume Slider").GetComponent<Slider>();
+            var volumeLabel = hud.transform.Find("Sound Volume Label").GetComponent<Text>();
+            Assert.That(volumeSlider.value, Is.EqualTo(game.SoundVolume).Within(0.001f));
+
+            volumeSlider.value = 0.73f;
+            Assert.That(game.SoundVolume, Is.EqualTo(0.73f).Within(0.001f));
+            Assert.That(volumeLabel.text, Is.EqualTo("CUE VOLUME  73%"));
+            Assert.That(game.SoundEnabled, Is.False);
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Observe));
+
+            hud.OnSoundPressed();
+            Assert.That(game.SoundEnabled, Is.True);
+            Assert.That(hud.transform.Find("Sound Cues Button/Label").GetComponent<Text>().text, Is.EqualTo("Sound cues: On"));
+            hud.OnSoundPressed();
+            Assert.That(game.SoundEnabled, Is.False);
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Observe));
+
+            game.SetSoundVolumeFromHud(1.5f);
+            Assert.That(game.SoundVolume, Is.EqualTo(1f));
+        }
+
+        [UnityTest]
+        public IEnumerator KeyboardVolumeNavigationAdjustsInBothDirections()
+        {
+            yield return SceneManager.LoadSceneAsync("SignalGarden");
+            yield return null;
+
+            var game = UnityEngine.Object.FindAnyObjectByType<SignalGardenGame>();
+            var hud = UnityEngine.Object.FindAnyObjectByType<SignalGardenHud>();
+            var eventSystem = EventSystem.current;
+            Assert.That(game, Is.Not.Null);
+            Assert.That(hud, Is.Not.Null);
+            Assert.That(eventSystem, Is.Not.Null);
+            var slider = hud.transform.Find("Sound Volume Slider").GetComponent<Slider>();
+            Assert.That(slider.navigation.mode, Is.EqualTo(Navigation.Mode.Explicit));
+            Assert.That(slider.navigation.selectOnLeft, Is.Null);
+            Assert.That(slider.navigation.selectOnRight, Is.Null);
+
+            eventSystem.SetSelectedGameObject(slider.gameObject);
+            var initial = slider.value;
+            slider.OnMove(new AxisEventData(eventSystem) { moveDir = MoveDirection.Left });
+            var lowered = slider.value;
+            Assert.That(lowered, Is.LessThan(initial));
+            Assert.That(game.SoundVolume, Is.EqualTo(lowered).Within(0.001f));
+
+            slider.OnMove(new AxisEventData(eventSystem) { moveDir = MoveDirection.Right });
+            Assert.That(slider.value, Is.EqualTo(initial).Within(0.001f));
+            Assert.That(game.SoundVolume, Is.EqualTo(initial).Within(0.001f));
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Observe));
+        }
+
+        [UnityTest]
+        public IEnumerator MissingOptionalAudioDoesNotBlockRecoveryOrRouteVerification()
+        {
+            yield return SceneManager.LoadSceneAsync("SignalGarden");
+            yield return null;
+
+            var game = UnityEngine.Object.FindAnyObjectByType<SignalGardenGame>();
+            Assert.That(game, Is.Not.Null);
+            game.ToggleSoundFromHud();
+            typeof(SignalGardenGame)
+                .GetField("feedbackAudio", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(game, null);
+
+            game.RunState.BeginRoute(RouteRules.StandardTrail[0]);
+            game.RunState.AppendRoutePoint(RouteRules.StandardTrail[1]);
+            ResolveCurrentRoute(game);
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Recovery));
+            Assert.That(game.StatusText, Does.Contain("stopped short"));
+
+            game.ResetFromHud();
+            game.RunState.BeginRoute(RouteRules.StandardTrail[0]);
+            for (var i = 1; i < RouteRules.StandardTrail.Length; i++)
+            {
+                game.RunState.AppendRoutePoint(RouteRules.StandardTrail[i]);
+            }
+
+            Assert.DoesNotThrow(() => ResolveCurrentRoute(game));
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Verified));
+            Assert.That(game.StatusText, Does.Contain("Signal received"));
+        }
+
+        [UnityTest]
+        public IEnumerator ReducedMotionKeepsVerificationVisibleAndStopsReceiverMotion()
+        {
+            yield return SceneManager.LoadSceneAsync("SignalGarden");
+            yield return null;
+
+            var game = UnityEngine.Object.FindAnyObjectByType<SignalGardenGame>();
+            var hud = UnityEngine.Object.FindAnyObjectByType<SignalGardenHud>();
+            var receiver = GameObject.Find("Blue Receiver").transform;
+            var receiverGlow = GameObject.Find("Receiver glow").GetComponent<Light>();
+            Assert.That(game, Is.Not.Null);
+
+            game.RunState.BeginRoute(RouteRules.StandardTrail[0]);
+            for (var i = 1; i < RouteRules.StandardTrail.Length; i++)
+            {
+                game.RunState.AppendRoutePoint(RouteRules.StandardTrail[i]);
+            }
+            ResolveCurrentRoute(game);
+            game.ToggleReducedMotionFromHud();
+            yield return null;
+
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Verified));
+            Assert.That(game.ReducedMotionEnabled, Is.True);
+            Assert.That(hud.transform.Find("Status Panel/Phase Label").GetComponent<Text>().text,
+                Is.EqualTo("VERIFIED  /  SIGNAL ROOTED"));
+            Assert.That(hud.transform.Find("State Overlay").gameObject.activeSelf, Is.True);
+
+            var rotation = receiver.rotation;
+            var glow = receiverGlow.intensity;
+            yield return new WaitForSeconds(0.25f);
+            Assert.That(receiver.rotation, Is.EqualTo(rotation));
+            Assert.That(receiverGlow.intensity, Is.EqualTo(glow).Within(0.001f));
+        }
+
+        private static void ResolveCurrentRoute(SignalGardenGame game)
+        {
+            typeof(SignalGardenGame)
+                .GetMethod("ResolveCurrentRoute", BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(game, null);
         }
 
         private static void AssertTopRightControl(RectTransform rect, float right, float top)

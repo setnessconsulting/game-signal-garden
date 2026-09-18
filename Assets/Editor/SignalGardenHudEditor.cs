@@ -51,7 +51,16 @@ namespace SignalGarden.Editor
                 throw new InvalidOperationException("Signal Garden Game is required before installing the HUD.");
             }
 
-            InstallInScene(game);
+            var existingHud = UnityEngine.Object.FindAnyObjectByType<SignalGardenHud>();
+            if (existingHud == null)
+            {
+                InstallInScene(game);
+            }
+            else
+            {
+                ConfigureExistingHud(game, existingHud);
+            }
+
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             Debug.Log("Signal Garden UGUI HUD installed in " + scenePath + ".");
@@ -75,6 +84,8 @@ namespace SignalGarden.Editor
             }
 
             SetExistingTopRightControl("Sound Cues Button", 210f, 26f);
+            SetExistingTopRightControl("Sound Volume Label", 26f, 88f);
+            SetExistingTopRightControl("Sound Volume Slider", 26f, 116f);
             SetExistingTopRightControl("Reduced Motion Button", 26f, 26f);
             EditorSceneManager.MarkSceneDirty(scene);
             if (!EditorSceneManager.SaveScene(scene))
@@ -180,6 +191,9 @@ namespace SignalGarden.Editor
             SetTopRight(soundButton.GetComponent<RectTransform>(), 210f, 26f);
             var motionButton = CreateButton(canvasRect, "Reduced Motion Button", "Motion: Full", font, 172f, 56f, Vector2.zero);
             SetTopRight(motionButton.GetComponent<RectTransform>(), 26f, 26f);
+            var soundVolumeLabel = CreateText(canvasRect, "Sound Volume Label", "CUE VOLUME  55%", font, 12, MutedTextColor, FontStyle.Bold, TextAnchor.MiddleRight,
+                Vector2.one, Vector2.one, Vector2.one, new Vector2(352f, 24f), new Vector2(-26f, -88f));
+            var soundVolumeSlider = CreateSlider(canvasRect, "Sound Volume Slider", 352f, 48f, new Vector2(-26f, -116f));
             var soundButtonLabel = soundButton.GetComponentInChildren<Text>(true);
             var motionButtonLabel = motionButton.GetComponentInChildren<Text>(true);
 
@@ -216,8 +230,10 @@ namespace SignalGarden.Editor
                 statusLabel,
                 retryButton,
                 soundButton,
+                soundVolumeSlider,
                 motionButton,
                 soundButtonLabel,
+                soundVolumeLabel,
                 motionButtonLabel,
                 overlay.gameObject,
                 overlayEyebrow,
@@ -236,6 +252,74 @@ namespace SignalGarden.Editor
             EditorUtility.SetDirty(hud);
             EditorUtility.SetDirty(game);
             return hud;
+        }
+
+        private static void ConfigureExistingHud(SignalGardenGame game, SignalGardenHud hud)
+        {
+            var root = hud.transform;
+            var volumeLabelTransform = root.Find("Sound Volume Label");
+            var volumeSliderTransform = root.Find("Sound Volume Slider");
+            if (volumeLabelTransform == null && volumeSliderTransform == null)
+            {
+                var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                CreateText(root, "Sound Volume Label", "CUE VOLUME  55%", font, 12, MutedTextColor, FontStyle.Bold, TextAnchor.MiddleRight,
+                    Vector2.one, Vector2.one, Vector2.one, new Vector2(352f, 24f), new Vector2(-26f, -88f));
+                CreateSlider(root, "Sound Volume Slider", 352f, 48f, new Vector2(-26f, -116f));
+            }
+            else if (volumeLabelTransform == null || volumeSliderTransform == null)
+            {
+                throw new InvalidOperationException("Signal Garden HUD has only one of its sound volume label and slider controls.");
+            }
+
+            var volumeSlider = FindHudComponent<Slider>(root, "Sound Volume Slider");
+            volumeSlider.navigation = new Navigation { mode = Navigation.Mode.Explicit };
+            var volumeLabel = FindHudComponent<Text>(root, "Sound Volume Label");
+            hud.Configure(
+                game,
+                FindHudObject(root, "Objective Panel"),
+                FindHudComponent<Text>(root, "Status Panel/Phase Label"),
+                FindHudComponent<Text>(root, "Status Panel/Status Label"),
+                FindHudComponent<Button>(root, "Status Panel/Try Again Button"),
+                FindHudComponent<Button>(root, "Sound Cues Button"),
+                volumeSlider,
+                FindHudComponent<Button>(root, "Reduced Motion Button"),
+                FindHudComponent<Text>(root, "Sound Cues Button/Label"),
+                volumeLabel,
+                FindHudComponent<Text>(root, "Reduced Motion Button/Label"),
+                FindHudObject(root, "State Overlay"),
+                FindHudComponent<Text>(root, "State Overlay/State Card/Overlay Eyebrow"),
+                FindHudComponent<Text>(root, "State Overlay/State Card/Overlay Title"),
+                FindHudComponent<Text>(root, "State Overlay/State Card/Overlay Body"),
+                FindHudComponent<Button>(root, "State Overlay/State Card/Overlay Primary Button"),
+                FindHudComponent<Button>(root, "State Overlay/State Card/Overlay Secondary Button"));
+        }
+
+        private static GameObject FindHudObject(Transform root, string path)
+        {
+            var child = root.Find(path);
+            if (child == null)
+            {
+                throw new InvalidOperationException("Signal Garden HUD is missing " + path + ".");
+            }
+
+            return child.gameObject;
+        }
+
+        private static T FindHudComponent<T>(Transform root, string path) where T : Component
+        {
+            var child = root.Find(path);
+            if (child == null)
+            {
+                throw new InvalidOperationException("Signal Garden HUD is missing " + path + ".");
+            }
+
+            var component = child.GetComponent<T>();
+            if (component == null)
+            {
+                throw new InvalidOperationException("Signal Garden HUD control " + path + " is missing " + typeof(T).Name + ".");
+            }
+
+            return component;
         }
 
         private static void EnsureEventSystem(Scene scene)
@@ -289,6 +373,42 @@ namespace SignalGarden.Editor
             CreateText(buttonObject, "Label", label, font, 15, TextColor, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
             return button;
+        }
+
+        private static Slider CreateSlider(Transform parent, string name, float width, float height, Vector2 anchoredPosition)
+        {
+            var sliderRect = CreateChild(parent, name);
+            SetAnchored(sliderRect, Vector2.one, Vector2.one, Vector2.one, new Vector2(width, height), anchoredPosition);
+
+            var track = sliderRect.gameObject.AddComponent<Image>();
+            track.color = new Color(0.055f, 0.12f, 0.125f, 1f);
+            track.raycastTarget = true;
+
+            var fillArea = CreateChild(sliderRect, "Fill Area");
+            SetStretch(fillArea, 12f, 12f, 14f, 14f);
+            var fillRect = CreateChild(fillArea, "Fill");
+            SetStretch(fillRect, 0f, 0f, 0f, 0f);
+            var fill = fillRect.gameObject.AddComponent<Image>();
+            fill.color = TealColor;
+            fill.raycastTarget = false;
+
+            var handleRect = CreateChild(sliderRect, "Handle");
+            SetAnchored(handleRect, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(24f, 36f), Vector2.zero);
+            var handle = handleRect.gameObject.AddComponent<Image>();
+            handle.color = TextColor;
+            handle.raycastTarget = true;
+
+            var slider = sliderRect.gameObject.AddComponent<Slider>();
+            slider.direction = Slider.Direction.LeftToRight;
+            slider.minValue = 0f;
+            slider.maxValue = 1f;
+            slider.wholeNumbers = false;
+            slider.fillRect = fillRect;
+            slider.handleRect = handleRect;
+            slider.targetGraphic = handle;
+            slider.navigation = new Navigation { mode = Navigation.Mode.Explicit };
+            slider.value = 0.55f;
+            return slider;
         }
 
         private static Text CreateText(
