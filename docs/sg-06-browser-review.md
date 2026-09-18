@@ -3,7 +3,8 @@
 **Date:** 2026-09-17
 **Build:** local Unity WebGL build from `codex/signal-garden-sg06`
 **URL:** `http://127.0.0.1:4176/signal-garden/play/`
-**Viewport:** 1280×720 browser viewport; the Unity game stage was 1280×662
+**Viewport:** 667×912 browser viewport; the Unity canvas was 667×854. The
+1920×1080 reference viewport remains a separate desktop qualification target.
 
 ## Visual and interaction evidence
 
@@ -23,13 +24,21 @@ The following state changes were observed in the browser:
   button to mute them.`
 - The reduced-motion control changed the live region to `Reduced motion on.
   Ambient pulses are now still.` and the button label to `Motion: Reduced`.
+- In the final keyboard-focus recheck, `Tab` from the canvas announced `Sound
+  cues: Off`, a second `Tab` announced `Motion: Full`, and `Shift+Tab` returned
+  to `Sound cues: Off`.
+- While paused, `Tab` announced `Restart this turn`, `Shift+Tab` returned to
+  `Resume / Esc`, and `Enter` resumed the scene to `Ready. Drag from the coral
+  source to begin.`
 - The accessible live region remained available as the state/status channel;
   spatial route drawing remained on the canvas.
 
-The browser development-log query returned no errors or warnings for this
-review. Existing deterministic route, recovery, reset, replay, and focus
-interruption coverage remains in the Unity EditMode suite; this visual pass did
-not claim human timing, sustained 60 fps, or physical focus-loss qualification.
+The browser reported no runtime errors. It did report that the optional URP
+Edge Adaptive Spatial Upsampling shader was stripped for WebGL, so that FSR
+post-processing pass does not run. The scene rendered normally. Existing
+deterministic route, recovery, reset, replay, and focus-interruption coverage
+remains in the Unity EditMode suite; this visual pass did not claim human
+timing, sustained 60 fps, or physical focus-loss qualification.
 
 ## Nested hosting read-back
 

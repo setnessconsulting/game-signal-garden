@@ -439,6 +439,11 @@ namespace SignalGarden
             suppressPointerUntilRelease = true;
         }
 
+        public void AnnounceHudFocusFromHud(string label)
+        {
+            Announce("Focused " + label + ". Press Enter or Space to activate.");
+        }
+
         public void ResumeFromHud()
         {
             suppressPointerUntilRelease = true;

@@ -121,25 +121,32 @@ exception, and API-37 evidence are recorded in
 captured in [docs/sg-06-browser-review.md](sg-06-browser-review.md).
 
 The Unity `6000.6.0f1` build used URP `17.6.0`, Input System `1.19.0`, UGUI
-`2.6.0`, and Unity Test Framework `1.8.0`. EditMode completed with 24 of 24
-tests passed (11 existing route/state cases, 5 HUD phase-label cases, 1 HUD
-binding case, and 7 SG-05 provenance cases). PlayMode completed with 1 of 1
-HUD scene binding smoke tests passed. The WebGL build reported
-`Success`, `10,490,846` bytes, and remains ignored under `Builds/WebGL/`.
+`2.6.0`, and Unity Test Framework `1.8.0`. Final EditMode coverage passed 24
+of 24 tests (11 existing route/state cases, 5 HUD phase-label cases, 1 HUD
+binding case, and 7 SG-05 provenance cases). Final PlayMode coverage passed 1
+of 1 scene binding and keyboard focus test, including forward/reverse traversal
+of the HUD and pause actions. The final WebGL build reported `Success`,
+`10,557,900` bytes, and remains ignored under `Builds/WebGL/`. Its Unity log is
+`Artifacts/SG-06/webgl-build-final2.log`.
 
 | File | Bytes | SHA-256 |
 | --- | ---: | --- |
-| `WebGL.loader.js` | 27,914 | `9CB76EE8B628A2293CCAA215ECE27B2B5FDC5E6EDE02405E246DFD74157A3BCC` |
-| `WebGL.data.br` | 3,632,297 | `F5CFDE0A3F983232EB4959CDEFD64A04CCE926347DBE64E5542242E0CC7D955F` |
+| `WebGL.loader.js` | 27,914 | `FFE688F245D8A0F86A01AD97C69768AE5DA05534AC43657731CF5CB47C1C50FF` |
+| `WebGL.data.br` | 3,633,110 | `EA4CCC8307200557A927333987763B3F194DCE44BC2CE741D9D987B96D5C51FB` |
 | `WebGL.framework.js.br` | 66,565 | `7A3B10FF77AA44F32185F084B9EE41AA21EE01A106446223893D1AF7B44207D9` |
-| `WebGL.wasm.br` | 6,743,561 | `F8C908BD653B332838786EB2E33FC577CC3C5FE69E2CD4D5A2F808D9AC40D229` |
+| `WebGL.wasm.br` | 6,809,802 | `4F7C5A208A63E64357F37CD3D276B50E98584EBEDB1689AEA00C1539E41DC3A6` |
 
-The local host at `http://127.0.0.1:4176/signal-garden/play/` returned `200`
+The final local host at `http://127.0.0.1:4176/signal-garden/play/` returned `200`
 for the nested play route and all four artifacts. The loader and framework
 returned `text/javascript; charset=utf-8`, the data file returned
 `application/octet-stream`, and the WASM file returned `application/wasm`;
 each `.br` artifact returned `Content-Encoding: br`. The browser rendered the
-new HUD and imported receiver at the nested route; the state observations and
+new HUD and imported receiver at the nested route. At a `667×912` browser
+viewport, Tab/Shift+Tab/Enter traversal announced the sound and motion controls,
+traversed `Resume / Esc` and `Restart this turn` in both directions, resumed
+the game, and toggled sound and reduced motion. The browser reported no runtime
+errors; it reported the optional URP FSR upscaling shader unavailable/stripped
+for WebGL, so that post-processing pass is skipped. The full observations and
 remaining owner-gated qualifications are in the SG-06 browser record.
 
 API-37 `hud` profile validation passed offline with zero blocking findings.

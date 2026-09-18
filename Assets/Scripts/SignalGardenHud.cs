@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace SignalGarden
@@ -115,7 +116,49 @@ namespace SignalGarden
 
         private void Update()
         {
+            var keyboard = Keyboard.current;
+            if (keyboard != null && keyboard.tabKey.wasPressedThisFrame)
+            {
+                var backwards = keyboard.shiftKey.isPressed || keyboard.shiftKey.wasPressedThisFrame ||
+                                keyboard.leftShiftKey.isPressed || keyboard.leftShiftKey.wasPressedThisFrame ||
+                                keyboard.rightShiftKey.isPressed || keyboard.rightShiftKey.wasPressedThisFrame;
+                MoveKeyboardFocus(backwards);
+            }
+
             Refresh(false);
+        }
+
+        public void MoveKeyboardFocus(bool backwards)
+        {
+            var eventSystem = EventSystem.current;
+            if (eventSystem == null)
+            {
+                return;
+            }
+
+            var focusableButtons = new System.Collections.Generic.List<Button>(5);
+            AddFocusable(focusableButtons, soundButton);
+            AddFocusable(focusableButtons, motionButton);
+            AddFocusable(focusableButtons, retryButton);
+            AddFocusable(focusableButtons, overlayPrimaryButton);
+            AddFocusable(focusableButtons, overlaySecondaryButton);
+            if (focusableButtons.Count == 0)
+            {
+                return;
+            }
+
+            var currentIndex = focusableButtons.FindIndex(button => button.gameObject == eventSystem.currentSelectedGameObject);
+            var nextIndex = currentIndex < 0
+                ? (backwards ? focusableButtons.Count - 1 : 0)
+                : (currentIndex + (backwards ? -1 : 1) + focusableButtons.Count) % focusableButtons.Count;
+            var next = focusableButtons[nextIndex];
+            eventSystem.SetSelectedGameObject(next.gameObject);
+            next.Select();
+            if (game != null)
+            {
+                var label = next.GetComponentInChildren<Text>(true);
+                game.AnnounceHudFocusFromHud(label != null ? label.text : next.name);
+            }
         }
 
         public void OnRetryPressed()
@@ -280,6 +323,14 @@ namespace SignalGarden
 
             EventSystem.current.SetSelectedGameObject(target.gameObject);
             target.Select();
+        }
+
+        private static void AddFocusable(System.Collections.Generic.List<Button> buttons, Button candidate)
+        {
+            if (candidate != null && candidate.isActiveAndEnabled && candidate.IsInteractable())
+            {
+                buttons.Add(candidate);
+            }
         }
 
         public static string GetPhaseLabel(GardenPhase phase)

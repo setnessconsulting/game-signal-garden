@@ -14,6 +14,7 @@ namespace SignalGarden.Editor
         private static readonly Color PanelColor = new Color(0.035f, 0.085f, 0.092f, 0.96f);
         private static readonly Color ButtonColor = new Color(0.10f, 0.23f, 0.22f, 0.98f);
         private static readonly Color ButtonHoverColor = new Color(0.16f, 0.36f, 0.31f, 1f);
+        private static readonly Color ButtonFocusColor = new Color(0.10f, 0.36f, 0.30f, 1f);
         private static readonly Color TextColor = new Color(0.94f, 0.95f, 0.88f, 1f);
         private static readonly Color MutedTextColor = new Color(0.78f, 0.86f, 0.81f, 1f);
         private static readonly Color TealColor = new Color(0.42f, 0.86f, 0.74f, 1f);
@@ -256,7 +257,7 @@ namespace SignalGarden.Editor
             colors.normalColor = ButtonColor;
             colors.highlightedColor = ButtonHoverColor;
             colors.pressedColor = TealColor;
-            colors.selectedColor = ButtonHoverColor;
+            colors.selectedColor = ButtonFocusColor;
             colors.disabledColor = new Color(ButtonColor.r, ButtonColor.g, ButtonColor.b, 0.45f);
             colors.colorMultiplier = 1f;
             button.colors = colors;

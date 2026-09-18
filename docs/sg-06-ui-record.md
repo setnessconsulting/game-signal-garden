@@ -56,7 +56,7 @@ The scene root `Signal Garden HUD` contains:
 - `CanvasScaler` with reference resolution `1920×1080`
 - `GraphicRaycaster`
 - `SignalGardenHud` with serialized game, objective, status, retry, sound, motion, and modal references
-- An `EventSystem` with `InputSystemUIInputModule` and automatic button navigation
+- An `EventSystem` with `InputSystemUIInputModule`, visible selected-button tint, and explicit `Tab` / `Shift+Tab` cycling in the documented order; the live region announces the focused action
 
 Phase changes select the recovery button or modal primary button when one is reachable. Button clicks suppress the next pointer release so a UI action cannot become an accidental route start.
 

@@ -86,7 +86,7 @@
     "canvas_sorting_order": 50,
     "canvas_reference_resolution": "1920x1080",
     "event_system": "EventSystem + InputSystemUIInputModule",
-    "focus_behavior": "Automatic UGUI navigation; phase changes select the recovery or modal primary action when reachable.",
+    "focus_behavior": "Tab and Shift+Tab explicitly cycle active controls in the documented order; phase changes select recovery or modal primary actions when reachable, and keyboard focus is announced through the WebGL live region.",
     "serialized_bindings": [
       "objectivePanel",
       "phaseLabel",

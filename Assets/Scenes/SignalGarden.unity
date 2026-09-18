@@ -1675,7 +1675,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0.1, g: 0.23, b: 0.22, a: 0.98}
     m_HighlightedColor: {r: 0.16, g: 0.36, b: 0.31, a: 1}
     m_PressedColor: {r: 0.42, g: 0.86, b: 0.74, a: 1}
-    m_SelectedColor: {r: 0.16, g: 0.36, b: 0.31, a: 1}
+    m_SelectedColor: {r: 0.1, g: 0.36, b: 0.3, a: 1}
     m_DisabledColor: {r: 0.1, g: 0.23, b: 0.22, a: 0.45}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -2666,7 +2666,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0.1, g: 0.23, b: 0.22, a: 0.98}
     m_HighlightedColor: {r: 0.16, g: 0.36, b: 0.31, a: 1}
     m_PressedColor: {r: 0.42, g: 0.86, b: 0.74, a: 1}
-    m_SelectedColor: {r: 0.16, g: 0.36, b: 0.31, a: 1}
+    m_SelectedColor: {r: 0.1, g: 0.36, b: 0.3, a: 1}
     m_DisabledColor: {r: 0.1, g: 0.23, b: 0.22, a: 0.45}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -5930,7 +5930,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0.1, g: 0.23, b: 0.22, a: 0.98}
     m_HighlightedColor: {r: 0.16, g: 0.36, b: 0.31, a: 1}
     m_PressedColor: {r: 0.42, g: 0.86, b: 0.74, a: 1}
-    m_SelectedColor: {r: 0.16, g: 0.36, b: 0.31, a: 1}
+    m_SelectedColor: {r: 0.1, g: 0.36, b: 0.3, a: 1}
     m_DisabledColor: {r: 0.1, g: 0.23, b: 0.22, a: 0.45}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -8773,7 +8773,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0.1, g: 0.23, b: 0.22, a: 0.98}
     m_HighlightedColor: {r: 0.16, g: 0.36, b: 0.31, a: 1}
     m_PressedColor: {r: 0.42, g: 0.86, b: 0.74, a: 1}
-    m_SelectedColor: {r: 0.16, g: 0.36, b: 0.31, a: 1}
+    m_SelectedColor: {r: 0.1, g: 0.36, b: 0.3, a: 1}
     m_DisabledColor: {r: 0.1, g: 0.23, b: 0.22, a: 0.45}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -15545,7 +15545,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0.1, g: 0.23, b: 0.22, a: 0.98}
     m_HighlightedColor: {r: 0.16, g: 0.36, b: 0.31, a: 1}
     m_PressedColor: {r: 0.42, g: 0.86, b: 0.74, a: 1}
-    m_SelectedColor: {r: 0.16, g: 0.36, b: 0.31, a: 1}
+    m_SelectedColor: {r: 0.1, g: 0.36, b: 0.3, a: 1}
     m_DisabledColor: {r: 0.1, g: 0.23, b: 0.22, a: 0.45}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
