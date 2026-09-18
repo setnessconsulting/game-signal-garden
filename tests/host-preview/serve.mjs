@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import { createHash } from "node:crypto";
 import { readFile, readdir, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -28,10 +29,18 @@ try {
     frameworkFile: findNamedFile(names, [".framework.js"], "framework"),
     wasmFile: findNamedFile(names, [".wasm"], "WebAssembly")
   };
+  const artifactSha256 = {};
   for (const filename of Object.values(buildFiles)) {
     const file = await stat(path.join(buildRoot, filename));
     if (!file.isFile()) throw new Error("Build artifact is not a file: " + filename);
+    const bytes = await readFile(path.join(buildRoot, filename));
+    artifactSha256[filename] = createHash("sha256").update(bytes).digest("hex");
   }
+  buildFiles.artifactSha256 = artifactSha256;
+  buildFiles.cacheKey = createHash("sha256")
+    .update(JSON.stringify(artifactSha256))
+    .digest("hex")
+    .slice(0, 16);
 } catch (error) {
   console.error("No usable local WebGL build was found under " + buildRoot);
   console.error(error.message);

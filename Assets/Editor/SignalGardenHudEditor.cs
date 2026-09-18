@@ -64,6 +64,27 @@ namespace SignalGarden.Editor
             Debug.Log("Signal Garden UGUI HUD validation passed.");
         }
 
+        [MenuItem("Signal Garden/Refresh 1080p HUD control anchors")]
+        public static void Refresh1080pHudControlAnchors()
+        {
+            const string scenePath = "Assets/Scenes/SignalGarden.unity";
+            var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+            if (!scene.IsValid())
+            {
+                throw new InvalidOperationException("SignalGarden scene could not be opened at " + scenePath + ".");
+            }
+
+            SetExistingTopRightControl("Sound Cues Button", 210f, 26f);
+            SetExistingTopRightControl("Reduced Motion Button", 26f, 26f);
+            EditorSceneManager.MarkSceneDirty(scene);
+            if (!EditorSceneManager.SaveScene(scene))
+            {
+                throw new InvalidOperationException("SignalGarden scene could not be saved after refreshing the HUD anchors.");
+            }
+
+            Debug.Log("Signal Garden sound and motion controls are anchored to the upper-right 1920×1080 HUD reference.");
+        }
+
         public static void ValidateInScene()
         {
             var hud = UnityEngine.Object.FindAnyObjectByType<SignalGardenHud>();
@@ -155,8 +176,10 @@ namespace SignalGarden.Editor
             CreateText(objectivePanel.rectTransform, "Instruction", "Drag coral to blue along the gold stones. WASD pans. Esc cancels or pauses.", font, 15, MutedTextColor, FontStyle.Normal, TextAnchor.UpperLeft,
                 new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(-44f, 58f), new Vector2(22f, -94f));
 
-            var soundButton = CreateButton(canvasRect, "Sound Cues Button", "Sound cues: Off", font, 168f, 56f, new Vector2(-378f, -26f));
-            var motionButton = CreateButton(canvasRect, "Reduced Motion Button", "Motion: Full", font, 172f, 56f, new Vector2(-198f, -26f));
+            var soundButton = CreateButton(canvasRect, "Sound Cues Button", "Sound cues: Off", font, 168f, 56f, Vector2.zero);
+            SetTopRight(soundButton.GetComponent<RectTransform>(), 210f, 26f);
+            var motionButton = CreateButton(canvasRect, "Reduced Motion Button", "Motion: Full", font, 172f, 56f, Vector2.zero);
+            SetTopRight(motionButton.GetComponent<RectTransform>(), 26f, 26f);
             var soundButtonLabel = soundButton.GetComponentInChildren<Text>(true);
             var motionButtonLabel = motionButton.GetComponentInChildren<Text>(true);
 
@@ -322,6 +345,31 @@ namespace SignalGarden.Editor
             rect.pivot = new Vector2(0f, 1f);
             rect.sizeDelta = new Vector2(width, height);
             rect.anchoredPosition = new Vector2(x, -y);
+        }
+
+        private static void SetTopRight(RectTransform rect, float right, float top)
+        {
+            rect.anchorMin = Vector2.one;
+            rect.anchorMax = Vector2.one;
+            rect.pivot = Vector2.one;
+            rect.anchoredPosition = new Vector2(-right, -top);
+        }
+
+        private static void SetExistingTopRightControl(string objectName, float right, float top)
+        {
+            var control = GameObject.Find(objectName);
+            if (control == null)
+            {
+                throw new InvalidOperationException("Signal Garden HUD control is missing: " + objectName + ".");
+            }
+
+            var rect = control.GetComponent<RectTransform>();
+            if (rect == null)
+            {
+                throw new InvalidOperationException("Signal Garden HUD control has no RectTransform: " + objectName + ".");
+            }
+
+            SetTopRight(rect, right, top);
         }
 
         private static void SetBottomStretch(RectTransform rect, float left, float right, float bottom, float height)

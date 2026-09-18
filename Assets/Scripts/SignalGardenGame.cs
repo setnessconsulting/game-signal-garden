@@ -46,7 +46,7 @@ namespace SignalGarden
         private static extern void SignalGardenInstallPointerCapture();
 
         [DllImport("__Internal")]
-        private static extern void SignalGardenReportFrameRate(int framesPerSecond);
+        private static extern void SignalGardenReportFrameRate(float framesPerSecond);
 #endif
 
         public GardenRunState RunState
@@ -181,7 +181,7 @@ namespace SignalGarden
             }
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-            SignalGardenReportFrameRate(Mathf.RoundToInt(measurementFrames / measurementSeconds));
+            SignalGardenReportFrameRate(measurementFrames / measurementSeconds);
 #endif
             measurementFrames = 0;
             measurementSeconds = 0f;

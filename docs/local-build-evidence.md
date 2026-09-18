@@ -154,3 +154,40 @@ Live qualification was attempted and classified `BLOCKED` because no Figma
 credential was available. No generated WebGL files are tracked, and no R2,
 games-site, deployment, or Jira mutation was made. After SG-06 review, the
 next focused issue is GAME-285 / SG-07 (record the v1 Rive decision).
+
+## SG-06 1920×1080 follow-up (2026-09-17)
+
+Unity `6000.6.0f1` built the SG-06 WebGL candidate successfully with URP
+`17.6.0`, Input System `1.19.0`, UGUI `2.6.0`, and Unity Test Framework
+`1.8.0`. The local Unity build reported `10,480,240` bytes and remains ignored
+under `Builds/WebGL/`. The local preview's cache identity is
+`e9867b39eceb012f`, the first 16 hexadecimal characters of the SHA-256 over
+the ordered four-artifact hash manifest.
+
+| File | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `WebGL.loader.js` | 27,914 | `6DA2C7385B7FD9A2EC4F634A4B40A32604A6BA8ED383494DA3EC6FFECD467B32` |
+| `WebGL.data.br` | 3,632,706 | `716B7AE8685465B47A0F29CB25D93284B43AB4794796F32242388391CA3F642F` |
+| `WebGL.framework.js.br` | 66,617 | `BF630E2ED2DF06748BEF43376CD3B9CF39F5CA7F00023B1D28646448E1899255` |
+| `WebGL.wasm.br` | 6,732,494 | `4B3EB9D1AAD281B474D8572C8AF5B0821DF46C0D997392930FD6812364F82476` |
+
+Final EditMode coverage passed 24/24 tests; PlayMode passed 1/1. The local
+nested route and all four build files returned HTTP 200. The loader returned
+`text/javascript; charset=utf-8` without compression; the data file returned
+`application/octet-stream`, the framework returned
+`text/javascript; charset=utf-8`, and the WASM returned `application/wasm`.
+Each `.br` file returned `Content-Encoding: br`.
+
+The visible in-app browser completed the five-second warmup and all 30
+one-second samples at an exact 1920×1080 canvas: minimum 60.0 fps, mean 60.1
+fps, `PASS`. A separate desktop Chrome automation run at an exact
+1920×1080 viewport and canvas completed its samples but reported 1.0 fps
+minimum/mean. No runtime error appeared; the only console warning was the
+optional URP FSR shader being stripped. Edge was unavailable. Treat the
+desktop Chrome/Edge 60 fps qualification as unresolved until the owner's
+desktop browser confirms it; the in-app preview alone does not close that
+browser-specific gate.
+
+`git diff --check` passed, and generated builds remain ignored. No production
+R2 upload, games-site catalog change, deployment, or Jira status update was
+made.

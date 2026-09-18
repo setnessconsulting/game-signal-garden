@@ -30,6 +30,28 @@
       main { position: relative; min-height: 0; display: grid; place-items: center; }
       #game-stage { position: relative; width: 100%; height: 100%; overflow: hidden; background: #12323b; }
       #unity-canvas { display: block; width: 100%; height: 100%; outline: none; }
+      body.reference-render { grid-template-rows: minmax(0, 1fr); }
+      body.reference-render header { display: none; }
+      body.reference-render main { grid-row: 1; }
+      body.reference-render #game-stage {
+        width: min(100vw, 177.7778vh);
+        height: auto;
+        aspect-ratio: 16 / 9;
+      }
+      #performance-readout {
+        position: fixed;
+        z-index: 10;
+        bottom: 12px;
+        left: 12px;
+        max-width: calc(100vw - 24px);
+        padding: 8px 11px;
+        border: 1px solid rgba(173, 220, 203, .45);
+        border-radius: 8px;
+        background: rgba(7, 24, 28, .94);
+        color: #edf4e9;
+        font: 12px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+      }
+      #performance-readout[hidden] { display: none; }
       #loading, #failure {
         position: absolute;
         z-index: 2;
@@ -69,6 +91,7 @@
       <div class="brand"><span class="brand-mark" aria-hidden="true">✳</span><strong>Signal Garden</strong></div>
       <div class="tag">LOCAL HOST PREVIEW · /signal-garden/play/</div>
     </header>
+    <output id="performance-readout" hidden></output>
     <main>
       <section id="game-stage" data-game-stage data-asset-base="/game-assets/signal-garden/local">
         <div id="loading">
@@ -88,6 +111,18 @@
       </section>
     </main>
     <script>
+      const query = new URLSearchParams(location.search);
+      const referenceRender = query.get("sg-render") === "1920x1080";
+      const statsEnabled = query.get("sg-stats") === "1";
+      const referenceWidth = 1920;
+      const referenceHeight = 1080;
+      const sampleSeconds = Math.max(1, Math.min(120, Number.parseInt(query.get("sg-sample-seconds") || "30", 10)));
+      const warmupSeconds = Math.max(0, Math.min(30, Number.parseInt(query.get("sg-warmup-seconds") || "5", 10)));
+      const stage = document.getElementById("game-stage");
+      const performanceReadout = document.getElementById("performance-readout");
+      if (referenceRender) document.body.classList.add("reference-render");
+      if (statsEnabled) performanceReadout.hidden = false;
+
       window.signalGardenBuildFiles = __BUILD_MANIFEST__;
       window.signalGardenAssetBase = new URL("/game-assets/signal-garden/local", location.origin).href.replace(/\/$/, "");
       window.signalGardenLoadStartedAt = performance.now();
@@ -100,14 +135,73 @@
       const files = window.signalGardenBuildFiles;
       const assetBase = window.signalGardenAssetBase;
       const buildBase = assetBase + "/Build";
+      const buildAssetUrl = (filename) => buildBase + "/" + filename + "?v=" + encodeURIComponent(files.cacheKey);
 
       function showFailure() {
         loading.hidden = true;
         failure.hidden = false;
       }
 
+      function pageIsActive() {
+        return document.visibilityState === "visible" && document.hasFocus();
+      }
+
+      function delay(milliseconds) {
+        return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+      }
+
+      async function waitForActiveTime(milliseconds, updateStatus) {
+        let activeMilliseconds = 0;
+        let previous = performance.now();
+        while (activeMilliseconds < milliseconds) {
+          await delay(100);
+          const now = performance.now();
+          if (pageIsActive()) activeMilliseconds += Math.min(now - previous, 250);
+          previous = now;
+          if (updateStatus) updateStatus(activeMilliseconds);
+        }
+      }
+
+      async function runPerformanceSample() {
+        if (!referenceRender || !statsEnabled) return;
+
+        performanceReadout.textContent = "1920×1080 render · focused warmup 0/" + warmupSeconds + "s";
+        await waitForActiveTime(warmupSeconds * 1000, (elapsed) => {
+          performanceReadout.textContent = "1920×1080 render · focused warmup " + Math.min(warmupSeconds, Math.floor(elapsed / 1000)) + "/" + warmupSeconds + "s";
+        });
+
+        const samples = [];
+        while (samples.length < sampleSeconds) {
+          await waitForActiveTime(1000);
+          const fps = Number(window.signalGardenFrameRate);
+          const sampleAge = performance.now() - Number(window.signalGardenFrameRateUpdatedAt || 0);
+          if (pageIsActive() && Number.isFinite(fps) && sampleAge <= 2500) samples.push(fps);
+          const minimum = samples.length ? Math.min(...samples) : 0;
+          const average = samples.length ? samples.reduce((sum, value) => sum + value, 0) / samples.length : 0;
+          const progress = samples.length + "/" + sampleSeconds + "s";
+          performanceReadout.textContent = "1920×1080 render · " + (Number.isFinite(fps) ? fps.toFixed(1) : "waiting") + " fps now · min " + minimum.toFixed(1) + " · avg " + average.toFixed(1) + " · " + progress;
+        }
+
+        const minimum = Math.min(...samples);
+        const average = samples.reduce((sum, value) => sum + value, 0) / samples.length;
+        const targetRendered = canvas.width === referenceWidth && canvas.height === referenceHeight;
+        const passed = targetRendered && samples.length === sampleSeconds && average >= 60;
+        window.signalGardenPerformanceResult = {
+          width: canvas.width,
+          height: canvas.height,
+          sampleSeconds: samples.length,
+          requestedSampleSeconds: sampleSeconds,
+          minimumFramesPerSecond: minimum,
+          averageFramesPerSecond: average,
+          averageAtTarget: average >= 60,
+          latestFramesPerSecond: Number(window.signalGardenFrameRate),
+          passed
+        };
+        performanceReadout.textContent = "1920×1080 render · " + Number(window.signalGardenFrameRate).toFixed(1) + " fps now · min " + minimum.toFixed(1) + " · avg " + average.toFixed(1) + " · " + samples.length + "/" + sampleSeconds + "s · " + (passed ? "PASS" : "FAIL");
+      }
+
       const loader = document.createElement("script");
-      loader.src = buildBase + "/" + files.loaderFile;
+      loader.src = buildAssetUrl(files.loaderFile);
       loader.async = true;
       loader.addEventListener("error", showFailure);
       loader.addEventListener("load", async () => {
@@ -118,16 +212,18 @@
 
         progressLabel.textContent = "Loading the garden…";
         try {
+          const stageBounds = stage.getBoundingClientRect();
+          const renderPixelRatio = referenceRender ? referenceWidth / stageBounds.width : window.devicePixelRatio;
           window.signalGardenUnity = await window.createUnityInstance(canvas, {
-            dataUrl: buildBase + "/" + files.dataFile,
-            frameworkUrl: buildBase + "/" + files.frameworkFile,
-            codeUrl: buildBase + "/" + files.wasmFile,
+            dataUrl: buildAssetUrl(files.dataFile),
+            frameworkUrl: buildAssetUrl(files.frameworkFile),
+            codeUrl: buildAssetUrl(files.wasmFile),
             streamingAssetsUrl: assetBase + "/StreamingAssets",
             companyName: "Setness Consulting",
             productName: "Signal Garden",
-            productVersion: "local",
+            productVersion: files.cacheKey,
             matchWebGLToCanvasSize: true,
-            devicePixelRatio: window.devicePixelRatio
+            devicePixelRatio: renderPixelRatio
           }, (value) => {
             progressLabel.textContent = "Loading the garden… " + Math.round(value * 100) + "%";
             progressBar.style.width = Math.max(8, Math.round(value * 100)) + "%";
@@ -136,6 +232,7 @@
           window.signalGardenLoadMs = window.signalGardenInteractiveAt - window.signalGardenLoadStartedAt;
           loading.hidden = true;
           canvas.focus({ preventScroll: true });
+          void runPerformanceSample();
         } catch (error) {
           console.error("Signal Garden failed to start:", error);
           showFailure();
