@@ -37,12 +37,14 @@ GitHub Actions runs credential-free repository checks on pull requests. See [doc
 - [SG-05 receiver asset record](docs/sg-05-asset-record.md)
 - [SG-06 UI/HUD handoff record](docs/sg-06-ui-record.md)
 - [SG-07 motion and Rive decision](docs/sg-07-motion-decision.md)
+- [SG-08 feedback and audio record](docs/sg-08-feedback-record.md)
 - [Fresh-player playtest script](docs/playtest-script.md)
 - [GAME-278 Epic](https://setnessconsulting.atlassian.net/browse/GAME-278)
 - [GAME-279 SG-01](https://setnessconsulting.atlassian.net/browse/GAME-279) · [GAME-280 SG-02](https://setnessconsulting.atlassian.net/browse/GAME-280) · [GAME-281 SG-03](https://setnessconsulting.atlassian.net/browse/GAME-281) · [GAME-282 SG-04](https://setnessconsulting.atlassian.net/browse/GAME-282)
 - [GAME-283 SG-05](https://setnessconsulting.atlassian.net/browse/GAME-283)
 - [GAME-284 SG-06](https://setnessconsulting.atlassian.net/browse/GAME-284)
 - [GAME-285 SG-07](https://setnessconsulting.atlassian.net/browse/GAME-285)
+- [GAME-286 SG-08](https://setnessconsulting.atlassian.net/browse/GAME-286)
 - [Games site release contract](https://github.com/setnessconsulting/games-site/blob/main/docs/game-release-contract.md)
 
 The Unity WebGL files are released under the immutable private-R2 prefix signal-garden/<version>/Build/. The host supplies an asset base URL; the player must load its loader, data, framework, and WASM files from <assetBase>/Build/<exact-filename>. Brotli builds require Content-Encoding: br on compressed files and the correct Content-Type (in particular application/wasm for compressed WebAssembly). The production bucket and catalog stay unchanged until a separately reviewed release PR.

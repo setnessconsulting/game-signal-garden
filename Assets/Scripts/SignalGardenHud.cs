@@ -21,8 +21,10 @@ namespace SignalGarden
         [SerializeField] private Text statusLabel;
         [SerializeField] private Button retryButton;
         [SerializeField] private Button soundButton;
+        [SerializeField] private Slider soundVolumeSlider;
         [SerializeField] private Button motionButton;
         [SerializeField] private Text soundButtonLabel;
+        [SerializeField] private Text soundVolumeLabel;
         [SerializeField] private Text motionButtonLabel;
 
         [Header("Modal HUD")]
@@ -48,8 +50,8 @@ namespace SignalGarden
             get
             {
                 return game != null && objectivePanel != null && phaseLabel != null && statusLabel != null &&
-                       retryButton != null && soundButton != null && motionButton != null &&
-                       soundButtonLabel != null && motionButtonLabel != null && overlay != null &&
+                       retryButton != null && soundButton != null && soundVolumeSlider != null && motionButton != null &&
+                       soundButtonLabel != null && soundVolumeLabel != null && motionButtonLabel != null && overlay != null &&
                        overlayEyebrow != null && overlayTitle != null && overlayBody != null &&
                        overlayPrimaryButton != null && overlaySecondaryButton != null;
             }
@@ -62,8 +64,10 @@ namespace SignalGarden
             Text status,
             Button retry,
             Button sound,
+            Slider soundVolume,
             Button motion,
             Text soundLabel,
+            Text volumeLabel,
             Text motionLabel,
             GameObject modal,
             Text modalEyebrow,
@@ -78,8 +82,10 @@ namespace SignalGarden
             statusLabel = status;
             retryButton = retry;
             soundButton = sound;
+            soundVolumeSlider = soundVolume;
             motionButton = motion;
             soundButtonLabel = soundLabel;
+            soundVolumeLabel = volumeLabel;
             motionButtonLabel = motionLabel;
             overlay = modal;
             overlayEyebrow = modalEyebrow;
@@ -136,28 +142,32 @@ namespace SignalGarden
                 return;
             }
 
-            var focusableButtons = new System.Collections.Generic.List<Button>(5);
-            AddFocusable(focusableButtons, soundButton);
-            AddFocusable(focusableButtons, motionButton);
-            AddFocusable(focusableButtons, retryButton);
-            AddFocusable(focusableButtons, overlayPrimaryButton);
-            AddFocusable(focusableButtons, overlaySecondaryButton);
-            if (focusableButtons.Count == 0)
+            var focusableControls = new System.Collections.Generic.List<Selectable>(6);
+            AddFocusable(focusableControls, soundButton);
+            AddFocusable(focusableControls, soundVolumeSlider);
+            AddFocusable(focusableControls, motionButton);
+            AddFocusable(focusableControls, retryButton);
+            AddFocusable(focusableControls, overlayPrimaryButton);
+            AddFocusable(focusableControls, overlaySecondaryButton);
+            if (focusableControls.Count == 0)
             {
                 return;
             }
 
-            var currentIndex = focusableButtons.FindIndex(button => button.gameObject == eventSystem.currentSelectedGameObject);
+            var currentIndex = focusableControls.FindIndex(control => control.gameObject == eventSystem.currentSelectedGameObject);
             var nextIndex = currentIndex < 0
-                ? (backwards ? focusableButtons.Count - 1 : 0)
-                : (currentIndex + (backwards ? -1 : 1) + focusableButtons.Count) % focusableButtons.Count;
-            var next = focusableButtons[nextIndex];
+                ? (backwards ? focusableControls.Count - 1 : 0)
+                : (currentIndex + (backwards ? -1 : 1) + focusableControls.Count) % focusableControls.Count;
+            var next = focusableControls[nextIndex];
             eventSystem.SetSelectedGameObject(next.gameObject);
             next.Select();
             if (game != null)
             {
                 var label = next.GetComponentInChildren<Text>(true);
-                game.AnnounceHudFocusFromHud(label != null ? label.text : next.name);
+                var accessibleLabel = next == soundVolumeSlider && soundVolumeLabel != null
+                    ? soundVolumeLabel.text
+                    : label != null ? label.text : next.name;
+                game.AnnounceHudFocusFromHud(accessibleLabel, next == soundVolumeSlider);
             }
         }
 
@@ -180,6 +190,17 @@ namespace SignalGarden
             }
 
             game.ToggleSoundFromHud();
+            Refresh(true);
+        }
+
+        public void OnSoundVolumeChanged(float value)
+        {
+            if (game == null)
+            {
+                return;
+            }
+
+            game.SetSoundVolumeFromHud(value);
             Refresh(true);
         }
 
@@ -233,6 +254,7 @@ namespace SignalGarden
 
             if (retryButton != null) retryButton.onClick.AddListener(OnRetryPressed);
             if (soundButton != null) soundButton.onClick.AddListener(OnSoundPressed);
+            if (soundVolumeSlider != null) soundVolumeSlider.onValueChanged.AddListener(OnSoundVolumeChanged);
             if (motionButton != null) motionButton.onClick.AddListener(OnMotionPressed);
             if (overlayPrimaryButton != null) overlayPrimaryButton.onClick.AddListener(OnPrimaryOverlayPressed);
             if (overlaySecondaryButton != null) overlaySecondaryButton.onClick.AddListener(OnSecondaryOverlayPressed);
@@ -248,6 +270,7 @@ namespace SignalGarden
 
             if (retryButton != null) retryButton.onClick.RemoveListener(OnRetryPressed);
             if (soundButton != null) soundButton.onClick.RemoveListener(OnSoundPressed);
+            if (soundVolumeSlider != null) soundVolumeSlider.onValueChanged.RemoveListener(OnSoundVolumeChanged);
             if (motionButton != null) motionButton.onClick.RemoveListener(OnMotionPressed);
             if (overlayPrimaryButton != null) overlayPrimaryButton.onClick.RemoveListener(OnPrimaryOverlayPressed);
             if (overlaySecondaryButton != null) overlaySecondaryButton.onClick.RemoveListener(OnSecondaryOverlayPressed);
@@ -271,6 +294,8 @@ namespace SignalGarden
             if (phaseLabel != null) phaseLabel.text = GetPhaseLabel(phase);
             if (statusLabel != null) statusLabel.text = status;
             if (soundButtonLabel != null) soundButtonLabel.text = game.SoundEnabled ? "Sound cues: On" : "Sound cues: Off";
+            if (soundVolumeSlider != null) soundVolumeSlider.SetValueWithoutNotify(game.SoundVolume);
+            if (soundVolumeLabel != null) soundVolumeLabel.text = "CUE VOLUME  " + Mathf.RoundToInt(game.SoundVolume * 100f) + "%";
             if (motionButtonLabel != null) motionButtonLabel.text = game.ReducedMotionEnabled ? "Motion: Reduced" : "Motion: Full";
             if (retryButton != null) retryButton.gameObject.SetActive(phase == GardenPhase.Recovery);
 
@@ -325,11 +350,11 @@ namespace SignalGarden
             target.Select();
         }
 
-        private static void AddFocusable(System.Collections.Generic.List<Button> buttons, Button candidate)
+        private static void AddFocusable(System.Collections.Generic.List<Selectable> controls, Selectable candidate)
         {
             if (candidate != null && candidate.isActiveAndEnabled && candidate.IsInteractable())
             {
-                buttons.Add(candidate);
+                controls.Add(candidate);
             }
         }
 

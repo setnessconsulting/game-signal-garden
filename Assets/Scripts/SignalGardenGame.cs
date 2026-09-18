@@ -11,6 +11,17 @@ namespace SignalGarden
         private const float RouteDrawHeight = 0.60f;
         private const float StartRadius = 0.68f;
         private const float CameraPanSpeed = 3.0f;
+        private const float DefaultSoundVolume = 0.55f;
+        private const float InteractionPulseDuration = 0.42f;
+        private const float VerifiedPulseDuration = 0.72f;
+        private const int FeedbackSampleRate = 22050;
+
+        private enum FeedbackCue
+        {
+            Interaction,
+            Recovery,
+            Success
+        }
 
         [SerializeField] private Camera gardenCamera;
         [SerializeField] private Transform cameraFocus;
@@ -35,7 +46,11 @@ namespace SignalGarden
         private float measurementSeconds;
         private int measurementFrames;
         private bool soundEnabled;
+        [SerializeField, Range(0f, 1f)] private float soundVolume = DefaultSoundVolume;
         private bool reducedMotion;
+        private float sourceFeedbackPulseSeconds;
+        private float receiverFeedbackPulseSeconds;
+        private bool audioFailureReported;
         private string statusText = "Ready. Drag from the coral source to begin.";
 
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -67,6 +82,11 @@ namespace SignalGarden
         public bool SoundEnabled
         {
             get { return soundEnabled; }
+        }
+
+        public float SoundVolume
+        {
+            get { return soundVolume; }
         }
 
         public bool ReducedMotionEnabled
@@ -140,6 +160,7 @@ namespace SignalGarden
                 feedbackAudio.playOnAwake = false;
                 feedbackAudio.spatialBlend = 0f;
             }
+            soundVolume = Mathf.Clamp01(soundVolume);
 
 #if UNITY_WEBGL && !UNITY_EDITOR
             SignalGardenInstallPointerCapture();
@@ -232,6 +253,8 @@ namespace SignalGarden
                     runState.BeginRoute(sourcePoint);
                     lastPointerWorld = sourcePoint;
                     statusText = "Tracing the signal. Stay on the gold stones and release at the blue receiver. Esc cancels.";
+                    sourceFeedbackPulseSeconds = InteractionPulseDuration;
+                    PlayFeedback(FeedbackCue.Interaction);
                     SetLineMaterial(routeActiveMaterial);
                     UpdateRouteVisual();
                     Announce(statusText);
@@ -291,13 +314,15 @@ namespace SignalGarden
             {
                 statusText = "Signal received. The garden is awake. Choose Play again for the next turn.";
                 SetLineMaterial(routeSuccessMaterial);
-                PlayFeedback(880f, 0.18f);
+                receiverFeedbackPulseSeconds = VerifiedPulseDuration;
+                PlayFeedback(FeedbackCue.Success);
             }
             else
             {
                 statusText = RecoveryMessage(result);
                 SetLineMaterial(routeFailureMaterial);
-                PlayFeedback(190f, 0.10f);
+                sourceFeedbackPulseSeconds = InteractionPulseDuration;
+                PlayFeedback(FeedbackCue.Recovery);
             }
 
             UpdateRouteVisual();
@@ -331,6 +356,8 @@ namespace SignalGarden
             {
                 runState.CancelRoute(RouteFailure.Cancelled);
                 statusText = RecoveryMessage(RouteFailure.Cancelled);
+                sourceFeedbackPulseSeconds = InteractionPulseDuration;
+                PlayFeedback(FeedbackCue.Recovery);
                 SetLineMaterial(routeActiveMaterial);
                 UpdateRouteVisual();
                 Announce(statusText);
@@ -376,9 +403,10 @@ namespace SignalGarden
         private void UpdatePulse()
         {
             var pulse = reducedMotion ? 0.92f : 0.78f + Mathf.Sin(Time.unscaledTime * 2.1f) * 0.16f;
+            var sourceFeedback = ReadFeedbackPulse(ref sourceFeedbackPulseSeconds, InteractionPulseDuration, 0.46f);
             if (sourceGlow != null)
             {
-                sourceGlow.intensity = 1.35f * pulse;
+                sourceGlow.intensity = 1.35f * pulse + sourceFeedback;
             }
 
             if (receiverGlow != null)
@@ -387,7 +415,8 @@ namespace SignalGarden
                                      (runState.phase == GardenPhase.Paused && runState.phaseBeforePause == GardenPhase.Verified)
                     ? 1.4f
                     : 0.72f;
-                receiverGlow.intensity = completedBoost * pulse;
+                var receiverFeedback = ReadFeedbackPulse(ref receiverFeedbackPulseSeconds, VerifiedPulseDuration, 0.65f);
+                receiverGlow.intensity = completedBoost * pulse + receiverFeedback;
             }
 
             if (!reducedMotion && receiverMarker != null &&
@@ -396,6 +425,23 @@ namespace SignalGarden
             {
                 receiverMarker.Rotate(Vector3.up, 12f * Time.unscaledDeltaTime, Space.World);
             }
+        }
+
+        private float ReadFeedbackPulse(ref float secondsRemaining, float duration, float strength)
+        {
+            if (secondsRemaining <= 0f)
+            {
+                return 0f;
+            }
+
+            var progress = 1f - secondsRemaining / duration;
+            secondsRemaining = Mathf.Max(0f, secondsRemaining - Time.unscaledDeltaTime);
+            if (reducedMotion)
+            {
+                return 0f;
+            }
+
+            return Mathf.Sin(Mathf.PI * Mathf.Clamp01(progress)) * strength;
         }
 
         private void UpdateRouteVisual()
@@ -439,9 +485,12 @@ namespace SignalGarden
             suppressPointerUntilRelease = true;
         }
 
-        public void AnnounceHudFocusFromHud(string label)
+        public void AnnounceHudFocusFromHud(string label, bool isVolumeSlider = false)
         {
-            Announce("Focused " + label + ". Press Enter or Space to activate.");
+            var instruction = isVolumeSlider
+                ? "Use the left and right arrow keys to adjust."
+                : "Press Enter or Space to activate.";
+            Announce("Focused " + label + ". " + instruction);
         }
 
         public void ResumeFromHud()
@@ -470,6 +519,14 @@ namespace SignalGarden
         {
             suppressPointerUntilRelease = true;
             ToggleSound();
+        }
+
+        public void SetSoundVolumeFromHud(float value)
+        {
+            suppressPointerUntilRelease = true;
+            soundVolume = Mathf.Clamp01(value);
+            Announce("Cue volume " + Mathf.RoundToInt(soundVolume * 100f) + " percent. " +
+                     (soundEnabled ? "Sound cues are on." : "Sound cues are muted."));
         }
 
         public void ToggleReducedMotionFromHud()
@@ -523,7 +580,9 @@ namespace SignalGarden
         private void ToggleSound()
         {
             soundEnabled = !soundEnabled;
-            statusText = soundEnabled ? "Sound cues on. Use the Sound button to mute them." : "Sound cues muted.";
+            statusText = soundEnabled
+                ? "Sound cues on at " + Mathf.RoundToInt(soundVolume * 100f) + " percent volume. Use the Sound button to mute them."
+                : "Sound cues muted. Visual and text feedback remain available.";
             Announce(statusText);
         }
 
@@ -534,26 +593,79 @@ namespace SignalGarden
             Announce(statusText);
         }
 
-        private void PlayFeedback(float frequency, float duration)
+        private void PlayFeedback(FeedbackCue cue)
         {
-            if (!soundEnabled || feedbackAudio == null)
+            if (!soundEnabled || soundVolume <= 0f || feedbackAudio == null)
             {
                 return;
             }
 
-            var sampleRate = 22050;
-            var sampleCount = Mathf.CeilToInt(sampleRate * duration);
-            var samples = new float[sampleCount];
-            for (var i = 0; i < sampleCount; i++)
+            var duration = CueDuration(cue);
+            AudioClip clip = null;
+            try
             {
-                var envelope = 1f - i / (float)sampleCount;
-                samples[i] = Mathf.Sin(2f * Mathf.PI * frequency * i / sampleRate) * envelope * 0.11f;
-            }
+                var sampleCount = Mathf.CeilToInt(FeedbackSampleRate * duration);
+                var samples = new float[sampleCount];
+                for (var i = 0; i < sampleCount; i++)
+                {
+                    var normalizedTime = i / (float)sampleCount;
+                    var frequency = CueFrequency(cue, normalizedTime);
+                    var attack = Mathf.Clamp01(normalizedTime / 0.035f);
+                    var release = Mathf.Clamp01((1f - normalizedTime) / 0.24f);
+                    var envelope = attack * release * (1f - normalizedTime * 0.25f);
+                    samples[i] = Mathf.Sin(2f * Mathf.PI * frequency * i / FeedbackSampleRate) * envelope * 0.12f;
+                }
 
-            var clip = AudioClip.Create("Garden signal cue", sampleCount, 1, sampleRate, false);
-            clip.SetData(samples, 0);
-            feedbackAudio.PlayOneShot(clip, 0.55f);
-            Destroy(clip, duration + 0.25f);
+                clip = AudioClip.Create("Signal Garden " + cue + " cue", sampleCount, 1, FeedbackSampleRate, false);
+                if (clip == null)
+                {
+                    return;
+                }
+
+                clip.SetData(samples, 0);
+                feedbackAudio.PlayOneShot(clip, soundVolume);
+            }
+            catch (System.Exception exception)
+            {
+                if (!audioFailureReported)
+                {
+                    Debug.LogWarning("Optional Signal Garden audio cue unavailable: " + exception.Message, this);
+                    audioFailureReported = true;
+                }
+            }
+            finally
+            {
+                if (clip != null)
+                {
+                    Destroy(clip, duration + 0.25f);
+                }
+            }
+        }
+
+        private static float CueDuration(FeedbackCue cue)
+        {
+            switch (cue)
+            {
+                case FeedbackCue.Interaction:
+                    return 0.075f;
+                case FeedbackCue.Recovery:
+                    return 0.15f;
+                default:
+                    return 0.22f;
+            }
+        }
+
+        private static float CueFrequency(FeedbackCue cue, float normalizedTime)
+        {
+            switch (cue)
+            {
+                case FeedbackCue.Interaction:
+                    return Mathf.Lerp(520f, 590f, normalizedTime);
+                case FeedbackCue.Recovery:
+                    return Mathf.Lerp(300f, 205f, normalizedTime);
+                default:
+                    return normalizedTime < 0.46f ? 659.25f : 880f;
+            }
         }
 
         private void Announce(string message)
@@ -570,6 +682,8 @@ namespace SignalGarden
             if (!focus && runState.phase == GardenPhase.Routing && runState.CancelRoute(RouteFailure.FocusInterrupted))
             {
                 statusText = RecoveryMessage(RouteFailure.FocusInterrupted);
+                sourceFeedbackPulseSeconds = InteractionPulseDuration;
+                PlayFeedback(FeedbackCue.Recovery);
                 SetLineMaterial(routeActiveMaterial);
                 UpdateRouteVisual();
                 Announce(statusText);
@@ -581,6 +695,8 @@ namespace SignalGarden
             if (paused && runState.phase == GardenPhase.Routing && runState.CancelRoute(RouteFailure.FocusInterrupted))
             {
                 statusText = RecoveryMessage(RouteFailure.FocusInterrupted);
+                sourceFeedbackPulseSeconds = InteractionPulseDuration;
+                PlayFeedback(FeedbackCue.Recovery);
                 SetLineMaterial(routeActiveMaterial);
                 UpdateRouteVisual();
                 Announce(statusText);

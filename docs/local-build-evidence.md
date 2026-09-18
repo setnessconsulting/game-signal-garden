@@ -192,3 +192,44 @@ browser-specific gate.
 `git diff --check` passed, and generated builds remain ignored. No production
 R2 upload, games-site catalog change, deployment, or Jira status update was
 made.
+
+## SG-08 feedback and audio addendum (2026-09-18)
+
+Unity `6000.6.0f1` built the SG-08 candidate successfully with URP `17.6.0`,
+Input System `1.19.0`, UGUI `2.6.0`, and Unity Test Framework `1.8.0`. The
+Unity Editor passed 24/24 EditMode tests and 5/5 PlayMode tests. The WebGL
+build report was `Success`, `10,560,659` bytes. Generated output remains
+ignored under `Builds/WebGL/`.
+
+The final local nested preview used cache key `63b4db6fcbfdd87e` and resolved these
+exact artifacts:
+
+| File | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `WebGL.loader.js` | 27,914 | `8E62AFD3D90B709331D8223954F6C3906287B9E8E8C7D852FD85435CD8A74AE3` |
+| `WebGL.data.br` | 3,635,386 | `8CAB72C9E89F55E08CABB66A93D2E1234FAFBEEFB5EDB9B4850F37517B9C9C3E` |
+| `WebGL.framework.js.br` | 66,617 | `BF630E2ED2DF06748BEF43376CD3B9CF39F5CA7F00023B1D28646448E1899255` |
+| `WebGL.wasm.br` | 6,810,233 | `492B0F4228524D7814AF51168D5A78C6005A7E1DE1099371F45667E04DA2FC7F` |
+
+The local host returned `200` for the play route and each artifact. It served
+the loader as `text/javascript; charset=utf-8` without compression, the data
+as `application/octet-stream` with `Content-Encoding: br`, the framework as
+`text/javascript; charset=utf-8` with `Content-Encoding: br`, and the WASM as
+`application/wasm` with `Content-Encoding: br`. The browser interaction record
+is [docs/sg-08-browser-review.md](sg-08-browser-review.md).
+
+The visible in-app browser preview exercised pause/resume, mute, mouse and
+keyboard volume changes, reduced motion, blind-spur recovery, and retry. On the
+final build, the exact 1920×1080 render completed a 30-second frame-rate sample
+with a 74.6 fps minimum and 86.9 fps average (`PASS`). The tab completed all
+30/30 samples while visible in the in-app browser. This is a local preview pass;
+it does not replace an independent desktop Chrome/Edge qualification or
+production CDN measurement. Earlier unpresented/agent-controlled reads below 60
+fps, including the background/occlusion-clamped Chrome run, remain recorded in
+the browser review and are not treated as representative foreground failures.
+
+The only browser console warning was the optional URP Edge Adaptive Spatial
+Upsampling shader being stripped for WebGL; no runtime errors appeared.
+
+The build and repository checks did not upload to production R2, change the
+games-site catalog, deploy, or modify Jira status.

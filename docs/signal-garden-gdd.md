@@ -53,8 +53,8 @@ Invalid, partial, canceled, or focus-interrupted routes never require a page rel
 - Objective, controls, status, pause, and replay text are presented in the game and mirrored into a focusable polite live region for screen readers. The spatial route itself remains visual.
 - The UGUI HUD covers objective/start, active routing, invalid/recovery, verified completion, reset/replay, pause/resume, mute, and reduced-motion states. Buttons use automatic keyboard navigation with readable labels and desktop targets of at least 40 px.
 - Phase text, shaped panels, and status copy accompany accent colors; no state depends on color or audio alone. The normalized snapshot and design tokens are in `SourceArt/Figma/SignalGardenHud/`, with the evidence classification in [docs/sg-06-ui-record.md](sg-06-ui-record.md).
-- Reduced-motion toggle freezes the small ambient source/receiver pulse; camera panning is direct, bounded, and has no inertia.
-- No music. Optional success and recovery tones are off by default and can be muted or enabled in play.
+- Reduced-motion toggle freezes the ambient source/receiver pulse, one-shot feedback pulses, and verified receiver rotation; phase text, route feedback, and completion state remain visible. Camera panning is direct, bounded, and has no inertia.
+- No music. Original optional interaction, recovery, and success cues are generated in code, off by default, muteable, and adjustable from 0–100% volume. Visual and text feedback always communicate the same state; cue playback can fail without blocking routing or completion. See [the SG-08 feedback record](sg-08-feedback-record.md).
 - English only. Rive is explicitly declined for v1; the existing Unity-native source/receiver pulse and verified receiver rotation remain, with reduced-motion behavior. No `.riv` asset or Rive runtime is in the v1 release dependency list; see [the SG-07 motion decision](sg-07-motion-decision.md). Live Figma plugin import and UI Toolkit consumption remain deferred; SG-06's normalized handoff and UGUI implementation are in scope. Blender production beyond the SG-05 receiver remains deferred.
 
 ### Quality bars
