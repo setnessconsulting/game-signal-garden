@@ -29,6 +29,8 @@ Run these from PowerShell after Unity has opened the project once and resolved p
 
 The WebGL build is written under ignored Builds/WebGL/. Never commit the generated build. The tests/host-preview harness serves the build at /signal-garden/play/ and uses the same /game-assets/signal-garden/<version>/Build/ asset-base shape as the games site. See docs/local-build-evidence.md for the most recent local build identity and checks.
 
+GitHub Actions runs credential-free repository checks on pull requests. See [docs/ci-validation.md](docs/ci-validation.md) for the hosted coverage and the Unity/WebGL checks it classifies as `NOT_RUN`.
+
 ## Scope and release contract
 
 - [Game vision and GDD](docs/signal-garden-gdd.md)
