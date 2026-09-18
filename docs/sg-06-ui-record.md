@@ -62,4 +62,4 @@ Phase changes select the recovery button or modal primary button when one is rea
 
 ## Boundaries and next issue
 
-This record does not qualify sustained 60 fps, human objective/completion timing, physical focus-loss behavior, production CDN load, or owner visual approval; those remain SG-09/SG-11 and release gates. SG-07 records the already-established v1 decision to decline Rive, followed by SG-08 feedback polish. No R2 object, games-site catalog entry, deployment, or Jira status was changed.
+This record does not qualify sustained 60 fps, human objective/completion timing, physical focus-loss behavior, production CDN load, or owner visual approval; those remain SG-09/SG-11 and release gates. The SG-07 decision to decline Rive for v1 is recorded in [docs/sg-07-motion-decision.md](sg-07-motion-decision.md); SG-08 feedback polish follows. No R2 object, games-site catalog entry, deployment, or Jira status was changed.
