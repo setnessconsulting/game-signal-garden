@@ -34,7 +34,6 @@ The game targets a 60 fps application frame rate and has an existing visible-pre
 
 ## Commands and local procedures
 
-The Unity test and WebGL build commands, nested host harness, and resolution/performance query are documented in [the repository README](../README.md) and [host-preview instructions](../tests/host-preview/README.md). The qualification run must use the host harness at `/signal-garden/play/`, which serves exact artifacts below the nested asset base. Generated builds remain ignored under `Builds/WebGL/`.
+The Unity test and WebGL build commands, nested host harness, and resolution/performance query are documented in [the repository README](../README.md) and [host-preview instructions](../tests/host-preview/README.md). The exact SG-09 build hashes and HTTP results are in [the SG-09 build record](sg-09-build-evidence.md). The qualification run must use the host harness at `/signal-garden/play/`, which serves exact artifacts below the nested asset base. Generated builds remain ignored under `Builds/WebGL/`.
 
 The objective-under-30-seconds and completion-under-one-minute targets are assessed with the existing [fresh-player playtest script](playtest-script.md). They require human participants and are not inferred from automated route tests or Unity's deterministic state transitions.
-

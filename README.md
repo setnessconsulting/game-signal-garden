@@ -40,6 +40,7 @@ GitHub Actions runs credential-free repository checks on pull requests. See [doc
 - [SG-07 motion and Rive decision](docs/sg-07-motion-decision.md)
 - [SG-08 feedback and audio record](docs/sg-08-feedback-record.md)
 - [SG-09 qualification matrix](docs/sg-09-qualification-matrix.md)
+- [SG-09 build evidence](docs/sg-09-build-evidence.md)
 - [Fresh-player playtest script](docs/playtest-script.md)
 - [GAME-278 Epic](https://setnessconsulting.atlassian.net/browse/GAME-278)
 - [GAME-279 SG-01](https://setnessconsulting.atlassian.net/browse/GAME-279) · [GAME-280 SG-02](https://setnessconsulting.atlassian.net/browse/GAME-280) · [GAME-281 SG-03](https://setnessconsulting.atlassian.net/browse/GAME-281) · [GAME-282 SG-04](https://setnessconsulting.atlassian.net/browse/GAME-282)
