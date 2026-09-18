@@ -152,8 +152,9 @@ remaining owner-gated qualifications are in the SG-06 browser record.
 API-37 `hud` profile validation passed offline with zero blocking findings.
 Live qualification was attempted and classified `BLOCKED` because no Figma
 credential was available. No generated WebGL files are tracked, and no R2,
-games-site, deployment, or Jira mutation was made. After SG-06 review, the
-next focused issue is GAME-285 / SG-07 (record the v1 Rive decision).
+games-site, deployment, or Jira mutation was made at capture time. The next
+focused issue was GAME-285 / SG-07; its v1 Rive decision is now recorded in
+[sg-07-motion-decision.md](sg-07-motion-decision.md).
 
 ## SG-06 1920×1080 follow-up (2026-09-17)
 

@@ -55,7 +55,7 @@ Invalid, partial, canceled, or focus-interrupted routes never require a page rel
 - Phase text, shaped panels, and status copy accompany accent colors; no state depends on color or audio alone. The normalized snapshot and design tokens are in `SourceArt/Figma/SignalGardenHud/`, with the evidence classification in [docs/sg-06-ui-record.md](sg-06-ui-record.md).
 - Reduced-motion toggle freezes the small ambient source/receiver pulse; camera panning is direct, bounded, and has no inertia.
 - No music. Optional success and recovery tones are off by default and can be muted or enabled in play.
-- English only. No Rive dependency in this slice. Live Figma plugin import and UI Toolkit consumption remain deferred; SG-06's normalized handoff and UGUI implementation are in scope. Blender production beyond the SG-05 receiver remains deferred.
+- English only. Rive is explicitly declined for v1; the existing Unity-native source/receiver pulse and verified receiver rotation remain, with reduced-motion behavior. No `.riv` asset or Rive runtime is in the v1 release dependency list; see [the SG-07 motion decision](sg-07-motion-decision.md). Live Figma plugin import and UI Toolkit consumption remain deferred; SG-06's normalized handoff and UGUI implementation are in scope. Blender production beyond the SG-05 receiver remains deferred.
 
 ### Quality bars
 
@@ -80,7 +80,7 @@ These references set qualities to check, not designs to copy:
 
 Included: one SignalGarden scene, one source, one receiver, one route, one short dead end, one player, desktop browser input, accessible status text, pause/cancel/recovery/reset, local automated rules tests, one repeatable playtest script, and a local WebGL build.
 
-Excluded: persistent progression, multiple puzzles or a campaign, multiplayer, accounts, monetization, leaderboards, remote analytics, LevelBest integration, localization, music, Rive runtime integration, live Figma plugin import, UI Toolkit consumption, further Blender source production beyond the SG-05 receiver, and production upload/catalog promotion.
+Excluded: persistent progression, multiple puzzles or a campaign, multiplayer, accounts, monetization, leaderboards, remote analytics, LevelBest integration, localization, music, Rive runtime and `.riv` production assets (declined for v1 in SG-07), live Figma plugin import, UI Toolkit consumption, further Blender source production beyond the SG-05 receiver, and production upload/catalog promotion.
 
 ## Technical and release notes
 
