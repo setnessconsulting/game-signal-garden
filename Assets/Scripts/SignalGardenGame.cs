@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace SignalGarden
@@ -22,6 +23,7 @@ namespace SignalGarden
         [SerializeField] private Material routeFailureMaterial;
         [SerializeField] private Material routeSuccessMaterial;
         [SerializeField] private AudioSource feedbackAudio;
+        [SerializeField] private SignalGardenHud hud;
 
         private readonly GardenRunState runState = new GardenRunState();
         private readonly List<Vector2> routeTrail = new List<Vector2>(RouteRules.StandardTrail);
@@ -35,17 +37,6 @@ namespace SignalGarden
         private bool soundEnabled;
         private bool reducedMotion;
         private string statusText = "Ready. Drag from the coral source to begin.";
-        private Texture2D panelTexture;
-        private Texture2D buttonTexture;
-        private Texture2D buttonHoverTexture;
-        private Texture2D overlayTexture;
-        private GUIStyle eyebrowStyle;
-        private GUIStyle titleStyle;
-        private GUIStyle bodyStyle;
-        private GUIStyle statusStyle;
-        private GUIStyle buttonStyle;
-        private int styleHeight = -1;
-        private int optionHeight = -1;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         [DllImport("__Internal")]
@@ -55,12 +46,32 @@ namespace SignalGarden
         private static extern void SignalGardenInstallPointerCapture();
 
         [DllImport("__Internal")]
-        private static extern void SignalGardenReportFrameRate(int framesPerSecond);
+        private static extern void SignalGardenReportFrameRate(float framesPerSecond);
 #endif
 
         public GardenRunState RunState
         {
             get { return runState; }
+        }
+
+        public GardenPhase Phase
+        {
+            get { return runState.phase; }
+        }
+
+        public string StatusText
+        {
+            get { return statusText; }
+        }
+
+        public bool SoundEnabled
+        {
+            get { return soundEnabled; }
+        }
+
+        public bool ReducedMotionEnabled
+        {
+            get { return reducedMotion; }
         }
 
         public void Configure(
@@ -109,6 +120,16 @@ namespace SignalGarden
             if (cameraFocus != null)
             {
                 cameraHomeFocus = cameraFocus.position;
+            }
+
+            if (hud == null)
+            {
+                hud = FindAnyObjectByType<SignalGardenHud>();
+            }
+
+            if (hud != null)
+            {
+                hud.Bind(this);
             }
 
             Application.targetFrameRate = 60;
@@ -160,7 +181,7 @@ namespace SignalGarden
             }
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-            SignalGardenReportFrameRate(Mathf.RoundToInt(measurementFrames / measurementSeconds));
+            SignalGardenReportFrameRate(measurementFrames / measurementSeconds);
 #endif
             measurementFrames = 0;
             measurementSeconds = 0f;
@@ -413,6 +434,50 @@ namespace SignalGarden
             }
         }
 
+        public void SuppressPointerUntilRelease()
+        {
+            suppressPointerUntilRelease = true;
+        }
+
+        public void AnnounceHudFocusFromHud(string label)
+        {
+            Announce("Focused " + label + ". Press Enter or Space to activate.");
+        }
+
+        public void ResumeFromHud()
+        {
+            suppressPointerUntilRelease = true;
+            ResumeGame();
+        }
+
+        public void ResetFromHud()
+        {
+            suppressPointerUntilRelease = true;
+            ResetGame();
+        }
+
+        public void RetryFromHud()
+        {
+            suppressPointerUntilRelease = true;
+            if (runState.phase == GardenPhase.Recovery)
+            {
+                statusText = "Begin at the coral source and follow the gold trail.";
+                Announce(statusText);
+            }
+        }
+
+        public void ToggleSoundFromHud()
+        {
+            suppressPointerUntilRelease = true;
+            ToggleSound();
+        }
+
+        public void ToggleReducedMotionFromHud()
+        {
+            suppressPointerUntilRelease = true;
+            ToggleReducedMotion();
+        }
+
         private void ResumeGame()
         {
             if (!runState.Resume())
@@ -524,269 +589,9 @@ namespace SignalGarden
 
         private bool IsPointerOverHud(Vector2 pointerPosition)
         {
-            var guiPoint = new Vector2(pointerPosition.x, Screen.height - pointerPosition.y);
-            var scale = GetUiScale();
-            var margin = 26f * scale;
-            var titlePanel = new Rect(margin, margin, 560f * scale, 164f * scale);
-            var soundButton = new Rect(Screen.width - 378f * scale, margin, 168f * scale, 54f * scale);
-            var motionButton = new Rect(Screen.width - 198f * scale, margin, 172f * scale, 54f * scale);
-            var statusPanel = new Rect(margin, Screen.height - 104f * scale, Screen.width - margin * 2f, 76f * scale);
-            return titlePanel.Contains(guiPoint) ||
-                   soundButton.Contains(guiPoint) ||
-                   motionButton.Contains(guiPoint) ||
-                   statusPanel.Contains(guiPoint) ||
+            return (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) ||
                    runState.phase == GardenPhase.Paused ||
                    runState.phase == GardenPhase.Verified;
-        }
-
-        private static float GetUiScale()
-        {
-            var heightScale = Mathf.Clamp(Screen.height / 1080f, 0.62f, 1.15f);
-            var widthScale = Mathf.Clamp(Screen.width / 1680f, 0.62f, 1.15f);
-            return Mathf.Min(heightScale, widthScale);
-        }
-
-        private void OnGUI()
-        {
-            if (Screen.width < 500 || Screen.height < 320)
-            {
-                return;
-            }
-
-            EnsureUiTextures();
-            var scale = GetUiScale();
-            EnsureGuiStyles(scale);
-            DrawTopHud(scale);
-            DrawStatusHud(scale);
-
-            if (runState.phase == GardenPhase.Paused)
-            {
-                DrawPauseOverlay(scale);
-            }
-            else if (runState.phase == GardenPhase.Verified)
-            {
-                DrawSuccessOverlay(scale);
-            }
-        }
-
-        private void DrawTopHud(float scale)
-        {
-            var margin = 26f * scale;
-            var card = new Rect(margin, margin, 560f * scale, 164f * scale);
-            DrawPanel(card);
-            GUI.color = new Color(0.42f, 0.86f, 0.74f, 0.92f);
-            GUI.DrawTexture(new Rect(card.x + 1f, card.y + 20f * scale, 4f * scale, 116f * scale), Texture2D.whiteTexture);
-            GUI.color = Color.white;
-            GUI.Label(new Rect(card.x + 22f * scale, card.y + 14f * scale, card.width - 42f * scale, 26f * scale),
-                "SIGNAL GARDEN  /  FIELD STUDY 01", eyebrowStyle);
-            GUI.Label(new Rect(card.x + 22f * scale, card.y + 45f * scale, card.width - 42f * scale, 40f * scale),
-                "Wake the garden with one clear line.", titleStyle);
-            GUI.Label(new Rect(card.x + 22f * scale, card.y + 91f * scale, card.width - 42f * scale, 54f * scale),
-                "Drag coral to blue along the gold stones. WASD pans. Esc cancels or pauses.", bodyStyle);
-
-            var soundRect = new Rect(Screen.width - 378f * scale, margin, 168f * scale, 54f * scale);
-            var motionRect = new Rect(Screen.width - 198f * scale, margin, 172f * scale, 54f * scale);
-            if (GUI.Button(soundRect, soundEnabled ? "Sound cues: On" : "Sound cues: Off", buttonStyle))
-            {
-                ToggleSound();
-            }
-
-            if (GUI.Button(motionRect, reducedMotion ? "Motion: Reduced" : "Motion: Full", buttonStyle))
-            {
-                ToggleReducedMotion();
-            }
-        }
-
-        private void DrawStatusHud(float scale)
-        {
-            var margin = 26f * scale;
-            var card = new Rect(margin, Screen.height - 104f * scale, Screen.width - margin * 2f, 76f * scale);
-            DrawPanel(card);
-            var retryWidth = runState.phase == GardenPhase.Recovery ? 164f * scale : 0f;
-            GUI.Label(new Rect(card.x + 22f * scale, card.y + 11f * scale, card.width - retryWidth - 48f * scale, 54f * scale),
-                statusText, statusStyle);
-
-            if (runState.phase == GardenPhase.Recovery)
-            {
-                var retry = new Rect(card.xMax - 176f * scale, card.y + 12f * scale, 158f * scale, 52f * scale);
-                if (GUI.Button(retry, "Try again", buttonStyle))
-                {
-                    suppressPointerUntilRelease = true;
-                    statusText = "Begin at the coral source and follow the gold trail.";
-                    Announce(statusText);
-                }
-            }
-        }
-
-        private void DrawPauseOverlay(float scale)
-        {
-            GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), overlayTexture);
-            var width = 440f * scale;
-            var height = 310f * scale;
-            var card = new Rect((Screen.width - width) * 0.5f, (Screen.height - height) * 0.5f, width, height);
-            DrawPanel(card);
-            GUI.Label(new Rect(card.x + 34f * scale, card.y + 28f * scale, width - 68f * scale, 34f * scale),
-                "GARDEN AT REST", eyebrowStyle);
-            GUI.Label(new Rect(card.x + 34f * scale, card.y + 72f * scale, width - 68f * scale, 52f * scale),
-                "Paused", titleStyle);
-            GUI.Label(new Rect(card.x + 34f * scale, card.y + 132f * scale, width - 68f * scale, 56f * scale),
-                "Your turn is safe. Resume, or reset the garden for the next player.", bodyStyle);
-            var resume = new Rect(card.x + 34f * scale, card.y + 204f * scale, width - 68f * scale, 44f * scale);
-            var replay = new Rect(card.x + 34f * scale, card.y + 258f * scale, width - 68f * scale, 36f * scale);
-            if (GUI.Button(resume, "Resume  /  Esc", buttonStyle))
-            {
-                suppressPointerUntilRelease = true;
-                ResumeGame();
-            }
-
-            if (GUI.Button(replay, "Restart this turn", buttonStyle))
-            {
-                suppressPointerUntilRelease = true;
-                ResetGame();
-            }
-        }
-
-        private void DrawSuccessOverlay(float scale)
-        {
-            GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), overlayTexture);
-            var width = 480f * scale;
-            var height = 292f * scale;
-            var card = new Rect((Screen.width - width) * 0.5f, (Screen.height - height) * 0.5f, width, height);
-            DrawPanel(card);
-            GUI.Label(new Rect(card.x + 32f * scale, card.y + 28f * scale, width - 64f * scale, 34f * scale),
-                "A SIGNAL TAKES ROOT", eyebrowStyle);
-            GUI.Label(new Rect(card.x + 32f * scale, card.y + 70f * scale, width - 64f * scale, 52f * scale),
-                "The garden is awake.", titleStyle);
-            GUI.Label(new Rect(card.x + 32f * scale, card.y + 128f * scale, width - 64f * scale, 42f * scale),
-                "A new player can take the next turn here.", bodyStyle);
-            var replay = new Rect(card.x + 32f * scale, card.y + 192f * scale, width - 64f * scale, 56f * scale);
-            if (GUI.Button(replay, "Play again", buttonStyle))
-            {
-                suppressPointerUntilRelease = true;
-                ResetGame();
-            }
-
-            GUI.Label(new Rect(card.x + 32f * scale, card.y + 250f * scale, width - 64f * scale, 28f * scale),
-                "Esc pauses  ·  use the page controls to leave", bodyStyle);
-        }
-
-        private void DrawPanel(Rect rect)
-        {
-            GUI.DrawTexture(rect, panelTexture);
-            GUI.color = new Color(0.66f, 0.88f, 0.80f, 0.16f);
-            GUI.DrawTexture(new Rect(rect.x, rect.y, rect.width, 1f), Texture2D.whiteTexture);
-            GUI.color = Color.white;
-        }
-
-        private void EnsureGuiStyles(float scale)
-        {
-            var scaleKey = Mathf.RoundToInt(scale * 1000f);
-            if (styleHeight == Screen.height && optionHeight == scaleKey)
-            {
-                return;
-            }
-
-            styleHeight = Screen.height;
-            optionHeight = scaleKey;
-            eyebrowStyle = CreateStyle(13, scale, FontStyle.Bold, TextAnchor.MiddleLeft, new Color(0.66f, 0.88f, 0.80f));
-            titleStyle = CreateStyle(25, scale, FontStyle.Bold, TextAnchor.MiddleLeft, new Color(0.96f, 0.97f, 0.87f));
-            bodyStyle = CreateStyle(15, scale, FontStyle.Normal, TextAnchor.MiddleLeft, new Color(0.81f, 0.87f, 0.81f));
-            statusStyle = CreateStyle(16, scale, FontStyle.Normal, TextAnchor.MiddleLeft, new Color(0.94f, 0.93f, 0.82f));
-            buttonStyle = new GUIStyle(GUI.skin.button)
-            {
-                fontSize = Mathf.RoundToInt(15f * scale),
-                fontStyle = FontStyle.Bold,
-                alignment = TextAnchor.MiddleCenter,
-                wordWrap = false
-            };
-            buttonStyle.normal.textColor = new Color(0.93f, 0.97f, 0.90f);
-            buttonStyle.hover.textColor = Color.white;
-            buttonStyle.active.textColor = Color.white;
-            buttonStyle.normal.background = buttonTexture;
-            buttonStyle.hover.background = buttonHoverTexture;
-            buttonStyle.active.background = buttonHoverTexture;
-            buttonStyle.border = new RectOffset(12, 12, 12, 12);
-        }
-
-        private GUIStyle CreateStyle(int fontSize, float scale, FontStyle weight, TextAnchor alignment, Color color)
-        {
-            var style = new GUIStyle(GUI.skin.label)
-            {
-                fontSize = Mathf.RoundToInt(fontSize * scale),
-                fontStyle = weight,
-                alignment = alignment,
-                wordWrap = true,
-                richText = false
-            };
-            style.normal.textColor = color;
-            return style;
-        }
-
-        private void EnsureUiTextures()
-        {
-            if (panelTexture != null)
-            {
-                return;
-            }
-
-            panelTexture = CreateRoundedTexture(new Color(0.035f, 0.085f, 0.092f, 0.94f), new Color(0.66f, 0.88f, 0.80f, 0.30f));
-            buttonTexture = CreateRoundedTexture(new Color(0.10f, 0.23f, 0.22f, 0.98f), new Color(0.44f, 0.82f, 0.70f, 0.68f));
-            buttonHoverTexture = CreateRoundedTexture(new Color(0.16f, 0.36f, 0.31f, 1f), new Color(0.69f, 0.94f, 0.77f, 0.96f));
-            overlayTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
-            overlayTexture.SetPixel(0, 0, new Color(0.015f, 0.035f, 0.044f, 0.72f));
-            overlayTexture.Apply();
-            panelTexture.hideFlags = HideFlags.HideAndDontSave;
-            buttonTexture.hideFlags = HideFlags.HideAndDontSave;
-            buttonHoverTexture.hideFlags = HideFlags.HideAndDontSave;
-            overlayTexture.hideFlags = HideFlags.HideAndDontSave;
-        }
-
-        private static Texture2D CreateRoundedTexture(Color fill, Color edge)
-        {
-            const int size = 64;
-            const float radius = 11f;
-            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
-            texture.wrapMode = TextureWrapMode.Clamp;
-            texture.filterMode = FilterMode.Bilinear;
-            var pixels = new Color[size * size];
-            for (var y = 0; y < size; y++)
-            {
-                for (var x = 0; x < size; x++)
-                {
-                    var dx = Mathf.Max(radius - x, 0f, x - (size - 1f - radius));
-                    var dy = Mathf.Max(radius - y, 0f, y - (size - 1f - radius));
-                    var outside = Mathf.Sqrt(dx * dx + dy * dy) - radius;
-                    if (outside > 1.5f)
-                    {
-                        pixels[y * size + x] = new Color(0f, 0f, 0f, 0f);
-                    }
-                    else if (x < 2 || y < 2 || x >= size - 2 || y >= size - 2)
-                    {
-                        pixels[y * size + x] = edge;
-                    }
-                    else
-                    {
-                        pixels[y * size + x] = fill;
-                    }
-                }
-            }
-
-            texture.SetPixels(pixels);
-            texture.Apply();
-            return texture;
-        }
-
-        private void OnEnable()
-        {
-            EnsureUiTextures();
-        }
-
-        private void OnDestroy()
-        {
-            if (panelTexture != null) Destroy(panelTexture);
-            if (buttonTexture != null) Destroy(buttonTexture);
-            if (buttonHoverTexture != null) Destroy(buttonHoverTexture);
-            if (overlayTexture != null) Destroy(overlayTexture);
         }
     }
 }

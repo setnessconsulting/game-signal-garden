@@ -111,3 +111,83 @@ The loader names those exact four files. The local host harness served them bene
 The final EditMode run passed all 18 tests: 11 existing route/state cases and 7 SG-05 provenance cases, including missing and stale source, mismatched FBX, GUID mismatch, missing prefab, and budget failure. API-10 read-only inspection and `prop` validation passed at commit `9783b64379c5bb3220cabda7018056d3fbef2a0c`; the auxiliary GLB and handoff manifest remain ignored validation artifacts.
 
 The fresh Chrome preview at `http://127.0.0.1:4175/signal-garden/play/` rendered the imported receiver, accepted source input, showed blind-spur recovery, and displayed pause/resume and restart controls. The [SG-05 browser review record](sg-05-browser-review.md) captures the visual evidence and keeps human timing, sustained 60 fps, focus-loss, and owner approval as separate gates. The generated build remains ignored under `Builds/WebGL/`; no production R2 object, site catalog entry, deployment, or Jira status changed.
+
+## SG-06 UGUI HUD addendum (2026-09-17)
+
+The SG-06 branch replaces the first slice's IMGUI presentation with a
+serialized UGUI Canvas HUD. The normalized design handoff, explicit UGUI
+exception, and API-37 evidence are recorded in
+[docs/sg-06-ui-record.md](sg-06-ui-record.md). The browser visual review is
+captured in [docs/sg-06-browser-review.md](sg-06-browser-review.md).
+
+The Unity `6000.6.0f1` build used URP `17.6.0`, Input System `1.19.0`, UGUI
+`2.6.0`, and Unity Test Framework `1.8.0`. Final EditMode coverage passed 24
+of 24 tests (11 existing route/state cases, 5 HUD phase-label cases, 1 HUD
+binding case, and 7 SG-05 provenance cases). Final PlayMode coverage passed 1
+of 1 scene binding and keyboard focus test, including forward/reverse traversal
+of the HUD and pause actions. The final WebGL build reported `Success`,
+`10,557,900` bytes, and remains ignored under `Builds/WebGL/`. Its Unity log is
+`Artifacts/SG-06/webgl-build-final2.log`.
+
+| File | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `WebGL.loader.js` | 27,914 | `FFE688F245D8A0F86A01AD97C69768AE5DA05534AC43657731CF5CB47C1C50FF` |
+| `WebGL.data.br` | 3,633,110 | `EA4CCC8307200557A927333987763B3F194DCE44BC2CE741D9D987B96D5C51FB` |
+| `WebGL.framework.js.br` | 66,565 | `7A3B10FF77AA44F32185F084B9EE41AA21EE01A106446223893D1AF7B44207D9` |
+| `WebGL.wasm.br` | 6,809,802 | `4F7C5A208A63E64357F37CD3D276B50E98584EBEDB1689AEA00C1539E41DC3A6` |
+
+The final local host at `http://127.0.0.1:4176/signal-garden/play/` returned `200`
+for the nested play route and all four artifacts. The loader and framework
+returned `text/javascript; charset=utf-8`, the data file returned
+`application/octet-stream`, and the WASM file returned `application/wasm`;
+each `.br` artifact returned `Content-Encoding: br`. The browser rendered the
+new HUD and imported receiver at the nested route. At a `667×912` browser
+viewport, Tab/Shift+Tab/Enter traversal announced the sound and motion controls,
+traversed `Resume / Esc` and `Restart this turn` in both directions, resumed
+the game, and toggled sound and reduced motion. The browser reported no runtime
+errors; it reported the optional URP FSR upscaling shader unavailable/stripped
+for WebGL, so that post-processing pass is skipped. The full observations and
+remaining owner-gated qualifications are in the SG-06 browser record.
+
+API-37 `hud` profile validation passed offline with zero blocking findings.
+Live qualification was attempted and classified `BLOCKED` because no Figma
+credential was available. No generated WebGL files are tracked, and no R2,
+games-site, deployment, or Jira mutation was made. After SG-06 review, the
+next focused issue is GAME-285 / SG-07 (record the v1 Rive decision).
+
+## SG-06 1920×1080 follow-up (2026-09-17)
+
+Unity `6000.6.0f1` built the SG-06 WebGL candidate successfully with URP
+`17.6.0`, Input System `1.19.0`, UGUI `2.6.0`, and Unity Test Framework
+`1.8.0`. The local Unity build reported `10,480,240` bytes and remains ignored
+under `Builds/WebGL/`. The local preview's cache identity is
+`e9867b39eceb012f`, the first 16 hexadecimal characters of the SHA-256 over
+the ordered four-artifact hash manifest.
+
+| File | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `WebGL.loader.js` | 27,914 | `6DA2C7385B7FD9A2EC4F634A4B40A32604A6BA8ED383494DA3EC6FFECD467B32` |
+| `WebGL.data.br` | 3,632,706 | `716B7AE8685465B47A0F29CB25D93284B43AB4794796F32242388391CA3F642F` |
+| `WebGL.framework.js.br` | 66,617 | `BF630E2ED2DF06748BEF43376CD3B9CF39F5CA7F00023B1D28646448E1899255` |
+| `WebGL.wasm.br` | 6,732,494 | `4B3EB9D1AAD281B474D8572C8AF5B0821DF46C0D997392930FD6812364F82476` |
+
+Final EditMode coverage passed 24/24 tests; PlayMode passed 1/1. The local
+nested route and all four build files returned HTTP 200. The loader returned
+`text/javascript; charset=utf-8` without compression; the data file returned
+`application/octet-stream`, the framework returned
+`text/javascript; charset=utf-8`, and the WASM returned `application/wasm`.
+Each `.br` file returned `Content-Encoding: br`.
+
+The visible in-app browser completed the five-second warmup and all 30
+one-second samples at an exact 1920×1080 canvas: minimum 60.0 fps, mean 60.1
+fps, `PASS`. A separate desktop Chrome automation run at an exact
+1920×1080 viewport and canvas completed its samples but reported 1.0 fps
+minimum/mean. No runtime error appeared; the only console warning was the
+optional URP FSR shader being stripped. Edge was unavailable. Treat the
+desktop Chrome/Edge 60 fps qualification as unresolved until the owner's
+desktop browser confirms it; the in-app preview alone does not close that
+browser-specific gate.
+
+`git diff --check` passed, and generated builds remain ignored. No production
+R2 upload, games-site catalog change, deployment, or Jira status update was
+made.

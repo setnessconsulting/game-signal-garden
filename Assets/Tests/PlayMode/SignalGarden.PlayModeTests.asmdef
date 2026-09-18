@@ -1,0 +1,19 @@
+{
+  "name": "SignalGarden.PlayModeTests",
+  "rootNamespace": "SignalGarden.Tests",
+  "references": [
+    "SignalGarden.Runtime"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false,
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

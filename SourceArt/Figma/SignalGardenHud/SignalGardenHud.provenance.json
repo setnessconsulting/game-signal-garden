@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.0",
+  "kind": "signal-garden-ui-provenance",
+  "asset_id": "signal-garden.hud.sg06",
+  "source": {
+    "kind": "repository-owned-offline-fixture",
+    "snapshot_path": "SourceArt/Figma/SignalGardenHud/SignalGardenHud.snapshot.json",
+    "snapshot_sha256": "112E68786473F21CF2FF9E21585F522FE9AEA33529908A2FA8AEC272DC2F75AB",
+    "snapshot_bytes": 13463,
+    "figma_file_key": "fixture-signal-garden-sg06-hud-001",
+    "figma_version": "1",
+    "figma_node_id": "1:1",
+    "figma_node_name": "Signal Garden HUD",
+    "component_identity": [
+      "component:status-pill",
+      "component:primary-action",
+      "component:settings-toggle",
+      "component:phase-badge"
+    ],
+    "token_identity": "SignalGardenHud.design-system.json@1.0",
+    "live_file_available": false,
+    "live_file_reason": "No Figma connector or credential was available during SG-06 implementation."
+  },
+  "design_system": {
+    "path": "SourceArt/Figma/SignalGardenHud/SignalGardenHud.design-system.json",
+    "sha256": "9DA144B0746ED9C235AED1E65967279969B321F7DFFBDD27E3C188702176DD05",
+    "reference_viewport": "1920x1080",
+    "minimum_interactive_target_px": 40,
+    "state_communication": "Text, shape, and feedback accompany color in every state."
+  },
+  "api_37": {
+    "tool": "project-figma-api",
+    "repository_path": "../02-setnessconsulting/project-figma-api",
+    "repository_sha": "914d8891c87d213f2f964d374ca30ea0da732d4a",
+    "version": "0.1.2",
+    "validation_profile": "hud",
+    "offline_validation": {
+      "command": "figma-api --repo-root <project-figma-api> validate screen --snapshot <snapshot> --profile hud",
+      "result": "PASS",
+      "blocking_count": 0,
+      "unsupported_findings": [
+        "contrast calculation is unsupported when colors are not determinate in the normalized snapshot; token contrast intent is recorded in the design-system file"
+      ]
+    },
+    "fixture_export": {
+      "command": "figma-api --repo-root <project-figma-api> export manifest --fixture <snapshot> --output <temporary> --profile png-1x",
+      "result": "PASS",
+      "asset_count": 10,
+      "manifest_path": "SourceArt/Figma/SignalGardenHud/SignalGardenHud.export-manifest.json",
+      "manifest_sha256": "CBD1084C0B9B33773A8EBE4F8F584587B9B33314E8F17D9D4DFF884D76AE7F5B"
+    },
+    "handoff": {
+      "command": "figma-api --repo-root <project-figma-api> handoff unity --snapshot <snapshot> --export-manifest <manifest> --output <temporary>",
+      "result": "PASS",
+      "manifest_path": "SourceArt/Figma/SignalGardenHud/SignalGardenHud.handoff.json",
+      "manifest_sha256": "2603B415BDDBE36C8045B45A0FD122FECDD4B226C721F78E7FB0D475992FD60D",
+      "producer_readiness": "manifest_only",
+      "consumer_profile": "unity-ui-toolkit",
+      "consumer_blockers": [
+        "API-29",
+        "API-30"
+      ]
+    },
+    "live_qualification": {
+      "result": "BLOCKED",
+      "command": "figma-api --repo-root <project-figma-api> doctor --live",
+      "reason": "No Figma credential found in Credential Manager or FIGMA_* environment variables; live REST/plugin/MCP lanes were not executed."
+    }
+  },
+  "unity": {
+    "runtime_stack": "UGUI Canvas",
+    "ui_toolkit_exception": {
+      "status": "APPROVED_FOR_SG06",
+      "profile": "unity-ui-toolkit",
+      "reason": "The game already uses UGUI and the project-figma-api UI Toolkit lane is not qualified for this runtime. The normalized handoff remains the design contract; Unity consumes the serialized Canvas implementation."
+    },
+    "unity_editor": "6000.6.0f1",
+    "ugui_package": "2.6.0",
+    "script_path": "Assets/Scripts/SignalGardenHud.cs",
+    "script_guid": "dfe338550134e6f45a5b225418b0a232",
+    "editor_installer": "Assets/Editor/SignalGardenHudEditor.cs",
+    "scene_path": "Assets/Scenes/SignalGarden.unity",
+    "scene_guid": "99c9720ab356a0642a771bea13969a05",
+    "hud_root": "Signal Garden HUD",
+    "canvas_render_mode": "ScreenSpaceOverlay",
+    "canvas_sorting_order": 50,
+    "canvas_reference_resolution": "1920x1080",
+    "event_system": "EventSystem + InputSystemUIInputModule",
+    "focus_behavior": "Tab and Shift+Tab explicitly cycle active controls in the documented order; phase changes select recovery or modal primary actions when reachable, and keyboard focus is announced through the WebGL live region.",
+    "serialized_bindings": [
+      "objectivePanel",
+      "phaseLabel",
+      "statusLabel",
+      "retryButton",
+      "soundButton",
+      "motionButton",
+      "overlayPrimaryButton",
+      "overlaySecondaryButton"
+    ]
+  },
+  "states": [
+    {
+      "design_frame": "Objective / Start",
+      "unity_phase": "Observe",
+      "reachable": true
+    },
+    {
+      "design_frame": "Routing / Active",
+      "unity_phase": "Routing",
+      "reachable": true
+    },
+    {
+      "design_frame": "Recovery / Invalid",
+      "unity_phase": "Recovery",
+      "reachable": true
+    },
+    {
+      "design_frame": "Verified / Completion",
+      "unity_phase": "Verified",
+      "reachable": true
+    },
+    {
+      "design_frame": "Replay / Reset",
+      "unity_action": "ResetFromHud",
+      "reachable": true
+    },
+    {
+      "design_frame": "Pause / Resume",
+      "unity_phase": "Paused",
+      "reachable": true
+    },
+    {
+      "design_frame": "Mute Controls",
+      "unity_action": "ToggleSoundFromHud",
+      "reachable": true
+    },
+    {
+      "design_frame": "Reduced Motion Controls",
+      "unity_action": "ToggleReducedMotionFromHud",
+      "reachable": true
+    }
+  ],
+  "accessibility": {
+    "text_status": true,
+    "shape_or_feedback_with_text": true,
+    "color_only_state": false,
+    "screen_reader_bridge": "#signal-garden-accessible-status role=status aria-live=polite tabindex=0",
+    "keyboard_controls": [
+      "Tab",
+      "Shift+Tab",
+      "Enter",
+      "Space",
+      "Esc"
+    ],
+    "spatial_route": "visual-only by design",
+    "reduced_motion": "ambient source/receiver pulse is frozen; state transitions and text remain immediate",
+    "sound": "optional cues off by default; mute toggle remains readable"
+  },
+  "provenance": {
+    "license": "Original Setness Consulting work",
+    "third_party_assets": false,
+    "human_modification_status": "Owner visual review required; implementation is repository-authored from the bounded handoff fixture."
+  },
+  "validation": {
+    "profile": "hud",
+    "design_states": 8,
+    "unity_states": 5,
+    "minimum_target_px": 40,
+    "commands": [
+      "figma-api validate screen --profile hud",
+      "figma-api export manifest --profile png-1x",
+      "figma-api handoff unity",
+      "Unity Signal Garden/Install UGUI HUD in SignalGarden Scene"
+    ],
+    "classification": "PASS_OFFLINE_BLOCKED_LIVE"
+  }
+}

@@ -59,6 +59,7 @@ mergeInto(LibraryManager.library, {
 
   SignalGardenReportFrameRate: function (framesPerSecond) {
     window.signalGardenFrameRate = framesPerSecond;
+    window.signalGardenFrameRateUpdatedAt = performance.now();
     document.documentElement.setAttribute("data-signal-garden-fps", framesPerSecond);
   }
 });

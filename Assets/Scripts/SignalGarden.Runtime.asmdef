@@ -2,7 +2,8 @@
   "name": "SignalGarden.Runtime",
   "rootNamespace": "SignalGarden",
   "references": [
-    "Unity.InputSystem"
+    "Unity.InputSystem",
+    "Unity.ugui"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

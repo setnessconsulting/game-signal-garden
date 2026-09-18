@@ -1,11 +1,11 @@
 # Signal Garden — Game Vision, Game Bible, and first-slice GDD
 
-**Scope authority:** [GAME-278](https://setnessconsulting.atlassian.net/browse/GAME-278) and its first four children, with the latest platform decision recorded in this repository.
+**Scope authority:** [GAME-278](https://setnessconsulting.atlassian.net/browse/GAME-278) and its SG-01–SG-06 children, with the latest platform and UI decisions recorded in this repository.
 
 **Implementation repository:** [setnessconsulting/game-signal-garden](https://github.com/setnessconsulting/game-signal-garden)
 
 **Release destination:** https://games.setnessconsulting.com/signal-garden/play/
-**Document status:** SG-01 scope record for the first playable slice. Jira statuses remain unchanged.
+**Document status:** SG-06 UI/HUD handoff and implementation record layered onto the first playable slice. Jira statuses remain unchanged.
 
 ## Vision
 
@@ -28,6 +28,7 @@ The first release is a single-player browser game. A parent and child can take t
 - **Input:** left mouse drag draws a route; WASD pans the bounded camera when not drawing; Esc cancels a route or pauses/resumes. The pointer remains visible and is not locked. A route begins only at the source.
 - **Runtime:** Unity 6000.6.0f1, URP 17.6.0, Input System 1.19.0, UGUI 2.6.0, Test Framework 1.8.0; WebGL build with Brotli compression. Exact resolved versions are in Packages/packages-lock.json.
 - **Asset pipeline:** the SG-01 diorama remains authored from deterministic Unity scene code, while the receiver visual now has the SG-05 Blender source → FBX → Unity prefab provenance chain. Later authored Blender assets follow the same FBX, hash, import identity, scale, coordinate, license/provenance, and human-modification record.
+- **UI pipeline:** SG-06 uses a repository-owned normalized Figma/API-37 HUD handoff with a recorded file/version/node/component/token identity. The runtime implementation is a serialized UGUI Canvas; the project-figma-api `unity-ui-toolkit` consumer profile is an explicit exception because the existing runtime is UGUI and the UI Toolkit lane is not qualified.
 - **Distribution:** the game repository owns Unity source and generated builds. Release builds use immutable private-R2 prefixes signal-garden/<version>/Build/; the site supplies an asset base and exact artifact filenames. Generated builds are not checked into Git or the site repository.
 
 ### One-scene challenge
@@ -50,9 +51,11 @@ Invalid, partial, canceled, or focus-interrupted routes never require a page rel
 
 - Stylized, original, compact 3D diorama; readable silhouettes and contrast carry the puzzle.
 - Objective, controls, status, pause, and replay text are presented in the game and mirrored into a focusable polite live region for screen readers. The spatial route itself remains visual.
+- The UGUI HUD covers objective/start, active routing, invalid/recovery, verified completion, reset/replay, pause/resume, mute, and reduced-motion states. Buttons use automatic keyboard navigation with readable labels and desktop targets of at least 40 px.
+- Phase text, shaped panels, and status copy accompany accent colors; no state depends on color or audio alone. The normalized snapshot and design tokens are in `SourceArt/Figma/SignalGardenHud/`, with the evidence classification in [docs/sg-06-ui-record.md](sg-06-ui-record.md).
 - Reduced-motion toggle freezes the small ambient source/receiver pulse; camera panning is direct, bounded, and has no inertia.
 - No music. Optional success and recovery tones are off by default and can be muted or enabled in play.
-- English only. No Rive dependency in this slice. No Figma or Blender integration is required to begin SG-02–04.
+- English only. No Rive dependency in this slice. Live Figma plugin import and UI Toolkit consumption remain deferred; SG-06's normalized handoff and UGUI implementation are in scope. Blender production beyond the SG-05 receiver remains deferred.
 
 ### Quality bars
 
@@ -77,7 +80,7 @@ These references set qualities to check, not designs to copy:
 
 Included: one SignalGarden scene, one source, one receiver, one route, one short dead end, one player, desktop browser input, accessible status text, pause/cancel/recovery/reset, local automated rules tests, one repeatable playtest script, and a local WebGL build.
 
-Excluded: persistent progression, multiple puzzles or a campaign, multiplayer, accounts, monetization, leaderboards, remote analytics, LevelBest integration, localization, music, Rive, Figma integration, further Blender source production beyond the SG-05 receiver, and production upload/catalog promotion.
+Excluded: persistent progression, multiple puzzles or a campaign, multiplayer, accounts, monetization, leaderboards, remote analytics, LevelBest integration, localization, music, Rive runtime integration, live Figma plugin import, UI Toolkit consumption, further Blender source production beyond the SG-05 receiver, and production upload/catalog promotion.
 
 ## Technical and release notes
 

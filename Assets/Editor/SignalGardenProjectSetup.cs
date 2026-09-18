@@ -81,6 +81,7 @@ namespace SignalGarden.Editor
                 materials.failedSignal,
                 materials.successSignal,
                 audio);
+            SignalGardenHudEditor.InstallInScene(game);
 
             EditorBuildSettings.scenes = new[]
             {
@@ -104,6 +105,9 @@ namespace SignalGarden.Editor
             {
                 GenerateFirstPlayableScene();
             }
+
+            SignalGardenHudEditor.EnsureInScene();
+            SignalGardenHudEditor.ValidateInScene();
 
             SignalGardenAssetProvenanceEditor.ValidateForBuild();
 

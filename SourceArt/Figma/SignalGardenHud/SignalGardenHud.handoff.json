@@ -1,0 +1,139 @@
+{
+  "assets": [
+    {
+      "filename": "Signal_Garden_HUD.png",
+      "format": "png",
+      "node_id": "1:1",
+      "sha256": "04c852e36b3a29348e847dfcb42859391bec2a99eb04bb7ec560b16025751fe1"
+    },
+    {
+      "filename": "Begin_Route_Button.png",
+      "format": "png",
+      "node_id": "1:14",
+      "sha256": "726eafed092bb50402ff3d7041978a13afb43fa9fdd43498f9304bf886051e5d"
+    },
+    {
+      "filename": "Cancel_Route_Button.png",
+      "format": "png",
+      "node_id": "1:22",
+      "sha256": "2f9ea95b6389a4e169eb4df7cda3b3fa3647fd56ee30b8075e398c3bf480bc49"
+    },
+    {
+      "filename": "Try_Again_Button.png",
+      "format": "png",
+      "node_id": "1:32",
+      "sha256": "678feee1e4822b8d05153b36aca7992feee8cc40e7574f073f98ff3f5db3a42e"
+    },
+    {
+      "filename": "Play_Again_Button.png",
+      "format": "png",
+      "node_id": "1:42",
+      "sha256": "e7c70301c2cdbbcb858463857cdcee032e2d8cf5353e6406eb0595262f6b7b15"
+    },
+    {
+      "filename": "Reset_Garden_Button.png",
+      "format": "png",
+      "node_id": "1:52",
+      "sha256": "a459f58c838ffabf7911b809bae44de3d81696e9dbcfdededbc7710bae698c72"
+    },
+    {
+      "filename": "Resume_Button.png",
+      "format": "png",
+      "node_id": "1:62",
+      "sha256": "ce9cb88cdd19102c4ed451bcc4fca9e9b5c03c4de78124858e02ffc2d583d699"
+    },
+    {
+      "filename": "Restart_Turn_Button.png",
+      "format": "png",
+      "node_id": "1:63",
+      "sha256": "21f6e7e118c4a98cd246c10f53107a9c35141a8668e1d97127e9f1649bbd827e"
+    },
+    {
+      "filename": "Sound_Cues_Button.png",
+      "format": "png",
+      "node_id": "1:71",
+      "sha256": "c169573cae6ba225c423cd3344eade854ebaa866e96a229f60f5f6e6edb0eaf5"
+    },
+    {
+      "filename": "Reduced_Motion_Button.png",
+      "format": "png",
+      "node_id": "1:81",
+      "sha256": "fd825481ea404df961c0264239b39802b61e7365b7abf6c0dedb2ec859123cdd"
+    }
+  ],
+  "consumer": "unity-ui-toolkit",
+  "export_manifest": {
+    "file_key": "fixture-signal-garden-sg06-hud-001",
+    "sha256": "1e385201e4dc5c3dea90b63e0a3dc71d8e3c5cd67626fe4d9c9182d58a50798a",
+    "version": "1"
+  },
+  "file_key": "fixture-signal-garden-sg06-hud-001",
+  "idempotent_reimport_rules": {
+    "changed_hash": "plan_diff_then_apply",
+    "unchanged_hash": "skip"
+  },
+  "kind": "figma-api-unity-ui",
+  "profile_id": "unity-ui-toolkit",
+  "profile_version": 1,
+  "readiness": "manifest_only",
+  "schema_version": "1.0",
+  "screens": [
+    {
+      "logical_screen_id": "Signal Garden HUD",
+      "node_id": "1:1"
+    },
+    {
+      "logical_screen_id": "Begin Route Button",
+      "node_id": "1:14"
+    },
+    {
+      "logical_screen_id": "Cancel Route Button",
+      "node_id": "1:22"
+    },
+    {
+      "logical_screen_id": "Try Again Button",
+      "node_id": "1:32"
+    },
+    {
+      "logical_screen_id": "Play Again Button",
+      "node_id": "1:42"
+    },
+    {
+      "logical_screen_id": "Reset Garden Button",
+      "node_id": "1:52"
+    },
+    {
+      "logical_screen_id": "Resume Button",
+      "node_id": "1:62"
+    },
+    {
+      "logical_screen_id": "Restart Turn Button",
+      "node_id": "1:63"
+    },
+    {
+      "logical_screen_id": "Sound Cues Button",
+      "node_id": "1:71"
+    },
+    {
+      "logical_screen_id": "Reduced Motion Button",
+      "node_id": "1:81"
+    }
+  ],
+  "ugui_extension_slot": {
+    "implemented": false,
+    "status": "reserved"
+  },
+  "unity_blockers": [
+    {
+      "issue": "API-29",
+      "summary": "Broader Unity UI Toolkit authoring beyond the Menu Screen stub is not in the GameObject allowlist"
+    },
+    {
+      "issue": "API-30",
+      "summary": "Thin Figma UI import live-verified on disposable fixture (hashed PNGs + MenuScreen.uxml read-back); broader UI Toolkit authoring remains gated on API-29"
+    }
+  ],
+  "unity_import_command": "setness_unity_api_figma_ui_import",
+  "unsupported": [],
+  "version": "1"
+}

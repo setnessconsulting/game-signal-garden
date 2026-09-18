@@ -2,7 +2,8 @@
   "name": "SignalGarden.Editor",
   "rootNamespace": "SignalGarden.Editor",
   "references": [
-    "SignalGarden.Runtime"
+    "SignalGarden.Runtime",
+    "Unity.InputSystem"
   ],
   "includePlatforms": [
     "Editor"
