@@ -192,11 +192,117 @@ namespace SignalGarden.Tests
             Assert.That(receiverGlow.intensity, Is.EqualTo(glow).Within(0.001f));
         }
 
+        [UnityTest]
+        public IEnumerator FocusLossCancelsPartialRouteAndAllowsAnotherAttempt()
+        {
+            yield return SceneManager.LoadSceneAsync("SignalGarden");
+            yield return null;
+
+            var game = UnityEngine.Object.FindAnyObjectByType<SignalGardenGame>();
+            var hud = UnityEngine.Object.FindAnyObjectByType<SignalGardenHud>();
+            Assert.That(game, Is.Not.Null);
+            Assert.That(hud, Is.Not.Null);
+
+            game.RunState.BeginRoute(RouteRules.StandardTrail[0]);
+            game.RunState.AppendRoutePoint(RouteRules.StandardTrail[1]);
+            InvokeLifecycleCallback(game, "OnApplicationFocus", false);
+            yield return null;
+
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Recovery));
+            Assert.That(game.RunState.lastFailure, Is.EqualTo(RouteFailure.FocusInterrupted));
+            Assert.That(game.RunState.routePoints, Is.Empty);
+            Assert.That(game.StatusText,
+                Is.EqualTo("Focus changed, so the partial route was canceled. Start again at the coral source."));
+            Assert.That(hud.DisplayedPhase, Is.EqualTo(GardenPhase.Recovery));
+
+            InvokeLifecycleCallback(game, "OnApplicationFocus", true);
+            yield return null;
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Recovery));
+
+            Assert.That(game.RunState.BeginRoute(RouteRules.StandardTrail[0]), Is.True);
+            for (var i = 1; i < RouteRules.StandardTrail.Length; i++)
+            {
+                game.RunState.AppendRoutePoint(RouteRules.StandardTrail[i]);
+            }
+
+            ResolveCurrentRoute(game);
+            yield return null;
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Verified));
+            Assert.That(game.RunState.verificationCount, Is.EqualTo(1));
+            Assert.That(hud.DisplayedPhase, Is.EqualTo(GardenPhase.Verified));
+        }
+
+        [UnityTest]
+        public IEnumerator ApplicationPauseCancelsPartialRouteAndLeavesSessionRecoverable()
+        {
+            yield return SceneManager.LoadSceneAsync("SignalGarden");
+            yield return null;
+
+            var game = UnityEngine.Object.FindAnyObjectByType<SignalGardenGame>();
+            var hud = UnityEngine.Object.FindAnyObjectByType<SignalGardenHud>();
+            Assert.That(game, Is.Not.Null);
+            Assert.That(hud, Is.Not.Null);
+
+            game.RunState.BeginRoute(RouteRules.StandardTrail[0]);
+            game.RunState.AppendRoutePoint(RouteRules.StandardTrail[1]);
+            InvokeLifecycleCallback(game, "OnApplicationPause", true);
+            yield return null;
+
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Recovery));
+            Assert.That(game.RunState.lastFailure, Is.EqualTo(RouteFailure.FocusInterrupted));
+            Assert.That(game.RunState.routePoints, Is.Empty);
+            Assert.That(game.StatusText, Does.Contain("partial route was canceled"));
+            Assert.That(hud.DisplayedPhase, Is.EqualTo(GardenPhase.Recovery));
+
+            InvokeLifecycleCallback(game, "OnApplicationPause", false);
+            yield return null;
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Recovery));
+            Assert.That(game.RunState.BeginRoute(RouteRules.StandardTrail[0]), Is.True);
+        }
+
+        [UnityTest]
+        public IEnumerator ReloadDuringRoutingStartsACompletelyFreshSession()
+        {
+            yield return SceneManager.LoadSceneAsync("SignalGarden");
+            yield return null;
+
+            var previousGame = UnityEngine.Object.FindAnyObjectByType<SignalGardenGame>();
+            Assert.That(previousGame, Is.Not.Null);
+            previousGame.RunState.BeginRoute(RouteRules.StandardTrail[0]);
+            previousGame.RunState.AppendRoutePoint(RouteRules.StandardTrail[1]);
+            previousGame.ToggleSoundFromHud();
+            previousGame.ToggleReducedMotionFromHud();
+
+            yield return SceneManager.LoadSceneAsync("SignalGarden");
+            yield return null;
+
+            var game = UnityEngine.Object.FindAnyObjectByType<SignalGardenGame>();
+            var hud = UnityEngine.Object.FindAnyObjectByType<SignalGardenHud>();
+            Assert.That(game, Is.Not.Null);
+            Assert.That(hud, Is.Not.Null);
+            Assert.That(game, Is.Not.SameAs(previousGame));
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Observe));
+            Assert.That(game.RunState.routePoints, Is.Empty);
+            Assert.That(game.RunState.attemptCount, Is.Zero);
+            Assert.That(game.RunState.verificationCount, Is.Zero);
+            Assert.That(game.StatusText, Is.EqualTo("Ready. Drag from the coral source to begin."));
+            Assert.That(game.SoundEnabled, Is.False);
+            Assert.That(game.ReducedMotionEnabled, Is.False);
+            Assert.That(hud.DisplayedPhase, Is.EqualTo(GardenPhase.Observe));
+        }
+
         private static void ResolveCurrentRoute(SignalGardenGame game)
         {
             typeof(SignalGardenGame)
                 .GetMethod("ResolveCurrentRoute", BindingFlags.Instance | BindingFlags.NonPublic)
                 .Invoke(game, null);
+        }
+
+        private static void InvokeLifecycleCallback(SignalGardenGame game, string methodName, bool value)
+        {
+            var callback = typeof(SignalGardenGame).GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(callback, Is.Not.Null, "Expected Unity lifecycle callback " + methodName);
+            callback.Invoke(game, new object[] { value });
         }
 
         private static void AssertTopRightControl(RectTransform rect, float right, float top)

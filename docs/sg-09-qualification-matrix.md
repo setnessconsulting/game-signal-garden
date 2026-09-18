@@ -1,0 +1,40 @@
+# SG-09 qualification matrix
+
+Issue: [GAME-287 / SG-09](https://setnessconsulting.atlassian.net/browse/GAME-287)
+
+Status: in progress. This record distinguishes automated and local-browser evidence from owner approval and physical accessibility review. It is not a production release sign-off.
+
+## Target and budgets
+
+| Item | Qualification target | Approval / measurement status |
+| --- | --- | --- |
+| Runtime | Windows desktop, Chrome and Edge, Unity WebGL | Chrome/Edge versions and exact environment will be recorded with the run. |
+| Display | 16:9 desktop layouts from 1280×720 through the 1920×1080 reference composition; exact reference render for performance sampling | Provisional range; every listed size must be checked for clipping and legibility. |
+| Frame rate | 30 seconds of visible, focused samples at an exact 1920×1080 Unity canvas; arithmetic mean at least 60 fps (16.67 ms average frame interval). Use the harness's 5-second warmup and 30 one-second samples. | 60 fps target established by the GDD; actual result pending the SG-09 build. The one-second minimum is informational. |
+| Local load | At most 10 seconds from the harness's `signalGardenLoadStartedAt` to `signalGardenInteractiveAt` at 1920×1080 | Existing GDD target; actual result pending the SG-09 build. This is local HTTP preview evidence, not CDN evidence. |
+| Compressed WebGL artifacts | At most 12 MiB (12,582,912 bytes) for the exact shipped loader, data, framework, and WASM files combined | Proposed by the owner and explicitly pending owner sign-off. Record the measured total without calling this an approved gate. |
+| Browser-tab working set | At most 512 MiB for the game tab | Proposed by the owner and explicitly pending owner sign-off. Do not infer tab working set from JavaScript heap or shared browser-process memory. |
+| Console errors | Zero unexpected game/runtime errors; known optional URP FSR shader-stripped warning is allow-listed if it remains the only warning and the scene renders | Record exact browser console observations. |
+
+The game targets a 60 fps application frame rate and has an existing visible-preview test. The harness pauses sampling when the page is hidden or unfocused; background/occluded measurements are not valid foreground performance evidence.
+
+## Acceptance and evidence map
+
+| GAME-287 criterion | Test procedure and evidence | Result |
+| --- | --- | --- |
+| Mouse/keyboard input and reset | In a fresh nested preview, drag from coral along the gold trail to blue; pan with WASD; press Esc during a route and while idle; use Replay. Confirm cursor stays visible and route recovery permits a new attempt. | Pending browser run |
+| Keyboard access decision | Tab and Shift+Tab through reachable controls; activate buttons with Enter/Space; adjust the volume slider with arrow keys. Record focus order and accessible names. | Pending browser run |
+| Critical/serious accessible UI issues | Inspect reachable text, focus indication, keyboard operation, and text/shape state cues at each qualified resolution. External screen-reader operation is a separate manual gate and is not claimed from DOM or live-region inspection alone. | Pending review |
+| Reduced motion and mute | Toggle each control in Observe and Verified; confirm the labels/status change, no route rule changes, and reduced motion stops pulsing/rotation while preserving readable success/recovery state. Sound starts muted. | Pending browser run; automated PlayMode coverage exists |
+| Frame time | Open `/signal-garden/play/?sg-render=1920x1080&sg-stats=1`; keep the window foreground and visible through 5-second warmup and all 30 samples. Record the reported exact buffer, minimum and mean, build identity, and browser. | Pending build/run |
+| Missing assets and invalid state | Run the SG-05 provenance validation and negative tests; run route/state EditMode coverage for invalid, partial, canceled, reset, and verified transitions. Confirm the release build fails closed when required provenance assets are absent. | Existing tests; rerun pending |
+| Interrupted input and application pause | PlayMode-invoke Unity focus-loss and pause callbacks during a partial route; verify route points clear, Recovery is shown, and a valid retry succeeds. Physical window/tab focus interruption remains a browser check. | New PlayMode coverage; results pending |
+| Scene reload | Reload `SignalGarden` during an active partial route; verify fresh Observe state, empty route/counters, default mute/motion settings, and complete HUD binding. | New PlayMode coverage; results pending |
+| Evidence tied to source/build | Record full implementation commit SHA, Unity/package versions, browser and environment, exact commands, build cache identity, artifact names/sizes/SHA-256, and HTTP metadata. Link the evidence from GAME-287 without changing its status. | Pending build and PR |
+
+## Commands and local procedures
+
+The Unity test and WebGL build commands, nested host harness, and resolution/performance query are documented in [the repository README](../README.md) and [host-preview instructions](../tests/host-preview/README.md). The qualification run must use the host harness at `/signal-garden/play/`, which serves exact artifacts below the nested asset base. Generated builds remain ignored under `Builds/WebGL/`.
+
+The objective-under-30-seconds and completion-under-one-minute targets are assessed with the existing [fresh-player playtest script](playtest-script.md). They require human participants and are not inferred from automated route tests or Unity's deterministic state transitions.
+
