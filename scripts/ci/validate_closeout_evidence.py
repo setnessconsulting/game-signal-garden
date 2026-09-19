@@ -241,6 +241,48 @@ def validate_known_limitations(limitations: Any) -> None:
         require_string(limitation, "ownerAction", f"{label}.ownerAction")
 
 
+def validate_qualification_updates(updates: Any) -> None:
+    if not isinstance(updates, dict):
+        fail("qualificationUpdates must be an object")
+        return
+    if updates.get("recordedAt") != "2026-09-19":
+        fail("qualificationUpdates.recordedAt must identify the current qualification observation")
+    if updates.get("candidateRuntimeSourceCommit") != EXPECTED_RUNTIME_COMMIT:
+        fail("qualificationUpdates.candidateRuntimeSourceCommit must match the runtime candidate")
+    chrome = updates.get("desktopChromeForeground")
+    if not isinstance(chrome, dict):
+        fail("qualificationUpdates.desktopChromeForeground must be an object")
+    else:
+        if chrome.get("status") != "PASS_LOCAL":
+            fail("qualificationUpdates.desktopChromeForeground.status must be PASS_LOCAL")
+        if chrome.get("browser") != "Chrome 153.0.8010.52":
+            fail("qualificationUpdates.desktopChromeForeground.browser must record the observed Chrome version")
+        if chrome.get("render") != "1920x1080":
+            fail("qualificationUpdates.desktopChromeForeground.render must be 1920x1080")
+        if chrome.get("sampleSeconds") != 30 or chrome.get("sampleCount") != 30:
+            fail("qualificationUpdates.desktopChromeForeground must record 30 focused seconds and 30 samples")
+        if chrome.get("meanFps") != 101.9 or chrome.get("minimumOneSecondSampleFps") != 27.6:
+            fail("qualificationUpdates.desktopChromeForeground FPS values do not match the observed run")
+        if chrome.get("result") != "PASS":
+            fail("qualificationUpdates.desktopChromeForeground.result must be PASS")
+        require_string(chrome, "method", "qualificationUpdates.desktopChromeForeground.method")
+        require_string(chrome, "classification", "qualificationUpdates.desktopChromeForeground.classification")
+    pause = updates.get("pauseResume")
+    if not isinstance(pause, dict) or pause.get("status") != "PASS_LOCAL":
+        fail("qualificationUpdates.pauseResume.status must be PASS_LOCAL")
+    elif not isinstance(pause.get("method"), str) or not pause["method"]:
+        fail("qualificationUpdates.pauseResume.method must describe the observed control path")
+    warm_tti = updates.get("localWarmReloadTimeToInteractive")
+    if not isinstance(warm_tti, dict):
+        fail("qualificationUpdates.localWarmReloadTimeToInteractive must be an object")
+    else:
+        if warm_tti.get("status") != "PASS_LOCAL_WARM":
+            fail("qualificationUpdates.localWarmReloadTimeToInteractive.status must be PASS_LOCAL_WARM")
+        if warm_tti.get("milliseconds") != 681 or warm_tti.get("targetMilliseconds") != 10000:
+            fail("qualificationUpdates.localWarmReloadTimeToInteractive timing does not match the observed run")
+        require_string(warm_tti, "method", "qualificationUpdates.localWarmReloadTimeToInteractive.method")
+
+
 def validate_jira(jira: Any) -> None:
     if not isinstance(jira, dict):
         fail("jira must be an object")
@@ -302,6 +344,7 @@ def main() -> int:
             fail("status must be NOT_READY, READY_FOR_OWNER_REVIEW, or READY_FOR_PROMOTION")
         validate_repository_identity(manifest.get("repository"))
         validate_release_candidate(manifest.get("releaseCandidate"), sg10, sg11)
+        validate_qualification_updates(manifest.get("qualificationUpdates"))
         validate_children(manifest.get("childStories"))
         validate_technology(manifest.get("technology"))
         validate_known_limitations(manifest.get("knownLimitations"))
