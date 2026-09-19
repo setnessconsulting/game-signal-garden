@@ -17,6 +17,7 @@ SG10_RELATIVE_PATH = "docs/sg-10-build-identity.json"
 SG11_RELATIVE_PATH = "docs/sg-11-playtest-evidence.json"
 EXPECTED_GAME = "signal-garden"
 EXPECTED_ISSUE = "GAME-290"
+EXPECTED_BASE_MAIN_COMMIT = "c388226fb02b66ea4084a0e52d4ce97fe844d784"
 EXPECTED_RUNTIME_COMMIT = "34122315f6f31718ffa616517495392be5c91a2b"
 EXPECTED_RUNTIME_MANIFEST_HASH = "6886B4CD48F3B5CB1ABBCAC3D983428DBF3F6159E5398E794FE2EC00999CA161"
 EXPECTED_ARTIFACTS = (
@@ -29,6 +30,17 @@ EXPECTED_CHILDREN = {f"GAME-{number}" for number in range(279, 291)}
 HEX_40 = re.compile(r"^[0-9a-fA-F]{40}$")
 HEX_64 = re.compile(r"^[0-9a-fA-F]{64}$")
 VALID_STATUSES = {"NOT_READY", "READY_FOR_OWNER_REVIEW", "READY_FOR_PROMOTION"}
+OWNER_QUALIFICATION_STATUSES = {"NOT_RUN", "PARTIAL", "READY_FOR_OWNER_REVIEW", "READY_FOR_PROMOTION"}
+OWNER_GATE_STATUSES = {"NOT_RUN", "PASS", "FAIL", "BLOCKED", "ACCEPTED"}
+OWNER_GATE_KEYS = (
+    "desktopChromeForeground",
+    "desktopEdgeForeground",
+    "localColdTimeToInteractive",
+    "browserWorkingSet",
+    "physicalFocusLoss",
+    "screenReader",
+    "humanBenchmark",
+)
 errors: list[str] = []
 
 
@@ -95,7 +107,12 @@ def validate_repository_identity(repository: Any) -> None:
             repo_file(path)
 
 
-def validate_release_candidate(candidate: Any, sg10: dict[str, Any] | None, sg11: dict[str, Any] | None) -> None:
+def validate_release_candidate(
+    candidate: Any,
+    sg10: dict[str, Any] | None,
+    sg11: dict[str, Any] | None,
+    closeout_status: str,
+) -> None:
     if not isinstance(candidate, dict):
         fail("releaseCandidate must be an object")
         return
@@ -122,14 +139,23 @@ def validate_release_candidate(candidate: Any, sg10: dict[str, Any] | None, sg11
     if not isinstance(location, dict):
         fail("releaseCandidate.artifactLocation must be an object")
     else:
-        if location.get("status") != "LOCAL_ONLY":
-            fail("releaseCandidate.artifactLocation.status must remain LOCAL_ONLY")
+        location_status = location.get("status")
+        if closeout_status == "READY_FOR_PROMOTION":
+            if location_status not in {"LOCAL_ONLY", "PRODUCTION_READBACK"}:
+                fail("releaseCandidate.artifactLocation.status must be LOCAL_ONLY or PRODUCTION_READBACK before promotion")
+            if location_status == "PRODUCTION_READBACK" and location.get("uploadedToProductionR2") is not True:
+                fail("PRODUCTION_READBACK requires uploadedToProductionR2 true")
+        else:
+            if location_status != "LOCAL_ONLY":
+                fail("releaseCandidate.artifactLocation.status must remain LOCAL_ONLY before promotion")
+            if location.get("uploadedToProductionR2") is not False:
+                fail("releaseCandidate.artifactLocation.uploadedToProductionR2 must be false before promotion")
         if location.get("prefixPattern") != "signal-garden/<version>/Build/":
             fail("releaseCandidate.artifactLocation.prefixPattern must preserve the immutable R2 contract")
+        if location.get("promotionPrefixPattern") != "signal-garden/<UTC-date>-<first-7-chars-of-runtime-source-commit>/Build/":
+            fail("releaseCandidate.artifactLocation.promotionPrefixPattern must preserve the Git-derived release prefix")
         if location.get("assetBasePattern") != "<assetBase>/Build/<filename>":
             fail("releaseCandidate.artifactLocation.assetBasePattern must preserve the host contract")
-        if location.get("uploadedToProductionR2") is not False:
-            fail("releaseCandidate.artifactLocation.uploadedToProductionR2 must be false")
 
     artifacts = candidate.get("artifacts")
     if artifacts != list(EXPECTED_ARTIFACTS):
@@ -283,7 +309,127 @@ def validate_qualification_updates(updates: Any) -> None:
         require_string(warm_tti, "method", "qualificationUpdates.localWarmReloadTimeToInteractive.method")
 
 
-def validate_jira(jira: Any) -> None:
+def validate_owner_gate(record: Any, label: str) -> str | None:
+    if not isinstance(record, dict):
+        fail(f"{label} must be an object")
+        return None
+    status = record.get("status")
+    if status not in OWNER_GATE_STATUSES:
+        fail(f"{label}.status must be one of {sorted(OWNER_GATE_STATUSES)}")
+    require_string(record, "classification", f"{label}.classification")
+    if status in {"NOT_RUN", "FAIL", "BLOCKED"}:
+        require_string(record, "reason", f"{label}.reason")
+    if status in {"PASS", "ACCEPTED"}:
+        require_string(record, "method", f"{label}.method")
+    return status if isinstance(status, str) else None
+
+
+def validate_owner_qualification(qualification: Any, sg11: dict[str, Any] | None, closeout_status: str) -> None:
+    if not isinstance(qualification, dict):
+        fail("ownerQualification must be an object")
+        return
+    if qualification.get("schemaVersion") != 1:
+        fail("ownerQualification.schemaVersion must be 1")
+    status = qualification.get("status")
+    if status not in OWNER_QUALIFICATION_STATUSES:
+        fail(f"ownerQualification.status must be one of {sorted(OWNER_QUALIFICATION_STATUSES)}")
+    runtime_commit = require_string(
+        qualification,
+        "runtimeSourceCommit",
+        "ownerQualification.runtimeSourceCommit",
+    )
+    if runtime_commit is not None:
+        if not HEX_40.fullmatch(runtime_commit):
+            fail("ownerQualification.runtimeSourceCommit must be a full commit SHA")
+        if runtime_commit != EXPECTED_RUNTIME_COMMIT:
+            fail("ownerQualification.runtimeSourceCommit must match the frozen SG-10 runtime")
+
+    target = qualification.get("target")
+    if not isinstance(target, dict):
+        fail("ownerQualification.target must be an object")
+    else:
+        expected_target = {
+            "render": "1920x1080",
+            "meanFpsMinimum": 60,
+            "localTimeToInteractiveMaximumMilliseconds": 10000,
+            "compressedArtifactBudgetMiB": 12,
+            "browserWorkingSetBudgetMiB": 512,
+        }
+        if target != expected_target:
+            fail("ownerQualification.target must preserve the approved qualification targets")
+
+    gate_statuses: dict[str, str | None] = {}
+    for key in OWNER_GATE_KEYS:
+        gate_statuses[key] = validate_owner_gate(qualification.get(key), f"ownerQualification.{key}")
+
+    for key in ("desktopChromeForeground", "desktopEdgeForeground"):
+        record = qualification.get(key)
+        if not isinstance(record, dict) or gate_statuses[key] not in {"PASS", "ACCEPTED"}:
+            continue
+        if record.get("render") != "1920x1080":
+            fail(f"ownerQualification.{key}.render must be 1920x1080")
+        if record.get("sampleSeconds") != 30 or record.get("sampleCount") != 30:
+            fail(f"ownerQualification.{key} must record 30 focused seconds and 30 samples")
+        if not isinstance(record.get("meanFps"), (int, float)) or record["meanFps"] < 60:
+            fail(f"ownerQualification.{key}.meanFps must be at least 60")
+        if not isinstance(record.get("minimumOneSecondSampleFps"), (int, float)):
+            fail(f"ownerQualification.{key}.minimumOneSecondSampleFps must be numeric")
+        require_string(record, "browser", f"ownerQualification.{key}.browser")
+
+    cold_tti = qualification.get("localColdTimeToInteractive")
+    if isinstance(cold_tti, dict) and gate_statuses["localColdTimeToInteractive"] in {"PASS", "ACCEPTED"}:
+        value = cold_tti.get("milliseconds")
+        if not isinstance(value, (int, float)) or value > 10000:
+            fail("ownerQualification.localColdTimeToInteractive.milliseconds must be at most 10000")
+
+    working_set = qualification.get("browserWorkingSet")
+    if isinstance(working_set, dict) and gate_statuses["browserWorkingSet"] in {"PASS", "ACCEPTED"}:
+        peak = working_set.get("peakMiB")
+        if not isinstance(peak, (int, float)) or peak > 512:
+            fail("ownerQualification.browserWorkingSet.peakMiB must be at most 512")
+        if working_set.get("budgetMiB") != 512:
+            fail("ownerQualification.browserWorkingSet.budgetMiB must be 512")
+        require_string(working_set, "measurementTool", "ownerQualification.browserWorkingSet.measurementTool")
+
+    focus = qualification.get("physicalFocusLoss")
+    if isinstance(focus, dict) and gate_statuses["physicalFocusLoss"] in {"PASS", "ACCEPTED"}:
+        if focus.get("recoverySuccess") is not True:
+            fail("ownerQualification.physicalFocusLoss.recoverySuccess must be true")
+
+    screen_reader = qualification.get("screenReader")
+    if isinstance(screen_reader, dict) and gate_statuses["screenReader"] in {"PASS", "ACCEPTED"}:
+        require_string(screen_reader, "reader", "ownerQualification.screenReader.reader")
+        announcements = screen_reader.get("announcements")
+        if not isinstance(announcements, list) or not announcements:
+            fail("ownerQualification.screenReader.announcements must list observed state announcements")
+
+    human = qualification.get("humanBenchmark")
+    if isinstance(human, dict):
+        if human.get("evidence") != SG11_RELATIVE_PATH:
+            fail("ownerQualification.humanBenchmark.evidence must point to SG-11 evidence")
+        if gate_statuses["humanBenchmark"] in {"PASS", "ACCEPTED"}:
+            if not isinstance(sg11, dict) or sg11.get("status") != "PASS_RECORDED":
+                fail("ownerQualification.humanBenchmark PASS requires SG-11 PASS_RECORDED")
+        elif gate_statuses["humanBenchmark"] == "NOT_RUN" and isinstance(sg11, dict) and sg11.get("status") != "NOT_RUN":
+            fail("ownerQualification.humanBenchmark NOT_RUN must match SG-11 status")
+
+    complete = all(value in {"PASS", "ACCEPTED"} for value in gate_statuses.values())
+    any_recorded = any(value not in {None, "NOT_RUN"} for value in gate_statuses.values())
+    if status == "NOT_RUN" and any_recorded:
+        fail("ownerQualification.status NOT_RUN cannot contain recorded gate results")
+    if status == "PARTIAL" and (not any_recorded or complete):
+        fail("ownerQualification.status PARTIAL requires incomplete recorded gate results")
+    if status in {"READY_FOR_OWNER_REVIEW", "READY_FOR_PROMOTION"} and not complete:
+        fail(f"ownerQualification.status {status} requires every owner gate to pass or be accepted")
+    if closeout_status == "NOT_READY" and status in {"READY_FOR_OWNER_REVIEW", "READY_FOR_PROMOTION"}:
+        fail("closeout status NOT_READY cannot claim completed owner qualification")
+    if closeout_status == "READY_FOR_OWNER_REVIEW" and status != "READY_FOR_OWNER_REVIEW":
+        fail("READY_FOR_OWNER_REVIEW closeout must match ownerQualification.status")
+    if closeout_status == "READY_FOR_PROMOTION" and status != "READY_FOR_PROMOTION":
+        fail("READY_FOR_PROMOTION closeout must match ownerQualification.status")
+
+
+def validate_jira(jira: Any, closeout_status: str) -> None:
     if not isinstance(jira, dict):
         fail("jira must be an object")
         return
@@ -293,27 +439,35 @@ def validate_jira(jira: Any) -> None:
         fail("jira.epicStatusReadback must preserve the current Ready readback")
     if jira.get("statusChangedByThisRecord") is not False:
         fail("jira.statusChangedByThisRecord must be false")
-    if jira.get("agreementStatus") != "PENDING_OWNER_RECONCILIATION":
-        fail("jira.agreementStatus must remain pending until the owner reconciles Jira")
+    expected_agreement = "RECONCILED" if closeout_status == "READY_FOR_PROMOTION" else "PENDING_OWNER_RECONCILIATION"
+    if jira.get("agreementStatus") != expected_agreement:
+        fail(f"jira.agreementStatus must be {expected_agreement} for closeout status {closeout_status}")
     require_string(jira, "reason", "jira.reason")
 
 
-def validate_owner_and_decision(owner: Any, decision: Any) -> None:
+def validate_owner_and_decision(owner: Any, decision: Any, closeout_status: str) -> None:
     if not isinstance(owner, dict):
         fail("ownerApprovals must be an object")
     else:
-        if owner.get("status") != "PENDING":
-            fail("ownerApprovals.status must remain PENDING")
+        expected_owner_status = "APPROVED" if closeout_status == "READY_FOR_PROMOTION" else "PENDING"
+        if owner.get("status") != expected_owner_status:
+            fail(f"ownerApprovals.status must be {expected_owner_status} for closeout status {closeout_status}")
         items = owner.get("items")
-        if not isinstance(items, list) or not items:
+        if not isinstance(items, list):
+            fail("ownerApprovals.items must be an array")
+        elif expected_owner_status == "PENDING" and not items:
             fail("ownerApprovals.items must list the outstanding gates")
+        elif expected_owner_status == "APPROVED" and items:
+            fail("ownerApprovals.items must be empty after owner approval")
     if not isinstance(decision, dict):
         fail("releaseDecision must be an object")
     else:
-        if decision.get("status") != "NOT_READY":
-            fail("releaseDecision.status must remain NOT_READY")
-        if decision.get("promotionAllowed") is not False:
-            fail("releaseDecision.promotionAllowed must be false")
+        expected_decision = "READY_FOR_PROMOTION" if closeout_status == "READY_FOR_PROMOTION" else "NOT_READY"
+        if decision.get("status") != expected_decision:
+            fail(f"releaseDecision.status must be {expected_decision} for closeout status {closeout_status}")
+        expected_promotion = closeout_status == "READY_FOR_PROMOTION"
+        if decision.get("promotionAllowed") is not expected_promotion:
+            fail(f"releaseDecision.promotionAllowed must be {str(expected_promotion).lower()} for closeout status {closeout_status}")
         require_string(decision, "reason", "releaseDecision.reason")
 
 
@@ -342,14 +496,18 @@ def main() -> int:
         status = manifest.get("status")
         if status not in VALID_STATUSES:
             fail("status must be NOT_READY, READY_FOR_OWNER_REVIEW, or READY_FOR_PROMOTION")
+        repository = manifest.get("repository")
+        if isinstance(repository, dict) and repository.get("baseMainCommit") != EXPECTED_BASE_MAIN_COMMIT:
+            fail("repository.baseMainCommit must identify the merged PR #11 main commit")
         validate_repository_identity(manifest.get("repository"))
-        validate_release_candidate(manifest.get("releaseCandidate"), sg10, sg11)
+        validate_release_candidate(manifest.get("releaseCandidate"), sg10, sg11, status if isinstance(status, str) else "NOT_READY")
         validate_qualification_updates(manifest.get("qualificationUpdates"))
+        validate_owner_qualification(manifest.get("ownerQualification"), sg11, status if isinstance(status, str) else "NOT_READY")
         validate_children(manifest.get("childStories"))
         validate_technology(manifest.get("technology"))
         validate_known_limitations(manifest.get("knownLimitations"))
-        validate_jira(manifest.get("jira"))
-        validate_owner_and_decision(manifest.get("ownerApprovals"), manifest.get("releaseDecision"))
+        validate_jira(manifest.get("jira"), status if isinstance(status, str) else "NOT_READY")
+        validate_owner_and_decision(manifest.get("ownerApprovals"), manifest.get("releaseDecision"), status if isinstance(status, str) else "NOT_READY")
         validate_provenance(manifest.get("provenance"))
 
     if errors:
