@@ -27,6 +27,26 @@ The artifact location is **local only**. A future reviewed release will use
 `<assetBase>/Build/<exact-filename>` pattern. No production object or catalog
 entry exists as part of SG-12.
 
+## Qualification update — 2026-09-19
+
+The existing local candidate was opened in a visible desktop Chrome session
+(Chrome `153.0.8010.52`) through the nested host preview. At the exact
+1920×1080 render, the harness completed 30/30 focused seconds with a `101.9`
+fps mean and `27.6` fps minimum one-second sample (`PASS` under the mean-at-least
+60 fps gate). The minimum is retained as an informational dip; it is not
+converted into a sustained frame-rate failure. Escape produced the readable
+Paused state and a second Escape restored the Ready state.
+
+A warm-cache reload reached the readable Ready state in `681 ms`, below the
+10-second local target. This is local warm-cache evidence only. It does not
+qualify a cold load, independent Edge run, production CDN, browser working set,
+physical focus loss, screen reader, or human benchmark.
+
+The exact observation is recorded under `qualificationUpdates` in the
+[release-candidate manifest](sg-12-release-candidate.json). The closeout
+decision remains `NOT_READY` until the remaining owner and human gates are
+resolved.
+
 ## Scope agreement
 
 The public repository describes one single-player `SignalGarden` scene for

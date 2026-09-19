@@ -34,6 +34,32 @@
       "com.unity.test-framework": "1.8.0"
     }
   },
+  "qualificationUpdates": {
+    "recordedAt": "2026-09-19",
+    "candidateRuntimeSourceCommit": "34122315f6f31718ffa616517495392be5c91a2b",
+    "desktopChromeForeground": {
+      "status": "PASS_LOCAL",
+      "browser": "Chrome 153.0.8010.52",
+      "render": "1920x1080",
+      "sampleSeconds": 30,
+      "sampleCount": 30,
+      "meanFps": 101.9,
+      "minimumOneSecondSampleFps": 27.6,
+      "result": "PASS",
+      "method": "Visible Codex Chrome extension session against the local nested host preview; canvas remained focused and the harness reported 30/30 seconds.",
+      "classification": "Local evidence only; the mean gate is at least 60 fps, while the one-second minimum is informational."
+    },
+    "pauseResume": {
+      "status": "PASS_LOCAL",
+      "method": "Escape produced the readable Paused state and a second Escape restored Ready in the same desktop Chrome session."
+    },
+    "localWarmReloadTimeToInteractive": {
+      "status": "PASS_LOCAL_WARM",
+      "milliseconds": 681,
+      "targetMilliseconds": 10000,
+      "method": "Visible local nested preview reload with the existing candidate cached; this is a warm-cache observation, not a cold or production CDN qualification."
+    }
+  },
   "childStories": [
     {
       "key": "GAME-279",
