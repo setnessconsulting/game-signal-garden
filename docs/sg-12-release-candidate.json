@@ -59,6 +59,47 @@
       "milliseconds": 681,
       "targetMilliseconds": 10000,
       "method": "Visible local nested preview reload with the existing candidate cached; this is a warm-cache observation, not a cold or production CDN qualification."
+    },
+    "localDiagnostics": {
+      "status": "RECORDED_NOT_OWNER_QUALIFICATION",
+      "classification": "AUTOMATED_LOCAL_HEADLESS_ONLY",
+      "recordedAt": "2026-09-19",
+      "runtimeSourceCommit": "34122315f6f31718ffa616517495392be5c91a2b",
+      "route": "/signal-garden/play/?sg-render=1920x1080&sg-stats=1",
+      "host": "http://127.0.0.1:4183",
+      "assetCacheKey": "7201692b3f2f2f53",
+      "render": "1920x1080",
+      "sampleSeconds": 30,
+      "sampleCount": 30,
+      "browsers": [
+        {
+          "browser": "Chrome",
+          "version": "153.0.8010.52",
+          "mode": "headless",
+          "freshProfile": true,
+          "timeToInteractiveMilliseconds": 1833.4,
+          "meanFps": 60.988686879475914,
+          "minimumOneSecondSampleFps": 60.09852981567383,
+          "result": "PASS_DIAGNOSTIC"
+        },
+        {
+          "browser": "Edge",
+          "version": "153.0.4234.32",
+          "mode": "headless",
+          "freshProfile": true,
+          "timeToInteractiveMilliseconds": 1533.5,
+          "meanFps": 60.87905451456706,
+          "minimumOneSecondSampleFps": 59.70148468017578,
+          "result": "PASS_DIAGNOSTIC"
+        }
+      ],
+      "focusQualified": false,
+      "ownerQualificationSubstitute": false,
+      "limitations": [
+        "Headless CDP runs are automated diagnostics and do not satisfy independently observed foreground Chrome or Edge qualification.",
+        "Timings are local-only and do not qualify production CDN time to interactive.",
+        "These runs do not measure browser-tab working set, physical focus loss, screen-reader behavior, or fresh-player comprehension."
+      ]
     }
   },
   "ownerQualification": {

@@ -308,6 +308,62 @@ def validate_qualification_updates(updates: Any) -> None:
             fail("qualificationUpdates.localWarmReloadTimeToInteractive timing does not match the observed run")
         require_string(warm_tti, "method", "qualificationUpdates.localWarmReloadTimeToInteractive.method")
 
+    diagnostics = updates.get("localDiagnostics")
+    if not isinstance(diagnostics, dict):
+        fail("qualificationUpdates.localDiagnostics must be an object")
+        return
+    if diagnostics.get("status") != "RECORDED_NOT_OWNER_QUALIFICATION":
+        fail("qualificationUpdates.localDiagnostics.status must preserve the non-owner classification")
+    if diagnostics.get("classification") != "AUTOMATED_LOCAL_HEADLESS_ONLY":
+        fail("qualificationUpdates.localDiagnostics.classification must preserve the headless-only classification")
+    if diagnostics.get("recordedAt") != "2026-09-19":
+        fail("qualificationUpdates.localDiagnostics.recordedAt must identify the diagnostic observation")
+    if diagnostics.get("runtimeSourceCommit") != EXPECTED_RUNTIME_COMMIT:
+        fail("qualificationUpdates.localDiagnostics.runtimeSourceCommit must match the runtime candidate")
+    if diagnostics.get("route") != "/signal-garden/play/?sg-render=1920x1080&sg-stats=1":
+        fail("qualificationUpdates.localDiagnostics.route must preserve the reference diagnostic route")
+    require_string(diagnostics, "host", "qualificationUpdates.localDiagnostics.host")
+    cache_key = diagnostics.get("assetCacheKey")
+    if not isinstance(cache_key, str) or not re.fullmatch(r"[0-9a-f]{16}", cache_key):
+        fail("qualificationUpdates.localDiagnostics.assetCacheKey must be a 16-character lowercase hex key")
+    if diagnostics.get("render") != "1920x1080":
+        fail("qualificationUpdates.localDiagnostics.render must be 1920x1080")
+    if diagnostics.get("sampleSeconds") != 30 or diagnostics.get("sampleCount") != 30:
+        fail("qualificationUpdates.localDiagnostics must record 30 seconds and 30 samples")
+    browsers = diagnostics.get("browsers")
+    if not isinstance(browsers, list) or {record.get("browser") for record in browsers if isinstance(record, dict)} != {"Chrome", "Edge"}:
+        fail("qualificationUpdates.localDiagnostics.browsers must contain Chrome and Edge")
+    else:
+        for index, record in enumerate(browsers):
+            label = f"qualificationUpdates.localDiagnostics.browsers[{index}]"
+            if not isinstance(record, dict):
+                fail(f"{label} must be an object")
+                continue
+            require_string(record, "browser", f"{label}.browser")
+            require_string(record, "version", f"{label}.version")
+            if record.get("mode") != "headless":
+                fail(f"{label}.mode must be headless")
+            if record.get("freshProfile") is not True:
+                fail(f"{label}.freshProfile must be true")
+            if record.get("result") != "PASS_DIAGNOSTIC":
+                fail(f"{label}.result must be PASS_DIAGNOSTIC")
+            tti = record.get("timeToInteractiveMilliseconds")
+            if not isinstance(tti, (int, float)) or tti <= 0 or tti > 10000:
+                fail(f"{label}.timeToInteractiveMilliseconds must be between 0 and 10000")
+            mean = record.get("meanFps")
+            if not isinstance(mean, (int, float)) or mean < 60:
+                fail(f"{label}.meanFps must be at least 60 for a diagnostic pass")
+            if not isinstance(record.get("minimumOneSecondSampleFps"), (int, float)):
+                fail(f"{label}.minimumOneSecondSampleFps must be numeric")
+    if diagnostics.get("focusQualified") is not False:
+        fail("qualificationUpdates.localDiagnostics.focusQualified must be false")
+    if diagnostics.get("ownerQualificationSubstitute") is not False:
+        fail("qualificationUpdates.localDiagnostics.ownerQualificationSubstitute must be false")
+    limitations = diagnostics.get("limitations")
+    if not isinstance(limitations, list) or not limitations or not all(isinstance(item, str) and item for item in limitations):
+        fail("qualificationUpdates.localDiagnostics.limitations must document diagnostic boundaries")
+    repo_file("docs/sg-12-local-diagnostics.md")
+
 
 def validate_owner_gate(record: Any, label: str) -> str | None:
     if not isinstance(record, dict):

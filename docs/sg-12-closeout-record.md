@@ -44,6 +44,14 @@ A warm-cache reload reached the readable Ready state in `681 ms`, below the
 qualify a cold load, independent Edge run, production CDN, browser working set,
 physical focus loss, screen reader, or human benchmark.
 
+Automated local headless diagnostics are recorded in the
+[SG-12 local diagnostics record](sg-12-local-diagnostics.md). Fresh-profile
+Chrome and Edge runs reached the exact `1920x1080` render with 30 samples and
+mean frame rates of `60.99` and `60.88` fps, and local time to interactive of
+`1,833.4 ms` and `1,533.5 ms`. Because these were headless CDP sessions, they
+remain diagnostic and do not replace independently observed foreground browser
+qualification.
+
 The exact observation is recorded under `qualificationUpdates` in the
 [release-candidate manifest](sg-12-release-candidate.json). The closeout
 decision remains `NOT_READY` until the remaining owner and human gates are
