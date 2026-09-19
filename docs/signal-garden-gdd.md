@@ -5,7 +5,7 @@
 **Implementation repository:** [setnessconsulting/game-signal-garden](https://github.com/setnessconsulting/game-signal-garden)
 
 **Release destination:** https://games.setnessconsulting.com/signal-garden/play/
-**Document status:** SG-06 UI/HUD handoff and implementation record layered onto the first playable slice. Jira statuses remain unchanged.
+**Document status:** SG-06 UI/HUD handoff and implementation record layered onto the first playable slice; SG-09 desktop qualification evidence is recorded separately in [the qualification matrix](sg-09-qualification-matrix.md). Jira statuses remain unchanged.
 
 ## Vision
 
@@ -64,7 +64,7 @@ These are observable goals for the first playable, not claims of completed human
 - **Objective clarity:** a first-time player can state the goal within 30 seconds without coaching.
 - **Completion:** after understanding the gesture, a first-time player completes the route in under one minute.
 - **Recovery:** every invalid, partial, canceled, or focus-interrupted route returns to a state from which another attempt can begin without restarting the page.
-- **Performance:** target 60 fps at 1920×1080 on the reference desktop; the visual style favors clear geometry and stable frame time over effects.
+- **Performance:** target a visible-preview mean of at least 60 fps at an exact 1920×1080 render on the reference desktop; the qualification harness uses a five-second warmup and 30 one-second samples. The visual style favors clear geometry and stable frame time over effects.
 - **Local load:** target 10 seconds or less to interactive in a local HTTP preview at 1920×1080 in desktop Chrome/Edge. Production CDN time is measured only after a reviewed release.
 - **Formative playtest:** run five first-time desktop sessions before release. Record each objective-understanding time, completion time, route errors, recoveries, pauses, and replay. The slice target is at least four of five players understanding and completing within the time bars, with every invalid route recoverable; this small sample is directional rather than statistical release certification.
 

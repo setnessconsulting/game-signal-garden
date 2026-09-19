@@ -25,6 +25,7 @@ Run these from PowerShell after Unity has opened the project once and resolved p
     $unity = "C:\Program Files\Unity\Hub\Editor\6000.6.0f1\Editor\Unity.exe"
     $project = (Get-Location).Path
     & $unity -batchmode -projectPath $project -runTests -testPlatform EditMode -testResults "$project\Temp\editmode-results.xml" -logFile "$project\Temp\editmode.log"
+    & $unity -batchmode -projectPath $project -runTests -testPlatform PlayMode -testResults "$project\Temp\playmode-results.xml" -logFile "$project\Temp\playmode.log"
     & $unity -batchmode -quit -projectPath $project -executeMethod SignalGarden.Editor.SignalGardenProjectSetup.BuildWebGL -logFile "$project\Temp\webgl-build.log"
 
 The WebGL build is written under ignored Builds/WebGL/. Never commit the generated build. The tests/host-preview harness serves the build at /signal-garden/play/ and uses the same /game-assets/signal-garden/<version>/Build/ asset-base shape as the games site. See docs/local-build-evidence.md for the most recent local build identity and checks.
@@ -38,6 +39,8 @@ GitHub Actions runs credential-free repository checks on pull requests. See [doc
 - [SG-06 UI/HUD handoff record](docs/sg-06-ui-record.md)
 - [SG-07 motion and Rive decision](docs/sg-07-motion-decision.md)
 - [SG-08 feedback and audio record](docs/sg-08-feedback-record.md)
+- [SG-09 qualification matrix](docs/sg-09-qualification-matrix.md)
+- [SG-09 build evidence](docs/sg-09-build-evidence.md)
 - [Fresh-player playtest script](docs/playtest-script.md)
 - [GAME-278 Epic](https://setnessconsulting.atlassian.net/browse/GAME-278)
 - [GAME-279 SG-01](https://setnessconsulting.atlassian.net/browse/GAME-279) · [GAME-280 SG-02](https://setnessconsulting.atlassian.net/browse/GAME-280) · [GAME-281 SG-03](https://setnessconsulting.atlassian.net/browse/GAME-281) · [GAME-282 SG-04](https://setnessconsulting.atlassian.net/browse/GAME-282)
