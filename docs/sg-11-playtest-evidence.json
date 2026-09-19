@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "game": "signal-garden",
+  "issue": "GAME-289",
+  "status": "NOT_RUN",
+  "source": {
+    "candidateReviewCommit": "ee32f5b6516b3448cb0956550a1559387d81d5e5",
+    "runtimeBuildIdentity": "docs/sg-10-build-identity.json",
+    "runtimeBuildIdentitySha256": "6886B4CD48F3B5CB1ABBCAC3D983428DBF3F6159E5398E794FE2EC00999CA161",
+    "runtimeBuildSourceCommit": "34122315f6f31718ffa616517495392be5c91a2b"
+  },
+  "target": {
+    "browser": "Desktop Chrome or Edge",
+    "display": "1920x1080",
+    "locale": "English",
+    "coaching": "none",
+    "freshPlayer": true,
+    "sampleSize": 5
+  },
+  "thresholds": {
+    "objectiveUnderSeconds": 30,
+    "completionUnderSeconds": 60,
+    "minimumPlayersMeetingBothTimeBars": 4,
+    "recoverySuccessRequiredForEverySession": true,
+    "restartQuitSuccessRequiredForEverySession": true
+  },
+  "measures": [
+    "timeToUnderstandSeconds",
+    "timeToFirstMeaningfulActionSeconds",
+    "timeToCompleteSeconds",
+    "invalidRouteCount",
+    "recoverySuccess",
+    "restartQuitSuccess",
+    "perceivedClarity"
+  ],
+  "rubric": {
+    "miniMetro": [
+      "Objective, source, receiver, and intended route are legible at a glance.",
+      "Valid and invalid routing produce readable state feedback."
+    ],
+    "dorfromantik": [
+      "The compact composition supports calm pacing and a clear visual hierarchy.",
+      "No distracting clutter competes with the route."
+    ],
+    "theRoom": [
+      "The source gesture is discoverable without coaching.",
+      "The trace and receiver provide immediate, tactile-feeling response."
+    ]
+  },
+  "sessions": [],
+  "findings": [],
+  "ownerReview": {
+    "status": "PENDING",
+    "reason": "Five uncoached fresh-player sessions must be observed and recorded by the owner or an approved facilitator. No participant identity or private information belongs in this repository."
+  },
+  "provenance": {
+    "originalWork": true,
+    "thirdPartyAssetsCopied": false,
+    "thirdPartyCodeCopied": false,
+    "thirdPartyBrandingCopied": false
+  }
+}

@@ -66,7 +66,7 @@ These are observable goals for the first playable, not claims of completed human
 - **Recovery:** every invalid, partial, canceled, or focus-interrupted route returns to a state from which another attempt can begin without restarting the page.
 - **Performance:** target a visible-preview mean of at least 60 fps at an exact 1920×1080 render on the reference desktop; the qualification harness uses a five-second warmup and 30 one-second samples. The visual style favors clear geometry and stable frame time over effects.
 - **Local load:** target 10 seconds or less to interactive in a local HTTP preview at 1920×1080 in desktop Chrome/Edge. Production CDN time is measured only after a reviewed release.
-- **Formative playtest:** run five first-time desktop sessions before release. Record each objective-understanding time, completion time, route errors, recoveries, pauses, and replay. The slice target is at least four of five players understanding and completing within the time bars, with every invalid route recoverable; this small sample is directional rather than statistical release certification.
+- **Formative playtest (SG-01 selection):** run five first-time desktop sessions before release. Record objective-understanding time, first meaningful action, completion time, route errors, recovery, restart/quit success, and perceived clarity. The slice target is at least four of five players understanding the objective within 30 seconds and completing within one minute, with recovery and restart/quit succeeding in every session; this small sample is directional rather than statistical release certification. The protocol and anonymous evidence record are in [SG-11](sg-11-human-benchmark.md).
 
 ### Reference-game rubric
 

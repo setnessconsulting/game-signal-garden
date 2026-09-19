@@ -79,7 +79,8 @@ workflow summary still classifies Unity, generated WebGL, and browser lanes as
 | Local Unity/WebGL/browser evidence | `PASS_LOCAL` / `PASS_RECORDED` | [SG-09 build evidence](sg-09-build-evidence.md) |
 | Foreground Chrome and Edge qualification | `NOT_RUN` | Requires an independently observed desktop session |
 | Browser-tab working set and time to interactive | `NOT_RUN` | Not measured by the clean-checkout lane |
-| Physical focus loss, screen reader, and five-session benchmark | `NOT_RUN` | Manual SG-09/SG-11 work remains open |
+| Physical focus loss and screen reader | `NOT_RUN` | Requires an independently observed desktop session |
+| Five-session fresh-player benchmark | `NOT_RUN` | [SG-11 protocol and anonymous evidence record](sg-11-human-benchmark.md) are ready; owner/participant sessions remain open |
 
 The 12 MiB compressed-build and 512 MiB browser-tab working-set limits remain
 provisional and pending owner sign-off. No R2 object was uploaded, the
