@@ -19,13 +19,15 @@ The recorded WebGL candidate is the local build from runtime source commit
 ordered loader, data, framework, and WASM files, exact hashes, Brotli encoding,
 MIME types, and immutable R2 prefix pattern remain authoritative in that
 manifest. The documentation closeout is based on merged `main`
-`b33fb0913b18358abc591f90aa8dd6642eee809e`; the documentation commits do not
+`c388226fb02b66ea4084a0e52d4ce97fe844d784`; the documentation commits do not
 silently change the Unity input tree or the recorded runtime artifact.
 
 The artifact location is **local only**. A future reviewed release will use
 `signal-garden/<version>/Build/` in private R2 and the host-supplied
 `<assetBase>/Build/<exact-filename>` pattern. No production object or catalog
-entry exists as part of SG-12.
+entry exists as part of SG-12. An approved promotion will use the deterministic
+Git-derived prefix
+`signal-garden/<UTC-date>-<first-7-chars-of-runtime-source-commit>/Build/`.
 
 ## Qualification update — 2026-09-19
 
@@ -46,6 +48,13 @@ The exact observation is recorded under `qualificationUpdates` in the
 [release-candidate manifest](sg-12-release-candidate.json). The closeout
 decision remains `NOT_READY` until the remaining owner and human gates are
 resolved.
+
+The owner-observed qualification procedure is in [the SG-12 runbook](sg-12-owner-qualification-runbook.md).
+Its machine-readable gate record is `ownerQualification` in the closeout
+manifest. The record starts at `NOT_RUN`, may advance to
+`READY_FOR_OWNER_REVIEW` only after all required observations and findings are
+complete, and cannot enable promotion until owner approval and Jira
+reconciliation are recorded.
 
 ## Scope agreement
 

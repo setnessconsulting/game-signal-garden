@@ -47,6 +47,7 @@ GitHub Actions runs credential-free repository checks on pull requests. See [doc
 - [Fresh-player playtest script](docs/playtest-script.md)
 - [SG-11 human benchmark and playtest evidence](docs/sg-11-human-benchmark.md)
 - [SG-11 anonymous evidence record](docs/sg-11-playtest-evidence.json)
+- [SG-12 owner qualification runbook](docs/sg-12-owner-qualification-runbook.md)
 - [SG-12 closeout record](docs/sg-12-closeout-record.md)
 - [SG-12 release-candidate manifest](docs/sg-12-release-candidate.json)
 - [GAME-278 Epic](https://setnessconsulting.atlassian.net/browse/GAME-278)
