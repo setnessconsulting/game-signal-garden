@@ -18,9 +18,12 @@ The recorded WebGL candidate is the local build from runtime source commit
 `6886B4CD48F3B5CB1ABBCAC3D983428DBF3F6159E5398E794FE2EC00999CA161`). Its
 ordered loader, data, framework, and WASM files, exact hashes, Brotli encoding,
 MIME types, and immutable R2 prefix pattern remain authoritative in that
-manifest. The documentation closeout is based on merged `main`
-`c388226fb02b66ea4084a0e52d4ce97fe844d784`; the documentation commits do not
-silently change the Unity input tree or the recorded runtime artifact.
+manifest. The closeout record is based on the current merged `main`
+`318647a4143f22cd4da4e16b6cb4d9bcea023eb4`. Earlier SG-12 evidence was
+assembled against `c388226fb02b66ea4084a0e52d4ce97fe844d784`; this metadata
+refresh preserves that evidence while making the current repository baseline
+explicit. Neither documentation commit changes the Unity input tree or the
+recorded runtime artifact.
 
 The artifact location is **local only**. A future reviewed release will use
 `signal-garden/<version>/Build/` in private R2 and the host-supplied

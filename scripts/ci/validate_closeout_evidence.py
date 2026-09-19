@@ -17,7 +17,7 @@ SG10_RELATIVE_PATH = "docs/sg-10-build-identity.json"
 SG11_RELATIVE_PATH = "docs/sg-11-playtest-evidence.json"
 EXPECTED_GAME = "signal-garden"
 EXPECTED_ISSUE = "GAME-290"
-EXPECTED_BASE_MAIN_COMMIT = "c388226fb02b66ea4084a0e52d4ce97fe844d784"
+EXPECTED_BASE_MAIN_COMMIT = "318647a4143f22cd4da4e16b6cb4d9bcea023eb4"
 EXPECTED_RUNTIME_COMMIT = "34122315f6f31718ffa616517495392be5c91a2b"
 EXPECTED_RUNTIME_MANIFEST_HASH = "6886B4CD48F3B5CB1ABBCAC3D983428DBF3F6159E5398E794FE2EC00999CA161"
 EXPECTED_ARTIFACTS = (
@@ -554,7 +554,7 @@ def main() -> int:
             fail("status must be NOT_READY, READY_FOR_OWNER_REVIEW, or READY_FOR_PROMOTION")
         repository = manifest.get("repository")
         if isinstance(repository, dict) and repository.get("baseMainCommit") != EXPECTED_BASE_MAIN_COMMIT:
-            fail("repository.baseMainCommit must identify the merged PR #11 main commit")
+            fail("repository.baseMainCommit must identify the current merged main commit")
         validate_repository_identity(manifest.get("repository"))
         validate_release_candidate(manifest.get("releaseCandidate"), sg10, sg11, status if isinstance(status, str) else "NOT_READY")
         validate_qualification_updates(manifest.get("qualificationUpdates"))
