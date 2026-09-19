@@ -39,6 +39,7 @@ sysinfo.txt
 *.opendb
 *.VC.db
 *.tmp
+__pycache__/
 
 # Unity generated crash and profiler captures
 *.stacktrace
