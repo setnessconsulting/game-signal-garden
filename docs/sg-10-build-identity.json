@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "game": "signal-garden",
+  "issue": "GAME-288",
+  "source": {
+    "commit": "34122315f6f31718ffa616517495392be5c91a2b",
+    "commitRole": "Merged main Unity input revision used for the recorded SG-10 local build",
+    "unityInputTreeSha256": "C3037272F9894DFA98A64B4C595CE0B0D2C494BF25147886F6F696F1DB23DD20",
+    "scene": "Assets/Scenes/SignalGarden.unity",
+    "packagesLock": "Packages/packages-lock.json",
+    "packagesLockSha256": "60E10C79BC5920DE75236CB939688B7BBA27EA4246A5171DDA556D3C7E173A22",
+    "packages": {
+      "com.unity.render-pipelines.universal": "17.6.0",
+      "com.unity.inputsystem": "1.19.0",
+      "com.unity.ugui": "2.6.0",
+      "com.unity.test-framework": "1.8.0"
+    },
+    "unityEditor": {
+      "version": "6000.6.0f1",
+      "revision": "f7f8ed4d1e24"
+    },
+    "provenanceManifest": {
+      "path": "SourceArt/Blender/SignalGardenReceiver/SignalGardenReceiver.provenance.json",
+      "sha256": "E24E574B664EB0407495E609826FB52ED4CDAADBC62F4A4A1FF471D4D34FDDE4",
+      "status": "PASS"
+    }
+  },
+  "build": {
+    "target": "WebGL",
+    "compression": {
+      "format": "Brotli",
+      "decompressionFallback": false
+    },
+    "threading": "single",
+    "outputPrefix": "signal-garden/<version>/Build/",
+    "assetBasePattern": "<assetBase>/Build/<filename>",
+    "totalBytes": 10489853,
+    "compressedBudgetBytes": 12582912,
+    "budgetApprovalStatus": "PENDING_OWNER_SIGN_OFF",
+    "status": "PASS_LOCAL",
+    "artifacts": [
+      {
+        "role": "loader",
+        "filename": "WebGL.loader.js",
+        "relativePath": "Build/WebGL.loader.js",
+        "bytes": 27914,
+        "sha256": "8E62AFD3D90B709331D8223954F6C3906287B9E8E8C7D852FD85435CD8A74AE3",
+        "contentType": "text/javascript; charset=utf-8",
+        "contentEncoding": null
+      },
+      {
+        "role": "data",
+        "filename": "WebGL.data.br",
+        "relativePath": "Build/WebGL.data.br",
+        "bytes": 3585089,
+        "sha256": "BBFC943DC2D8DF55BB93D0CB44D49640C3A10172ABB58DA754BC6B768933B48A",
+        "contentType": "application/octet-stream",
+        "contentEncoding": "br"
+      },
+      {
+        "role": "framework",
+        "filename": "WebGL.framework.js.br",
+        "relativePath": "Build/WebGL.framework.js.br",
+        "bytes": 66617,
+        "sha256": "BF630E2ED2DF06748BEF43376CD3B9CF39F5CA7F00023B1D28646448E1899255",
+        "contentType": "text/javascript; charset=utf-8",
+        "contentEncoding": "br"
+      },
+      {
+        "role": "wasm",
+        "filename": "WebGL.wasm.br",
+        "relativePath": "Build/WebGL.wasm.br",
+        "bytes": 6810233,
+        "sha256": "492B0F4228524D7814AF51168D5A78C6005A7E1DE1099371F45667E04DA2FC7F",
+        "contentType": "application/wasm",
+        "contentEncoding": "br"
+      }
+    ]
+  },
+  "verification": {
+    "provenance": {
+      "status": "PASS_RECORDED",
+      "evidence": "docs/sg-05-asset-record.md and the SG-05 editor validator"
+    },
+    "unityEditMode": {
+      "status": "PASS_RECORDED",
+      "evidence": "docs/sg-10-ci-and-release-evidence.md (24/24 local Unity run)"
+    },
+    "unityPlayMode": {
+      "status": "PASS_RECORDED",
+      "evidence": "docs/sg-10-ci-and-release-evidence.md (8/8 local Unity run)"
+    },
+    "webglBuild": {
+      "status": "PASS_LOCAL",
+      "evidence": "docs/sg-10-ci-and-release-evidence.md (Unity Success and four artifact hashes)"
+    },
+    "nestedBrowserPreview": {
+      "status": "PASS_LOCAL",
+      "evidence": "docs/sg-09-build-evidence.md, docs/sg-09-browser-review.md, and the SG-10 repeat sample"
+    },
+    "hostedCredentialFree": {
+      "status": "PASS_RECORDED",
+      "evidence": "PR #8 Repository integrity check passed in Actions run 35412361707 (job 105814335542)."
+    },
+    "cleanCheckout": {
+      "status": "PASS_RECORDED",
+      "evidence": "docs/sg-10-clean-checkout.md and scripts/ci/check_clean_checkout.py"
+    }
+  },
+  "releaseGates": {
+    "inAppBrowserFrameRate": {
+      "status": "PASS_LOCAL",
+      "reason": "The repeat visible 1920x1080 local sample completed 30/30 seconds at 60.9 fps mean and 60.2 fps minimum; an earlier same-host diagnostic was lower and is retained as a caveat."
+    },
+    "desktopChromeForeground": {
+      "status": "NOT_RUN",
+      "reason": "No independently observed foreground desktop Chrome run is recorded."
+    },
+    "desktopEdgeForeground": {
+      "status": "NOT_RUN",
+      "reason": "No independently observed foreground desktop Edge run is recorded."
+    },
+    "localTimeToInteractive": {
+      "status": "NOT_RUN",
+      "reason": "The clean-checkout evidence does not include a fresh timing sample."
+    },
+    "browserTabWorkingSet": {
+      "status": "NOT_RUN",
+      "reason": "Browser-tab working set was not measured."
+    },
+    "physicalFocusLoss": {
+      "status": "NOT_RUN",
+      "reason": "Unity callback coverage is recorded; physical browser interruption remains open."
+    },
+    "screenReader": {
+      "status": "NOT_RUN",
+      "reason": "External screen-reader operation remains a manual gate."
+    },
+    "humanBenchmark": {
+      "status": "NOT_RUN",
+      "reason": "The five-session fresh-player benchmark is SG-11 work."
+    },
+    "ownerApproval": {
+      "status": "PENDING",
+      "reason": "Owner review of visual, audio, accessibility, and budget evidence is still required."
+    },
+    "productionCdn": {
+      "status": "NOT_RUN",
+      "reason": "No R2 upload, catalog promotion, or production deployment was performed."
+    }
+  }
+}
