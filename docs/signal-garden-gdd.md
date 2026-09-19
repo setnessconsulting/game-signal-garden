@@ -5,7 +5,7 @@
 **Implementation repository:** [setnessconsulting/game-signal-garden](https://github.com/setnessconsulting/game-signal-garden)
 
 **Release destination:** https://games.setnessconsulting.com/signal-garden/play/
-**Document status:** SG-06 UI/HUD handoff and implementation record layered onto the first playable slice; SG-09 qualification evidence and SG-10 credential-free release evidence are recorded separately in [the qualification matrix](sg-09-qualification-matrix.md) and [the SG-10 evidence record](sg-10-ci-and-release-evidence.md). Jira statuses remain unchanged.
+**Document status:** SG-06 UI/HUD handoff and implementation record layered onto the first playable slice; SG-09 qualification evidence, SG-10 credential-free release evidence, SG-11 human-benchmark protocol, and SG-12 closeout reconciliation are recorded separately in [the qualification matrix](sg-09-qualification-matrix.md), [the SG-10 evidence record](sg-10-ci-and-release-evidence.md), and [the SG-12 closeout record](sg-12-closeout-record.md). Jira statuses remain unchanged.
 
 ## Vision
 
