@@ -63,6 +63,12 @@ python3 scripts/ci/validate_repository.py
 python3 scripts/ci/validate_release_evidence.py
 ```
 
+The SG-10 pull request's hosted **Repository integrity** check passed in
+[Actions run 35412361707](https://github.com/setnessconsulting/game-signal-garden/actions/runs/35412361707)
+(job `105814335542`). This is a credential-free repository/evidence pass; the
+workflow summary still classifies Unity, generated WebGL, and browser lanes as
+`NOT_RUN`.
+
 ## Classification boundary
 
 | Lane | Classification | Evidence |

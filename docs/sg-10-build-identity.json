@@ -99,8 +99,8 @@
       "evidence": "docs/sg-09-build-evidence.md, docs/sg-09-browser-review.md, and the SG-10 repeat sample"
     },
     "hostedCredentialFree": {
-      "status": "NOT_RUN",
-      "evidence": "The SG-10 pull-request workflow will provide the hosted check; local validator output is recorded in this worktree."
+      "status": "PASS_RECORDED",
+      "evidence": "PR #8 Repository integrity check passed in Actions run 35412361707 (job 105814335542)."
     },
     "cleanCheckout": {
       "status": "PASS_RECORDED",
