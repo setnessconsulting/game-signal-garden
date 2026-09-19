@@ -4,7 +4,7 @@
   "issue": "GAME-290",
   "status": "NOT_READY",
   "repository": {
-    "baseMainCommit": "c388226fb02b66ea4084a0e52d4ce97fe844d784",
+    "baseMainCommit": "318647a4143f22cd4da4e16b6cb4d9bcea023eb4",
     "scope": "Single-player Unity WebGL first playable; one SignalGarden scene; desktop Chrome/Edge target; no multiplayer, network, progression, or production promotion.",
     "readme": "README.md",
     "gdd": "docs/signal-garden-gdd.md",
