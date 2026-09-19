@@ -23,4 +23,3 @@ Using `?sg-render=1920x1080&sg-stats=1` in a kept-foreground in-app preview, the
 This is a local in-app browser result. An independent foreground desktop Chrome run and Edge run were not completed in this slice. The installed browser versions observed on the Windows machine were Chrome `153.0.8010.52` and Edge `153.0.4234.32`; neither version is claimed as a completed SG-09 performance pass here.
 
 Time to interactive was not directly captured from the harness timestamps in this review. Browser-tab working set was not measured. The compressed artifact total is recorded in [local build evidence](local-build-evidence.md), but the proposed 12 MiB and 512 MiB budgets remain pending owner sign-off.
-

@@ -36,4 +36,3 @@ The visible in-app browser completed the exact `1920×1080` render sample with `
 This is local in-app-browser evidence, not independent desktop Chrome or Edge qualification. Chrome `153.0.8010.52` and Edge `153.0.4234.32` were installed, but completed foreground runs in those desktop browsers were not captured. The 10-second time-to-interactive target, external screen-reader operation, physical focus-loss behavior, browser-tab working set, and five-session human benchmark remain open.
 
 No R2 upload, games-site catalog change, deployment, or Jira status update was made.
-
