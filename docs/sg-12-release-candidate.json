@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 1,
+  "game": "signal-garden",
+  "issue": "GAME-290",
+  "status": "NOT_READY",
+  "repository": {
+    "baseMainCommit": "b33fb0913b18358abc591f90aa8dd6642eee809e",
+    "scope": "Single-player Unity WebGL first playable; one SignalGarden scene; desktop Chrome/Edge target; no multiplayer, network, progression, or production promotion.",
+    "readme": "README.md",
+    "gdd": "docs/signal-garden-gdd.md",
+    "closeoutRecord": "docs/sg-12-closeout-record.md"
+  },
+  "releaseCandidate": {
+    "runtimeSourceCommit": "34122315f6f31718ffa616517495392be5c91a2b",
+    "runtimeBuildIdentity": "docs/sg-10-build-identity.json",
+    "runtimeBuildIdentitySha256": "6886B4CD48F3B5CB1ABBCAC3D983428DBF3F6159E5398E794FE2EC00999CA161",
+    "artifactLocation": {
+      "status": "LOCAL_ONLY",
+      "prefixPattern": "signal-garden/<version>/Build/",
+      "assetBasePattern": "<assetBase>/Build/<filename>",
+      "uploadedToProductionR2": false
+    },
+    "artifacts": [
+      "WebGL.loader.js",
+      "WebGL.data.br",
+      "WebGL.framework.js.br",
+      "WebGL.wasm.br"
+    ],
+    "unity": "6000.6.0f1",
+    "packages": {
+      "com.unity.render-pipelines.universal": "17.6.0",
+      "com.unity.inputsystem": "1.19.0",
+      "com.unity.ugui": "2.6.0",
+      "com.unity.test-framework": "1.8.0"
+    }
+  },
+  "childStories": [
+    {
+      "key": "GAME-279",
+      "name": "SG-01",
+      "evidenceStatus": "MERGED_EVIDENCE",
+      "evidence": ["docs/signal-garden-gdd.md", "docs/local-build-evidence.md"],
+      "ownerDisposition": "Scope and first playable are recorded; Jira status was not changed."
+    },
+    {
+      "key": "GAME-280",
+      "name": "SG-02",
+      "evidenceStatus": "MERGED_EVIDENCE",
+      "evidence": ["docs/signal-garden-gdd.md"],
+      "ownerDisposition": "Gameplay loop is represented by the existing SignalGarden scene and route tests; Jira status was not changed."
+    },
+    {
+      "key": "GAME-281",
+      "name": "SG-03",
+      "evidenceStatus": "MERGED_EVIDENCE",
+      "evidence": ["docs/signal-garden-gdd.md", "docs/sg-05-asset-record.md"],
+      "ownerDisposition": "Diorama and receiver presentation evidence are recorded; Jira status was not changed."
+    },
+    {
+      "key": "GAME-282",
+      "name": "SG-04",
+      "evidenceStatus": "MERGED_EVIDENCE",
+      "evidence": ["docs/sg-06-ui-record.md", "docs/sg-08-feedback-record.md"],
+      "ownerDisposition": "HUD, accessibility text, and feedback decisions are recorded; Jira status was not changed."
+    },
+    {
+      "key": "GAME-283",
+      "name": "SG-05",
+      "evidenceStatus": "MERGED_EVIDENCE",
+      "evidence": ["docs/sg-05-asset-record.md"],
+      "ownerDisposition": "Blender source, FBX, prefab, provenance, and validator evidence are recorded; owner visual review remains a release gate."
+    },
+    {
+      "key": "GAME-284",
+      "name": "SG-06",
+      "evidenceStatus": "MERGED_EVIDENCE",
+      "evidence": ["docs/sg-06-ui-record.md", "docs/sg-06-browser-review.md"],
+      "ownerDisposition": "UGUI HUD handoff and browser review are recorded; independent screen-reader review remains open."
+    },
+    {
+      "key": "GAME-285",
+      "name": "SG-07",
+      "evidenceStatus": "MERGED_EVIDENCE",
+      "evidence": ["docs/sg-07-motion-decision.md"],
+      "ownerDisposition": "Rive is explicitly declined for v1; Unity-native motion remains."
+    },
+    {
+      "key": "GAME-286",
+      "name": "SG-08",
+      "evidenceStatus": "MERGED_EVIDENCE",
+      "evidence": ["docs/sg-08-feedback-record.md", "docs/sg-08-browser-review.md"],
+      "ownerDisposition": "Visual/audio feedback is documented; human listening and owner review remain open."
+    },
+    {
+      "key": "GAME-287",
+      "name": "SG-09",
+      "evidenceStatus": "EVIDENCE_WITH_OPEN_GATES",
+      "evidence": ["docs/sg-09-qualification-matrix.md", "docs/sg-09-build-evidence.md"],
+      "ownerDisposition": "Local and automated evidence is recorded; desktop foreground, focus-loss, screen-reader, working-set, TTI, and human gates remain open."
+    },
+    {
+      "key": "GAME-288",
+      "name": "SG-10",
+      "evidenceStatus": "EVIDENCE_WITH_OPEN_GATES",
+      "evidence": ["docs/sg-10-ci-and-release-evidence.md", "docs/sg-10-build-identity.json"],
+      "ownerDisposition": "Credential-free repository and build identity checks pass; production and owner gates remain open."
+    },
+    {
+      "key": "GAME-289",
+      "name": "SG-11",
+      "evidenceStatus": "PROTOCOL_READY_HUMAN_RUN_REQUIRED",
+      "evidence": ["docs/sg-11-human-benchmark.md", "docs/sg-11-playtest-evidence.json"],
+      "ownerDisposition": "The five-session benchmark is NOT_RUN with zero sessions; no human result is claimed."
+    },
+    {
+      "key": "GAME-290",
+      "name": "SG-12",
+      "evidenceStatus": "CLOSEOUT_IN_PROGRESS",
+      "evidence": ["docs/sg-12-closeout-record.md", "docs/sg-12-release-candidate.json"],
+      "ownerDisposition": "Closeout is not ready until the listed owner and human gates are resolved."
+    }
+  ],
+  "technology": {
+    "unity": {
+      "status": "PASS_RECORDED",
+      "version": "6000.6.0f1",
+      "evidence": "docs/sg-10-ci-and-release-evidence.md"
+    },
+    "blender": {
+      "status": "PASS_RECORDED",
+      "version": "5.2.1 LTS",
+      "evidence": "docs/sg-05-asset-record.md"
+    },
+    "figma": {
+      "status": "PASS_RECORDED_NORMALIZED_HANDOFF",
+      "evidence": "docs/sg-06-ui-record.md"
+    },
+    "rive": {
+      "status": "DECLINED_V1",
+      "evidence": "docs/sg-07-motion-decision.md"
+    },
+    "githubActions": {
+      "status": "PASS_RECORDED_CREDENTIAL_FREE",
+      "evidence": "docs/ci-validation.md"
+    },
+    "sentry": {
+      "status": "DEFERRED",
+      "reason": "No runtime error-reporting dependency is selected for v1."
+    },
+    "hermes": {
+      "status": "DEFERRED",
+      "reason": "No Hermes integration is selected for v1."
+    },
+    "browserQualification": {
+      "status": "OPEN_OWNER_GATE",
+      "reason": "Independent foreground Chrome and Edge, time-to-interactive, working-set, and physical focus-loss runs remain open."
+    },
+    "levelBest": {
+      "status": "DEFERRED",
+      "reason": "No progression, account, leaderboard, or LevelBest integration is in v1."
+    }
+  },
+  "knownLimitations": [
+    {"id": "human-benchmark", "status": "OPEN", "ownerAction": "Run and record five fresh-player sessions."},
+    {"id": "foreground-browser", "status": "OPEN", "ownerAction": "Capture independently observed Chrome and Edge runs."},
+    {"id": "time-to-interactive", "status": "OPEN", "ownerAction": "Measure the local target and later production CDN separately."},
+    {"id": "browser-working-set", "status": "OPEN", "ownerAction": "Measure the game tab against the provisional 512 MiB budget."},
+    {"id": "physical-focus-loss", "status": "OPEN", "ownerAction": "Observe a real browser focus interruption."},
+    {"id": "screen-reader", "status": "OPEN", "ownerAction": "Run independent screen-reader review."},
+    {"id": "owner-approval", "status": "OPEN", "ownerAction": "Approve visuals, audio, accessibility, and provisional budgets."},
+    {"id": "production-cdn", "status": "OPEN", "ownerAction": "Only after review, upload immutable artifacts and qualify production."}
+  ],
+  "jira": {
+    "epicKey": "GAME-278",
+    "epicStatusReadback": "Ready",
+    "statusChangedByThisRecord": false,
+    "agreementStatus": "PENDING_OWNER_RECONCILIATION",
+    "reason": "The repository records scope and evidence, but Jira statuses and the Epic closeout decision remain unchanged by this implementation."
+  },
+  "ownerApprovals": {
+    "status": "PENDING",
+    "items": [
+      "Five-session fresh-player benchmark and finding disposition",
+      "Foreground desktop Chrome and Edge qualification",
+      "Time-to-interactive, browser working-set, physical focus-loss, and screen-reader evidence",
+      "Visual/audio/accessibility review",
+      "12 MiB compressed build and 512 MiB browser-tab budget sign-off",
+      "Jira Epic scope/status reconciliation before any promotion"
+    ]
+  },
+  "releaseDecision": {
+    "status": "NOT_READY",
+    "promotionAllowed": false,
+    "reason": "Evidence is recorded, but human qualification, owner approvals, Jira reconciliation, and production CDN qualification are incomplete."
+  },
+  "provenance": {
+    "license": "Original Setness Consulting work; no third-party game assets, code, branding, or protected content copied.",
+    "generatedBuildTracked": false,
+    "productionChanged": false
+  }
+}

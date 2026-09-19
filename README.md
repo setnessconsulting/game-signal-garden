@@ -47,6 +47,8 @@ GitHub Actions runs credential-free repository checks on pull requests. See [doc
 - [Fresh-player playtest script](docs/playtest-script.md)
 - [SG-11 human benchmark and playtest evidence](docs/sg-11-human-benchmark.md)
 - [SG-11 anonymous evidence record](docs/sg-11-playtest-evidence.json)
+- [SG-12 closeout record](docs/sg-12-closeout-record.md)
+- [SG-12 release-candidate manifest](docs/sg-12-release-candidate.json)
 - [GAME-278 Epic](https://setnessconsulting.atlassian.net/browse/GAME-278)
 - [GAME-279 SG-01](https://setnessconsulting.atlassian.net/browse/GAME-279) · [GAME-280 SG-02](https://setnessconsulting.atlassian.net/browse/GAME-280) · [GAME-281 SG-03](https://setnessconsulting.atlassian.net/browse/GAME-281) · [GAME-282 SG-04](https://setnessconsulting.atlassian.net/browse/GAME-282)
 - [GAME-283 SG-05](https://setnessconsulting.atlassian.net/browse/GAME-283)
@@ -54,6 +56,7 @@ GitHub Actions runs credential-free repository checks on pull requests. See [doc
 - [GAME-285 SG-07](https://setnessconsulting.atlassian.net/browse/GAME-285)
 - [GAME-286 SG-08](https://setnessconsulting.atlassian.net/browse/GAME-286)
 - [GAME-287 SG-09](https://setnessconsulting.atlassian.net/browse/GAME-287) · [GAME-288 SG-10](https://setnessconsulting.atlassian.net/browse/GAME-288) · [GAME-289 SG-11](https://setnessconsulting.atlassian.net/browse/GAME-289)
+- [GAME-290 SG-12](https://setnessconsulting.atlassian.net/browse/GAME-290)
 - [Games site release contract](https://github.com/setnessconsulting/games-site/blob/main/docs/game-release-contract.md)
 
 The Unity WebGL files are released under the immutable private-R2 prefix signal-garden/<version>/Build/. The host supplies an asset base URL; the player must load its loader, data, framework, and WASM files from <assetBase>/Build/<exact-filename>. Brotli builds require Content-Encoding: br on compressed files and the correct Content-Type (in particular application/wasm for compressed WebAssembly). The production bucket and catalog stay unchanged until a separately reviewed release PR.
