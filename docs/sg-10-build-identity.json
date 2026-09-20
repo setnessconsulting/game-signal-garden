@@ -3,9 +3,9 @@
   "game": "signal-garden",
   "issue": "GAME-288",
   "source": {
-    "commit": "34122315f6f31718ffa616517495392be5c91a2b",
-    "commitRole": "Merged main Unity input revision used for the recorded SG-10 local build",
-    "unityInputTreeSha256": "C3037272F9894DFA98A64B4C595CE0B0D2C494BF25147886F6F696F1DB23DD20",
+    "commit": "20bf9b0595b2b16bb341a3bed119e37e615491aa",
+    "commitRole": "WebGL compatibility replacement revision: Mobile URP shadow and native render-pass paths disabled after the frozen candidate rendered a blank world; gameplay and scene content are unchanged.",
+    "unityInputTreeSha256": "9A0E890A7AC996B0CE8DF4B49340B5BD75987E0C27A950637760D501E053A490",
     "scene": "Assets/Scenes/SignalGarden.unity",
     "packagesLock": "Packages/packages-lock.json",
     "packagesLockSha256": "60E10C79BC5920DE75236CB939688B7BBA27EA4246A5171DDA556D3C7E173A22",
@@ -34,7 +34,7 @@
     "threading": "single",
     "outputPrefix": "signal-garden/<version>/Build/",
     "assetBasePattern": "<assetBase>/Build/<filename>",
-    "totalBytes": 10489853,
+    "totalBytes": 10510749,
     "compressedBudgetBytes": 12582912,
     "budgetApprovalStatus": "PENDING_OWNER_SIGN_OFF",
     "status": "PASS_LOCAL",
@@ -52,8 +52,8 @@
         "role": "data",
         "filename": "WebGL.data.br",
         "relativePath": "Build/WebGL.data.br",
-        "bytes": 3585089,
-        "sha256": "BBFC943DC2D8DF55BB93D0CB44D49640C3A10172ABB58DA754BC6B768933B48A",
+        "bytes": 3605985,
+        "sha256": "7BED26BEF38C40A3C4CDD7E01326C61089A5624E033B0971AC43F25ED266C03B",
         "contentType": "application/octet-stream",
         "contentEncoding": "br"
       },
@@ -92,25 +92,25 @@
     },
     "webglBuild": {
       "status": "PASS_LOCAL",
-      "evidence": "docs/sg-10-ci-and-release-evidence.md (Unity Success and four artifact hashes)"
+      "evidence": "docs/sg-13-webgl-rendering-fix.md (Unity Success, four artifact hashes, Brotli/MIME readback)"
     },
     "nestedBrowserPreview": {
       "status": "PASS_LOCAL",
-      "evidence": "docs/sg-09-build-evidence.md, docs/sg-09-browser-review.md, and the SG-10 repeat sample"
+      "evidence": "docs/sg-13-webgl-rendering-fix.md (local nested preview rendered the full diorama and completed a route)"
     },
     "hostedCredentialFree": {
-      "status": "PASS_RECORDED",
-      "evidence": "PR #8 Repository integrity check passed in Actions run 35412361707 (job 105814335542)."
+      "status": "NOT_RUN",
+      "evidence": "Credential-free Repository integrity will run on the replacement branch; no hosted result is claimed here."
     },
     "cleanCheckout": {
       "status": "PASS_RECORDED",
-      "evidence": "docs/sg-10-clean-checkout.md and scripts/ci/check_clean_checkout.py"
+      "evidence": "docs/sg-13-webgl-rendering-fix.md and scripts/ci/check_clean_checkout.py"
     }
   },
   "releaseGates": {
     "inAppBrowserFrameRate": {
-      "status": "PASS_LOCAL",
-      "reason": "The repeat visible 1920x1080 local sample completed 30/30 seconds at 60.9 fps mean and 60.2 fps minimum; an earlier same-host diagnostic was lower and is retained as a caveat."
+      "status": "NOT_RUN",
+      "reason": "The prior frame-rate sample belonged to the superseded blank-world candidate; the replacement renders correctly but requires a fresh focused 30-sample measurement."
     },
     "desktopChromeForeground": {
       "status": "NOT_RUN",
@@ -122,7 +122,7 @@
     },
     "localTimeToInteractive": {
       "status": "NOT_RUN",
-      "reason": "The clean-checkout evidence does not include a fresh timing sample."
+      "reason": "The prior timing sample belonged to the superseded candidate; a replacement cold and warm timing run is required."
     },
     "browserTabWorkingSet": {
       "status": "NOT_RUN",

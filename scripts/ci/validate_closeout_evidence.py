@@ -18,8 +18,8 @@ SG11_RELATIVE_PATH = "docs/sg-11-playtest-evidence.json"
 EXPECTED_GAME = "signal-garden"
 EXPECTED_ISSUE = "GAME-290"
 EXPECTED_BASE_MAIN_COMMIT = "318647a4143f22cd4da4e16b6cb4d9bcea023eb4"
-EXPECTED_RUNTIME_COMMIT = "34122315f6f31718ffa616517495392be5c91a2b"
-EXPECTED_RUNTIME_MANIFEST_HASH = "6886B4CD48F3B5CB1ABBCAC3D983428DBF3F6159E5398E794FE2EC00999CA161"
+EXPECTED_RUNTIME_COMMIT = "20bf9b0595b2b16bb341a3bed119e37e615491aa"
+EXPECTED_RUNTIME_MANIFEST_HASH = "6D092D9290EB64F935A5D322E8600B87BFC5FFE80E7E1F65E7AE7D8DEABCEDD6"
 EXPECTED_ARTIFACTS = (
     "WebGL.loader.js",
     "WebGL.data.br",
@@ -275,6 +275,28 @@ def validate_qualification_updates(updates: Any) -> None:
         fail("qualificationUpdates.recordedAt must identify the current qualification observation")
     if updates.get("candidateRuntimeSourceCommit") != EXPECTED_RUNTIME_COMMIT:
         fail("qualificationUpdates.candidateRuntimeSourceCommit must match the runtime candidate")
+    if updates.get("status") == "SUPERSEDED":
+        previous = updates.get("previousCandidateRuntimeSourceCommit")
+        if not isinstance(previous, str) or not HEX_40.fullmatch(previous):
+            fail("qualificationUpdates.previousCandidateRuntimeSourceCommit must be a full commit SHA")
+        if updates.get("replacementRequired") is not True:
+            fail("qualificationUpdates.replacementRequired must be true for superseded evidence")
+        require_string(updates, "reason", "qualificationUpdates.reason")
+        evidence = require_string(updates, "evidence", "qualificationUpdates.evidence")
+        if evidence is not None:
+            repo_file(evidence)
+        smoke = updates.get("localRenderSmoke")
+        if not isinstance(smoke, dict):
+            fail("qualificationUpdates.localRenderSmoke must be an object")
+        else:
+            if smoke.get("status") != "PASS_LOCAL":
+                fail("qualificationUpdates.localRenderSmoke.status must be PASS_LOCAL")
+            if smoke.get("render") != "1920x1080":
+                fail("qualificationUpdates.localRenderSmoke.render must be 1920x1080")
+            require_string(smoke, "route", "qualificationUpdates.localRenderSmoke.route")
+            require_string(smoke, "method", "qualificationUpdates.localRenderSmoke.method")
+            require_string(smoke, "classification", "qualificationUpdates.localRenderSmoke.classification")
+        return
     chrome = updates.get("desktopChromeForeground")
     if not isinstance(chrome, dict):
         fail("qualificationUpdates.desktopChromeForeground must be an object")
