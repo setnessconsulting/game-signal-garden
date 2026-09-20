@@ -3,9 +3,9 @@
   "game": "signal-garden",
   "issue": "GAME-288",
   "source": {
-    "commit": "20bf9b0595b2b16bb341a3bed119e37e615491aa",
-    "commitRole": "WebGL compatibility replacement revision: Mobile URP shadow and native render-pass paths disabled after the frozen candidate rendered a blank world; gameplay and scene content are unchanged.",
-    "unityInputTreeSha256": "9A0E890A7AC996B0CE8DF4B49340B5BD75987E0C27A950637760D501E053A490",
+    "commit": "47fd09f8567d02bca8a4f4d38404b451ede5e0c6",
+    "commitRole": "Visual polish replacement revision: shared island surface, rounded route stones, source bloom, receiver beacon, grounded shadows, and firefly atmosphere added while gameplay and route rules remain unchanged.",
+    "unityInputTreeSha256": "87C7504E7E7B729ABA84B303948F423854A38BC4997B5A14426288FA7B798B68",
     "scene": "Assets/Scenes/SignalGarden.unity",
     "packagesLock": "Packages/packages-lock.json",
     "packagesLockSha256": "60E10C79BC5920DE75236CB939688B7BBA27EA4246A5171DDA556D3C7E173A22",
@@ -34,7 +34,7 @@
     "threading": "single",
     "outputPrefix": "signal-garden/<version>/Build/",
     "assetBasePattern": "<assetBase>/Build/<filename>",
-    "totalBytes": 10510749,
+    "totalBytes": 10471760,
     "compressedBudgetBytes": 12582912,
     "budgetApprovalStatus": "PENDING_OWNER_SIGN_OFF",
     "status": "PASS_LOCAL",
@@ -52,8 +52,8 @@
         "role": "data",
         "filename": "WebGL.data.br",
         "relativePath": "Build/WebGL.data.br",
-        "bytes": 3605985,
-        "sha256": "7BED26BEF38C40A3C4CDD7E01326C61089A5624E033B0971AC43F25ED266C03B",
+        "bytes": 3566996,
+        "sha256": "DB5D18744083AEEF603A8E7251408D6C4AB112E923CD73A4DF31751215B4D0A1",
         "contentType": "application/octet-stream",
         "contentEncoding": "br"
       },
@@ -92,11 +92,11 @@
     },
     "webglBuild": {
       "status": "PASS_LOCAL",
-      "evidence": "docs/sg-13-webgl-rendering-fix.md (Unity Success, four artifact hashes, Brotli/MIME readback)"
+      "evidence": "docs/sg-14-visual-polish.md (Unity Success, four artifact hashes, Brotli/MIME readback)"
     },
     "nestedBrowserPreview": {
       "status": "PASS_LOCAL",
-      "evidence": "docs/sg-13-webgl-rendering-fix.md (local nested preview rendered the full diorama and completed a route)"
+      "evidence": "docs/sg-14-visual-polish.md (local nested preview rendered the polished diorama and completed a route)"
     },
     "hostedCredentialFree": {
       "status": "NOT_RUN",

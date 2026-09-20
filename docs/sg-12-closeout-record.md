@@ -12,20 +12,21 @@ evidence as an owner release approval.
 
 ## Candidate identity
 
-The recorded WebGL candidate is the replacement local build from runtime source
-commit `20bf9b0595b2b16bb341a3bed119e37e615491aa`, identified by
+The recorded WebGL candidate is the visual-polish local build from runtime
+source commit `47fd09f8567d02bca8a4f4d38404b451ede5e0c6`, identified by
 `docs/sg-10-build-identity.json` (SHA-256
-`6D092D9290EB64F935A5D322E8600B87BFC5FFE80E7E1F65E7AE7D8DEABCEDD6`). Its
+`C48C96FEA42463FAFCD3D74C1FB50C2036E5BBDAD29897A404D7FE78D6DADA9C`). Its
 ordered loader, data, framework, and WASM files, exact hashes, Brotli encoding,
 MIME types, and immutable R2 prefix pattern remain authoritative in that
 manifest. The closeout record is based on the current merged `main`
 `318647a4143f22cd4da4e16b6cb4d9bcea023eb4`. Earlier SG-12 evidence was
 assembled against `c388226fb02b66ea4084a0e52d4ce97fe844d784`; this metadata
 refresh preserves that evidence while making the current repository baseline
-explicit. The WebGL settings replacement is recorded in [the SG-13 rendering
-fix record](sg-13-webgl-rendering-fix.md). It changes the Unity input tree and
-produces a replacement data bundle; the prior qualification observations
-therefore require a fresh run.
+explicit. The WebGL compatibility replacement is recorded in [the SG-13 rendering
+fix record](sg-13-webgl-rendering-fix.md), and the current authored presentation
+change is recorded in [SG-14](sg-14-visual-polish.md). The visual polish changes
+the Unity input tree and produces a replacement data bundle; the prior
+qualification observations therefore require a fresh run.
 
 The artifact location is **local only**. A future reviewed release will use
 `signal-garden/<version>/Build/` in private R2 and the host-supplied
@@ -41,8 +42,8 @@ superseded blank-world candidate. They remain in [the historical diagnostics
 record](sg-12-local-diagnostics.md) for traceability but are marked
 `SUPERSEDED` in the machine-readable closeout manifest. The replacement
 candidate has passed the local rendering and route smoke checks documented in
-[SG-13](sg-13-webgl-rendering-fix.md); all performance and owner gates must be
-rerun against it.
+[SG-14](sg-14-visual-polish.md); all performance and owner gates must be rerun
+against it.
 
 The replacement was opened in the local nested host preview at the exact
 `1920x1080` render. The full diorama rendered, and a source-to-receiver drag
