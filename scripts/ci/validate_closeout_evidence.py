@@ -18,8 +18,8 @@ SG11_RELATIVE_PATH = "docs/sg-11-playtest-evidence.json"
 EXPECTED_GAME = "signal-garden"
 EXPECTED_ISSUE = "GAME-290"
 EXPECTED_BASE_MAIN_COMMIT = "318647a4143f22cd4da4e16b6cb4d9bcea023eb4"
-EXPECTED_RUNTIME_COMMIT = "47fd09f8567d02bca8a4f4d38404b451ede5e0c6"
-EXPECTED_RUNTIME_MANIFEST_HASH = "C48C96FEA42463FAFCD3D74C1FB50C2036E5BBDAD29897A404D7FE78D6DADA9C"
+EXPECTED_RUNTIME_COMMIT = "1b3586f26f0c81410cbbbe33fc908e2dee2f1079"
+EXPECTED_RUNTIME_MANIFEST_HASH = "8B882A25376564B9706A2D89710A79C43F2B5721A0391C618FB41CBE81925B12"
 EXPECTED_ARTIFACTS = (
     "WebGL.loader.js",
     "WebGL.data.br",
@@ -271,7 +271,7 @@ def validate_qualification_updates(updates: Any) -> None:
     if not isinstance(updates, dict):
         fail("qualificationUpdates must be an object")
         return
-    if updates.get("recordedAt") != "2026-09-19":
+    if updates.get("recordedAt") != "2026-09-20":
         fail("qualificationUpdates.recordedAt must identify the current qualification observation")
     if updates.get("candidateRuntimeSourceCommit") != EXPECTED_RUNTIME_COMMIT:
         fail("qualificationUpdates.candidateRuntimeSourceCommit must match the runtime candidate")

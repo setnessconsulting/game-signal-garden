@@ -6,10 +6,10 @@ Status: implementation complete for the credential-free evidence lane. This
 record does not promote the game to playable production and does not replace
 the owner-gated desktop, accessibility, or human qualification work.
 
-The original SG-10 candidate and the SG-13 WebGL compatibility replacement are
-retained as historical evidence. The current runtime identity is the bounded
-SG-14 visual polish replacement; see [the SG-14 visual polish record](sg-14-visual-polish.md).
-It improves the authored diorama presentation while preserving gameplay and
+The original SG-10 candidate, the SG-13 WebGL compatibility replacement, and
+the SG-14 visual polish replacement are retained as historical evidence. The
+current runtime identity is the bounded SG-15 terrain and trail refinement;
+see [the SG-15 visual audit](sg-15-visual-audit.md). It preserves gameplay and
 resets owner qualification because the runtime artifact changed.
 
 ## What is checked in
@@ -30,9 +30,9 @@ resets owner qualification because the runtime artifact changed.
   summary that keeps Unity compilation, Unity tests, WebGL generation, and
   browser qualification classified as `NOT_RUN` in hosted CI.
 
-The recorded local candidate is a fresh SG-10 build from merged `main` source
-revision `34122315f6f31718ffa616517495392be5c91a2b`. The ordered four-file
-artifact total is `10,489,853` bytes; Unity reported a `10,510,362` byte total
+The current recorded local candidate is a fresh SG-10 build from runtime source
+revision `1b3586f26f0c81410cbbbe33fc908e2dee2f1079`. The ordered four-file
+artifact total is `10,468,381` bytes; Unity reported a `10,488,890` byte total
 including its surrounding output. The manifest verifies the tracked Unity
 input tree hash and the generated files were checked locally with
 `--build-dir`, while keeping those generated files ignored.
@@ -42,17 +42,14 @@ input tree hash and the generated files were checked locally with
 Unity `6000.6.0f1` with URP `17.6.0`, Input System `1.19.0`, UGUI `2.6.0`, and
 Unity Test Framework `1.8.0` was run from the SG-10 worktree. EditMode passed
 `24/24` and PlayMode passed `8/8`. The WebGL build completed with `Build
-Finished, Result: Success`; its ordered four artifacts totalled `10,489,853`
-bytes and the Unity build report total was `10,510,362` bytes. The release
+Finished, Result: Success`; its ordered four artifacts totalled `10,468,381`
+bytes and the Unity build report total was `10,488,890` bytes. The release
 validator passed both metadata-only mode and `--build-dir Builds/WebGL/Build`.
 
-The browser result remains the previously recorded local nested preview in
-[SG-09 build evidence](sg-09-build-evidence.md); this issue adds the identity
-and clean-checkout lane and does not claim a new desktop browser or production
-CDN run. A repeat visible in-app preview at the exact 1920×1080 render completed
-`30/30s` at `60.9 fps` mean and `60.2 fps` minimum (`PASS`). The first same-host
-diagnostic was `56.8 fps` mean with an `11.2 fps` minimum; it is retained as a
-transient in-app caveat rather than used as a sustained performance claim.
+The current visual smoke result is recorded in [SG-15](sg-15-visual-audit.md)
+and does not claim a new desktop browser or production CDN run. Foreground
+Chrome and Edge performance, time to interactive, and all owner gates remain
+open.
 
 ## Clean-checkout evidence
 
