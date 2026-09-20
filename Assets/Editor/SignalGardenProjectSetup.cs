@@ -35,11 +35,12 @@ namespace SignalGarden.Editor
             CreateIslandUnderside(islandForm.transform, materials);
             CreateGardenRim(island.transform, materials.edgeGlow);
 
-            CreateTrail(island.transform, RouteRules.StandardTrail, materials.trailStone, materials.trailMarker, 0.78f, "Gold signal trail");
-            CreateTrail(island.transform, RouteRules.DeadEndSpur, materials.deadEndStone, materials.deadEndGlow, 0.62f, "Blind spur");
+            CreateTrail(island.transform, RouteRules.StandardTrail, materials.trailStone, materials.trailMarker, 0.70f, "Gold signal trail");
+            CreateTrail(island.transform, RouteRules.DeadEndSpur, materials.deadEndStone, materials.deadEndGlow, 0.54f, "Blind spur");
             var source = CreateSource(island.transform, RouteRules.StandardTrail[0], materials);
             var receiver = CreateReceiver(island.transform, RouteRules.StandardTrail[RouteRules.StandardTrail.Length - 1], materials);
             CreateGardenDetails(island.transform, materials);
+            CreateAtmosphere(island.transform, materials);
 
             var focus = new GameObject("Camera focus");
             focus.transform.position = new Vector3(0f, -0.30f, 0f);
@@ -191,17 +192,17 @@ namespace SignalGarden.Editor
             {
                 topPalette = new[]
                 {
-                    MaterialAsset("Garden Moss Deep", "#426B5C", 0.12f),
-                    MaterialAsset("Garden Moss Fern", "#547D62", 0.14f),
-                    MaterialAsset("Garden Moss Sage", "#678B68", 0.16f),
-                    MaterialAsset("Garden Moss Sunlit", "#779771", 0.18f)
+                    MaterialAsset("Garden Moss Deep", "#5A8269", 0.12f),
+                    MaterialAsset("Garden Moss Fern", "#628B70", 0.14f),
+                    MaterialAsset("Garden Moss Sage", "#6B9274", 0.16f),
+                    MaterialAsset("Garden Moss Sunlit", "#739979", 0.18f)
                 },
                 clayUpper = MaterialAsset("Island Clay Ochre", "#A9674C", 0.24f),
                 clayMiddle = MaterialAsset("Island Clay Rose", "#854E45", 0.23f),
                 clayLower = MaterialAsset("Island Stone Deep", "#344C51", 0.25f),
                 edgeGlow = MaterialAsset("Garden Edge Glaze", "#73B6A4", 0.32f, "#347D75", 0.25f),
-                trailStone = MaterialAsset("Trail Stone Warm", "#D5BC80", 0.30f, "#B48637", 0.16f),
-                trailMarker = MaterialAsset("Trail Thread Gold", "#F4D88B", 0.3f, "#F5B843", 1.05f),
+                trailStone = MaterialAsset("Trail Stone Warm", "#C9B47E", 0.30f, "#B48637", 0.13f),
+                trailMarker = MaterialAsset("Trail Thread Gold", "#F6D98C", 0.3f, "#F5B843", 1.15f),
                 deadEndStone = MaterialAsset("Blind Spur Stone", "#788A80", 0.24f),
                 deadEndGlow = MaterialAsset("Blind Spur Signal", "#9DAF9E", 0.32f, "#7F9588", 0.10f),
                 sourceBase = MaterialAsset("Source Pedestal", "#4F5D56", 0.35f),
@@ -217,7 +218,9 @@ namespace SignalGarden.Editor
                 flowerCoral = MaterialAsset("Wildflower Coral", "#E77D6D", 0.24f, "#B74048", 0.10f),
                 flowerCream = MaterialAsset("Wildflower Cream", "#F0D69A", 0.24f),
                 rock = MaterialAsset("Garden Stone", "#647A70", 0.18f),
-                rockLight = MaterialAsset("Garden Stone Light", "#9AA58A", 0.20f)
+                rockLight = MaterialAsset("Garden Stone Light", "#9AA58A", 0.20f),
+                contactShadow = MaterialAsset("Garden Contact Shadow", "#3B574D", 0.05f),
+                firefly = MaterialAsset("Garden Firefly", "#FFF0B7", 0.18f, "#FFD76A", 2.30f)
             };
             return materials;
         }
@@ -306,6 +309,8 @@ namespace SignalGarden.Editor
             var root = new GameObject("Coral Source");
             root.transform.SetParent(parent, false);
             root.transform.position = new Vector3(point.x, 0f, point.y);
+            CreatePrimitive(PrimitiveType.Cylinder, "Source contact shadow", root.transform,
+                new Vector3(0f, 0.33f, 0f), new Vector3(0.94f, 0.014f, 0.94f), materials.contactShadow);
             CreatePrimitive(PrimitiveType.Cylinder, "Source stone socket", root.transform,
                 new Vector3(0f, 0.52f, 0f), new Vector3(0.94f, 0.075f, 0.94f), materials.sourceBase);
             CreatePrimitive(PrimitiveType.Cylinder, "Source inner ring", root.transform,
@@ -316,6 +321,15 @@ namespace SignalGarden.Editor
                 new Vector3(0f, 0.80f, 0f), new Vector3(0.08f, 0.14f, 0.08f), materials.sourceBase);
             CreatePrimitive(PrimitiveType.Sphere, "Source glint", root.transform,
                 new Vector3(-0.10f, 1.19f, -0.18f), new Vector3(0.09f, 0.09f, 0.09f), materials.flowerCream);
+            for (var i = 0; i < 5; i++)
+            {
+                var angle = i * Mathf.PI * 2f / 5f + 0.22f;
+                var petal = new Vector3(Mathf.Cos(angle) * 0.29f, 1.08f + (i % 2) * 0.05f, Mathf.Sin(angle) * 0.29f);
+                var lobe = CreatePrimitive(PrimitiveType.Sphere, "Coral bloom lobe " + (i + 1), root.transform,
+                    petal, new Vector3(0.22f, 0.15f, 0.22f), i % 2 == 0 ? materials.sourceOrb : materials.flowerCoral);
+                lobe.transform.rotation = Quaternion.Euler(0f, i * 31f, 12f - i * 4f);
+            }
+            CreateRingLine("Source signal halo", root.transform, 0.67f, 0.69f, materials.trailMarker, 0.022f, 28);
             return root.transform;
         }
 
@@ -325,6 +339,11 @@ namespace SignalGarden.Editor
             root.transform.SetParent(parent, false);
             root.transform.position = new Vector3(point.x, 0f, point.y);
             SignalGardenAssetProvenanceEditor.InstantiateReceiverVisual(root.transform);
+            CreatePrimitive(PrimitiveType.Cylinder, "Receiver contact shadow", root.transform,
+                new Vector3(0f, 0.33f, 0f), new Vector3(0.88f, 0.014f, 0.88f), materials.contactShadow);
+            CreateRingLine("Receiver signal halo", root.transform, 0.73f, 0.56f, materials.receiverCrystal, 0.024f, 32);
+            CreatePrimitive(PrimitiveType.Cylinder, "Receiver beacon collar", root.transform,
+                new Vector3(0f, 0.88f, 0f), new Vector3(0.54f, 0.035f, 0.54f), materials.trailMarker);
             return root.transform;
         }
 
@@ -343,8 +362,8 @@ namespace SignalGarden.Editor
         private static Mesh BuildIslandSurfaceMesh()
         {
             const int segments = 96;
-            const int rings = 9;
-            var vertices = new List<Vector3>(segments * rings * 6 * 3);
+            const int rings = 10;
+            var vertices = new List<Vector3>(1 + segments * (rings - 1));
             var submeshIndices = new List<int>[4];
             for (var i = 0; i < submeshIndices.Length; i++)
             {
@@ -363,42 +382,51 @@ namespace SignalGarden.Editor
                 return new Vector3(x, y, z);
             }
 
-            void AddTriangle(Vector3 first, Vector3 second, Vector3 third, int paletteIndex)
+            int VertexIndex(int ring, int segment)
             {
-                var start = vertices.Count;
-                vertices.Add(first);
-                vertices.Add(second);
-                vertices.Add(third);
-                submeshIndices[paletteIndex].Add(start);
-                submeshIndices[paletteIndex].Add(start + 1);
-                submeshIndices[paletteIndex].Add(start + 2);
+                return 1 + (ring - 1) * segments + segment;
             }
 
-            var center = new Vector3(0f, 0.25f, 0f);
-            for (var segment = 0; segment < segments; segment++)
+            void AddTriangle(int first, int second, int third, int paletteIndex)
             {
-                var angleA = segment * Mathf.PI * 2f / segments;
-                var angleB = (segment + 1) * Mathf.PI * 2f / segments;
-                var edgeA = At(1f / rings, angleA);
-                var edgeB = At(1f / rings, angleB);
-                AddTriangle(center, edgeB, edgeA, (segment * 3) % submeshIndices.Length);
+                submeshIndices[paletteIndex].Add(first);
+                submeshIndices[paletteIndex].Add(second);
+                submeshIndices[paletteIndex].Add(third);
             }
 
-            for (var ring = 0; ring < rings - 1; ring++)
+            vertices.Add(new Vector3(0f, 0.25f, 0f));
+            for (var ring = 1; ring < rings; ring++)
             {
-                var innerRadius = (ring + 1f) / rings;
-                var outerRadius = (ring + 2f) / rings;
                 for (var segment = 0; segment < segments; segment++)
                 {
-                    var angleA = segment * Mathf.PI * 2f / segments;
-                    var angleB = (segment + 1) * Mathf.PI * 2f / segments;
-                    var innerA = At(innerRadius, angleA);
-                    var innerB = At(innerRadius, angleB);
-                    var outerA = At(outerRadius, angleA);
-                    var outerB = At(outerRadius, angleB);
-                    var paletteIndex = Mathf.Abs((ring * 7 + segment * 3 + (segment % 5) * ring) % submeshIndices.Length);
+                    var angle = segment * Mathf.PI * 2f / segments;
+                    vertices.Add(At(ring / (rings - 1f), angle));
+                }
+            }
+
+            for (var segment = 0; segment < segments; segment++)
+            {
+                var next = (segment + 1) % segments;
+                var noise = Mathf.PerlinNoise(segment * 0.17f, 0.31f);
+                var palette = Mathf.Clamp(Mathf.FloorToInt(noise * submeshIndices.Length), 0, submeshIndices.Length - 1);
+                AddTriangle(0, VertexIndex(1, next), VertexIndex(1, segment), palette);
+            }
+
+            for (var ring = 1; ring < rings - 1; ring++)
+            {
+                for (var segment = 0; segment < segments; segment++)
+                {
+                    var next = (segment + 1) % segments;
+                    var innerA = VertexIndex(ring, segment);
+                    var innerB = VertexIndex(ring, next);
+                    var outerA = VertexIndex(ring + 1, segment);
+                    var outerB = VertexIndex(ring + 1, next);
+                    var paletteNoise = Mathf.PerlinNoise(segment * 0.17f + ring * 0.43f, ring * 0.61f);
+                    var paletteIndex = Mathf.Clamp(Mathf.FloorToInt(paletteNoise * submeshIndices.Length), 0, submeshIndices.Length - 1);
                     AddTriangle(innerA, outerB, outerA, paletteIndex);
-                    AddTriangle(innerA, innerB, outerB, (paletteIndex + ((segment + ring) % 3 == 0 ? 1 : 0)) % submeshIndices.Length);
+                    var secondNoise = Mathf.PerlinNoise(segment * 0.17f + ring * 0.43f + 0.21f, ring * 0.61f + 0.19f);
+                    var secondPalette = Mathf.Clamp(Mathf.FloorToInt(secondNoise * submeshIndices.Length), 0, submeshIndices.Length - 1);
+                    AddTriangle(innerA, innerB, outerB, secondPalette);
                 }
             }
 
@@ -547,9 +575,9 @@ namespace SignalGarden.Editor
                 var end = points[i + 1];
                 var direction = new Vector3(end.x - start.x, 0f, end.y - start.y);
                 var midpoint = new Vector3((start.x + end.x) * 0.5f, 0.35f, (start.y + end.y) * 0.5f);
-                var segment = CreatePrimitive(PrimitiveType.Cube, groupName + " path stone " + (i + 1), group.transform,
-                    midpoint, new Vector3(width, 0.11f, direction.magnitude + 0.18f), stone);
-                segment.transform.rotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
+                var segment = CreatePrimitive(PrimitiveType.Capsule, groupName + " path stone " + (i + 1), group.transform,
+                    midpoint, new Vector3(width * 1.18f, direction.magnitude * 0.50f, 0.22f), stone);
+                segment.transform.rotation = Quaternion.LookRotation(direction.normalized, Vector3.up) * Quaternion.Euler(90f, 0f, 0f);
             }
 
             for (var i = 0; i < points.Count; i++)
@@ -597,6 +625,8 @@ namespace SignalGarden.Editor
                 var group = new GameObject("Wild growth " + (i + 1));
                 group.transform.SetParent(parent, false);
                 group.transform.localPosition = new Vector3(plants[i].x, 0.31f, plants[i].y);
+                CreatePrimitive(PrimitiveType.Cylinder, "Plant contact shadow", group.transform,
+                    new Vector3(0f, 0.01f, 0f), new Vector3(0.60f, 0.010f, 0.46f), materials.contactShadow);
                 CreatePlant(group.transform, i, materials);
             }
 
@@ -619,6 +649,24 @@ namespace SignalGarden.Editor
                     new Vector3(0.34f + (i % 3) * 0.08f, 0.18f + (i % 2) * 0.06f, 0.29f),
                     i % 3 == 0 ? materials.rockLight : materials.rock);
                 rock.transform.rotation = Quaternion.Euler(i * 7f, i * 19f, i * 5f);
+            }
+        }
+
+        private static void CreateAtmosphere(Transform parent, GardenMaterials materials)
+        {
+            var motes = new[]
+            {
+                new Vector3(-5.65f, 1.65f, 4.20f), new Vector3(-4.95f, 2.40f, 3.70f),
+                new Vector3(4.95f, 2.05f, 3.85f), new Vector3(5.55f, 1.25f, 2.75f),
+                new Vector3(-5.20f, 1.10f, -3.30f), new Vector3(5.45f, 1.45f, -2.80f),
+                new Vector3(0.05f, 2.85f, 4.95f), new Vector3(-1.60f, 2.20f, 4.65f),
+                new Vector3(2.35f, 2.60f, 4.35f)
+            };
+            for (var i = 0; i < motes.Length; i++)
+            {
+                var mote = CreatePrimitive(PrimitiveType.Sphere, "Garden firefly " + (i + 1), parent,
+                    motes[i], new Vector3(0.065f + (i % 3) * 0.018f, 0.065f + (i % 2) * 0.020f, 0.065f), materials.firefly);
+                mote.transform.rotation = Quaternion.Euler(0f, i * 37f, i * 13f);
             }
         }
 
@@ -696,6 +744,18 @@ namespace SignalGarden.Editor
             line.endColor = Color.white;
         }
 
+        private static void CreateRingLine(string name, Transform parent, float radius, float y, Material material, float width, int segments)
+        {
+            var points = new Vector3[segments + 1];
+            for (var i = 0; i <= segments; i++)
+            {
+                var angle = i * Mathf.PI * 2f / segments;
+                points[i] = new Vector3(Mathf.Cos(angle) * radius, y, Mathf.Sin(angle) * radius);
+            }
+
+            CreateLine(name, parent, points, material, width);
+        }
+
         private static void EnsureFolder(string path)
         {
             if (AssetDatabase.IsValidFolder(path))
@@ -748,6 +808,8 @@ namespace SignalGarden.Editor
             public Material flowerCream;
             public Material rock;
             public Material rockLight;
+            public Material contactShadow;
+            public Material firefly;
         }
     }
 }

@@ -6,11 +6,11 @@ Status: implementation complete for the credential-free evidence lane. This
 record does not promote the game to playable production and does not replace
 the owner-gated desktop, accessibility, or human qualification work.
 
-The original SG-10 candidate is retained below as historical evidence. A
-bounded WebGL rendering compatibility replacement is now the current recorded
-identity; see [the SG-13 rendering fix record](sg-13-webgl-rendering-fix.md).
-The replacement resets frame-rate and owner qualification observations because
-the original candidate rendered a blank world in the current Chromium preview.
+The original SG-10 candidate and the SG-13 WebGL compatibility replacement are
+retained as historical evidence. The current runtime identity is the bounded
+SG-14 visual polish replacement; see [the SG-14 visual polish record](sg-14-visual-polish.md).
+It improves the authored diorama presentation while preserving gameplay and
+resets owner qualification because the runtime artifact changed.
 
 ## What is checked in
 

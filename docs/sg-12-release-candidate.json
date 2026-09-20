@@ -11,9 +11,9 @@
     "closeoutRecord": "docs/sg-12-closeout-record.md"
   },
   "releaseCandidate": {
-    "runtimeSourceCommit": "20bf9b0595b2b16bb341a3bed119e37e615491aa",
+    "runtimeSourceCommit": "47fd09f8567d02bca8a4f4d38404b451ede5e0c6",
     "runtimeBuildIdentity": "docs/sg-10-build-identity.json",
-    "runtimeBuildIdentitySha256": "9541B038D810AE10817DC47E2885244F67EDBFF2AF9F6EB7595B5C4DB324C644",
+    "runtimeBuildIdentitySha256": "C48C96FEA42463FAFCD3D74C1FB50C2036E5BBDAD29897A404D7FE78D6DADA9C",
     "artifactLocation": {
       "status": "LOCAL_ONLY",
       "prefixPattern": "signal-garden/<version>/Build/",
@@ -37,24 +37,24 @@
   },
   "qualificationUpdates": {
     "recordedAt": "2026-09-19",
-    "candidateRuntimeSourceCommit": "20bf9b0595b2b16bb341a3bed119e37e615491aa",
+    "candidateRuntimeSourceCommit": "47fd09f8567d02bca8a4f4d38404b451ede5e0c6",
     "status": "SUPERSEDED",
-    "previousCandidateRuntimeSourceCommit": "34122315f6f31718ffa616517495392be5c91a2b",
+    "previousCandidateRuntimeSourceCommit": "20bf9b0595b2b16bb341a3bed119e37e615491aa",
     "replacementRequired": true,
-    "reason": "The previous local browser and timing observations were captured against a candidate that rendered a blank world in the current WebGL preview. The replacement disables unsupported mobile URP paths, so all performance and owner qualification observations must be rerun.",
-    "evidence": "docs/sg-13-webgl-rendering-fix.md",
+    "reason": "The prior replacement rendered correctly but the owner qualification packet must be rerun after the visual polish revision. The new candidate improves the authored diorama presentation without changing gameplay, route rules, controls, or accessibility state transitions.",
+    "evidence": "docs/sg-14-visual-polish.md",
     "localRenderSmoke": {
       "status": "PASS_LOCAL",
       "render": "1920x1080",
       "route": "/signal-garden/play/",
-      "method": "Local nested preview on the replacement build rendered the full diorama and completed a valid source-to-receiver drag.",
+      "method": "Local nested preview on the visual-polish build rendered the full diorama and completed a valid source-to-receiver drag.",
       "classification": "VISUAL_SMOKE_ONLY; does not satisfy owner FPS, TTI, focus, accessibility, or human gates."
     }
   },
   "ownerQualification": {
     "schemaVersion": 1,
     "status": "NOT_RUN",
-    "runtimeSourceCommit": "20bf9b0595b2b16bb341a3bed119e37e615491aa",
+    "runtimeSourceCommit": "47fd09f8567d02bca8a4f4d38404b451ede5e0c6",
     "target": {
       "render": "1920x1080",
       "meanFpsMinimum": 60,
