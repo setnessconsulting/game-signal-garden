@@ -1,10 +1,10 @@
 # Signal Garden — SG-14 visual polish
 
-**Issue:** Visual quality follow-up after owner preview feedback  
-**Date:** 2026-09-19  
-**Runtime source:** `47fd09f8567d02bca8a4f4d38404b451ede5e0c6`  
-**Unity:** `6000.6.0f1` (`f7f8ed4d1e24`)  
-**Route:** `/signal-garden/play/`  
+**Issue:** Visual quality follow-up after owner preview feedback
+**Date:** 2026-09-19
+**Runtime source:** `47fd09f8567d02bca8a4f4d38404b451ede5e0c6`
+**Unity:** `6000.6.0f1` (`f7f8ed4d1e24`)
+**Route:** `/signal-garden/play/`
 **Reference render:** `1920x1080`
 
 ## Bounded change
