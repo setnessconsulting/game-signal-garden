@@ -80,10 +80,10 @@ These references set qualities to check, not designs to copy:
 
 Included: one SignalGarden scene, one source, one receiver, one route, one short dead end, one player, desktop browser input, accessible status text, pause/cancel/recovery/reset, local automated rules tests, one repeatable playtest script, and a local WebGL build.
 
-Excluded: persistent progression, multiple puzzles or a campaign, multiplayer, accounts, monetization, leaderboards, remote analytics, LevelBest integration, localization, music, Rive runtime and `.riv` production assets (declined for v1 in SG-07), live Figma plugin import, UI Toolkit consumption, further Blender source production beyond the SG-05 receiver, and production upload/catalog promotion.
+Excluded: persistent progression, multiple puzzles or a campaign, multiplayer, accounts, monetization, leaderboards, remote analytics, LevelBest integration, localization, music, Rive runtime and `.riv` production assets (declined for v1 in SG-07), live Figma plugin import, UI Toolkit consumption, and further Blender source production beyond the SG-05 receiver. Production release administration is recorded separately from the runtime scope in [the SG-16 production closeout](sg-16-production-closeout.md).
 
 ## Technical and release notes
 
 The implementation consumes Unity and Unity package APIs directly in the game repository; it does not copy or reimplement project-unity-api, project-game-maker, or the games site. The local host-preview harness mirrors the games site's asset-base contract: loader/data/framework/WASM requests are constructed from <assetBase>/Build/<exact-filename>, even when the play page is below /signal-garden/play/. Brotli metadata, MIME types, filenames, and local build identity are recorded in local-build-evidence.md after a build is available.
 
-The project-unity-api integration is not qualified or required for this first implementation pass; its current runtime/API qualification remains a separate evidence lane. The production R2 bucket and site catalog are intentionally not modified by this work.
+The project-unity-api integration is not qualified or required for this first implementation pass; its current runtime/API qualification remains a separate evidence lane. The production R2 readback and games-site catalog promotion are recorded separately from this runtime document in [the SG-16 production closeout](sg-16-production-closeout.md). Formal owner qualification remains independent of that deployment record.

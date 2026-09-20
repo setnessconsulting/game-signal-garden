@@ -1,5 +1,21 @@
 # Local build evidence
 
+## Current production reconciliation (2026-09-20)
+
+The current runtime candidate is deployed at
+`https://games.setnessconsulting.com/signal-garden/play/` under the immutable
+prefix `signal-garden/2026-09-20-1b3586f/Build/`. The production route, catalog
+pointer, Pages deployment, four artifact hashes, MIME types, Brotli metadata,
+and cache policy are recorded in [the SG-16 production closeout](sg-16-production-closeout.md)
+and the SG-10 build identity. This readback records deployment state only; it
+does not claim the remaining foreground browser, accessibility, working-set,
+focus-loss, owner-approval, or human benchmark gates.
+
+The historical local captures below are preserved as evidence for the builds
+and environments in which they were observed. Their statements that no
+production upload or catalog change had occurred describe those capture dates,
+not the current deployment.
+
 ## Current state (2026-09-16)
 
 The first playable WebGL slice was imported, compiled, tested, built, and served locally with Unity `6000.6.0f1`. The project uses the assigned Unity Personal entitlement. No production R2 object was uploaded and the games-site catalog remains unchanged.

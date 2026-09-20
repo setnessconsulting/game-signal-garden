@@ -17,9 +17,14 @@ SG10_RELATIVE_PATH = "docs/sg-10-build-identity.json"
 SG11_RELATIVE_PATH = "docs/sg-11-playtest-evidence.json"
 EXPECTED_GAME = "signal-garden"
 EXPECTED_ISSUE = "GAME-290"
-EXPECTED_BASE_MAIN_COMMIT = "318647a4143f22cd4da4e16b6cb4d9bcea023eb4"
+EXPECTED_BASE_MAIN_COMMIT = "89e7afc161ce16404929a394b2ba89cbd2c136ec"
 EXPECTED_RUNTIME_COMMIT = "1b3586f26f0c81410cbbbe33fc908e2dee2f1079"
-EXPECTED_RUNTIME_MANIFEST_HASH = "ECA6A6F80BEC6F94446A0DA4C587B0EE1FBF7FE5DCC3953BD0951B10F87CA477"
+EXPECTED_RUNTIME_MANIFEST_HASH = "78EF75BE07C142F35949ECA3032CAC9A777A8082188231BA8FF831E092FF08AF"
+EXPECTED_SITE_COMMIT = "42acc2aa2bec48861d9bc9ae335027507b66f4a2"
+EXPECTED_RELEASE_VERSION = "2026-09-20-1b3586f"
+EXPECTED_RELEASE_PREFIX = f"signal-garden/{EXPECTED_RELEASE_VERSION}/Build/"
+EXPECTED_PRODUCTION_ROUTE = "https://games.setnessconsulting.com/signal-garden/play/"
+EXPECTED_PAGES_DEPLOYMENT_ID = "d55fc64e-07af-4aec-99f6-c1ce32d82b26"
 EXPECTED_ARTIFACTS = (
     "WebGL.loader.js",
     "WebGL.data.br",
@@ -140,16 +145,18 @@ def validate_release_candidate(
         fail("releaseCandidate.artifactLocation must be an object")
     else:
         location_status = location.get("status")
-        if closeout_status == "READY_FOR_PROMOTION":
-            if location_status not in {"LOCAL_ONLY", "PRODUCTION_READBACK"}:
-                fail("releaseCandidate.artifactLocation.status must be LOCAL_ONLY or PRODUCTION_READBACK before promotion")
-            if location_status == "PRODUCTION_READBACK" and location.get("uploadedToProductionR2") is not True:
-                fail("PRODUCTION_READBACK requires uploadedToProductionR2 true")
-        else:
-            if location_status != "LOCAL_ONLY":
-                fail("releaseCandidate.artifactLocation.status must remain LOCAL_ONLY before promotion")
+        if location_status == "LOCAL_ONLY":
             if location.get("uploadedToProductionR2") is not False:
                 fail("releaseCandidate.artifactLocation.uploadedToProductionR2 must be false before promotion")
+        elif location_status == "PRODUCTION_READBACK":
+            if location.get("uploadedToProductionR2") is not True:
+                fail("PRODUCTION_READBACK requires uploadedToProductionR2 true")
+            if location.get("releaseVersion") != EXPECTED_RELEASE_VERSION:
+                fail("PRODUCTION_READBACK must record the immutable release version")
+            if location.get("prefix") != EXPECTED_RELEASE_PREFIX:
+                fail("PRODUCTION_READBACK must record the exact immutable release prefix")
+        else:
+            fail("releaseCandidate.artifactLocation.status must be LOCAL_ONLY or PRODUCTION_READBACK")
         if location.get("prefixPattern") != "signal-garden/<version>/Build/":
             fail("releaseCandidate.artifactLocation.prefixPattern must preserve the immutable R2 contract")
         if location.get("promotionPrefixPattern") != "signal-garden/<UTC-date>-<first-7-chars-of-runtime-source-commit>/Build/":
@@ -191,6 +198,72 @@ def validate_release_candidate(
                 fail("SG-11 runtime build identity hash does not match SG-12")
             if source.get("runtimeBuildSourceCommit") != runtime_commit:
                 fail("SG-11 runtime build source commit does not match SG-12")
+
+
+def validate_production_deployment(deployment: Any, sg10: dict[str, Any] | None) -> None:
+    if not isinstance(deployment, dict):
+        fail("productionDeployment must be an object")
+        return
+    if deployment.get("status") != "DEPLOYED":
+        fail("productionDeployment.status must be DEPLOYED")
+    if deployment.get("recordedAt") != "2026-09-20":
+        fail("productionDeployment.recordedAt must identify the production readback")
+    if deployment.get("runtimeSourceCommit") != EXPECTED_RUNTIME_COMMIT:
+        fail("productionDeployment.runtimeSourceCommit must match the frozen runtime")
+    if deployment.get("siteMergeCommit") != EXPECTED_SITE_COMMIT:
+        fail("productionDeployment.siteMergeCommit must match the promoted games-site commit")
+    if deployment.get("gameMergeCommit") != EXPECTED_BASE_MAIN_COMMIT:
+        fail("productionDeployment.gameMergeCommit must match the game main baseline")
+    if deployment.get("pagesDeploymentId") != EXPECTED_PAGES_DEPLOYMENT_ID:
+        fail("productionDeployment.pagesDeploymentId must match the active deployment")
+    require_string(deployment, "pagesDeploymentUrl", "productionDeployment.pagesDeploymentUrl")
+    if deployment.get("route") != EXPECTED_PRODUCTION_ROUTE:
+        fail("productionDeployment.route must be the nested production play route")
+    if deployment.get("r2Prefix") != EXPECTED_RELEASE_PREFIX:
+        fail("productionDeployment.r2Prefix must match the immutable release prefix")
+    if deployment.get("catalogStatus") != "playable":
+        fail("productionDeployment.catalogStatus must be playable")
+    if deployment.get("requestAcceptEncoding") != "br":
+        fail("productionDeployment.requestAcceptEncoding must record browser Brotli negotiation")
+
+    recorded = deployment.get("artifacts")
+    if not isinstance(recorded, list) or [item.get("filename") for item in recorded if isinstance(item, dict)] != list(EXPECTED_ARTIFACTS):
+        fail("productionDeployment.artifacts must list the exact four release files in order")
+        return
+    expected_by_name: dict[str, dict[str, Any]] = {}
+    if isinstance(sg10, dict):
+        build = sg10.get("build")
+        if isinstance(build, dict):
+            expected_by_name = {
+                item.get("filename"): item
+                for item in build.get("artifacts", [])
+                if isinstance(item, dict) and isinstance(item.get("filename"), str)
+            }
+    for index, item in enumerate(recorded):
+        label = f"productionDeployment.artifacts[{index}]"
+        if not isinstance(item, dict):
+            fail(f"{label} must be an object")
+            continue
+        filename = item.get("filename")
+        expected = expected_by_name.get(filename)
+        if expected is None:
+            fail(f"{label}.filename is not a recorded SG-10 artifact")
+            continue
+        for key in ("bytes", "sha256"):
+            if item.get(key) != expected.get(key):
+                fail(f"{label}.{key} does not match SG-10 build identity")
+        if item.get("r2ContentType") != expected.get("contentType"):
+            fail(f"{label}.r2ContentType does not match R2 metadata")
+        if item.get("r2ContentEncoding") != expected.get("contentEncoding"):
+            fail(f"{label}.r2ContentEncoding does not match R2 metadata")
+        if item.get("httpStatus") != 200:
+            fail(f"{label}.httpStatus must be 200")
+        if item.get("httpContentType") != expected.get("contentType"):
+            fail(f"{label}.httpContentType does not match the release contract")
+        if item.get("httpContentEncoding") != "br":
+            fail(f"{label}.httpContentEncoding must record the browser Brotli response")
+        if item.get("cacheControl") != "public, max-age=31536000, immutable":
+            fail(f"{label}.cacheControl must be immutable")
 
 
 def validate_children(children: Any) -> None:
@@ -556,8 +629,8 @@ def validate_provenance(provenance: Any) -> None:
     require_string(provenance, "license", "provenance.license")
     if provenance.get("generatedBuildTracked") is not False:
         fail("provenance.generatedBuildTracked must be false")
-    if provenance.get("productionChanged") is not False:
-        fail("provenance.productionChanged must be false")
+    if provenance.get("productionChanged") is not True:
+        fail("provenance.productionChanged must be true for the recorded production deployment")
 
 
 def main() -> int:
@@ -579,6 +652,7 @@ def main() -> int:
             fail("repository.baseMainCommit must identify the current merged main commit")
         validate_repository_identity(manifest.get("repository"))
         validate_release_candidate(manifest.get("releaseCandidate"), sg10, sg11, status if isinstance(status, str) else "NOT_READY")
+        validate_production_deployment(manifest.get("productionDeployment"), sg10)
         validate_qualification_updates(manifest.get("qualificationUpdates"))
         validate_owner_qualification(manifest.get("ownerQualification"), sg11, status if isinstance(status, str) else "NOT_READY")
         validate_children(manifest.get("childStories"))
