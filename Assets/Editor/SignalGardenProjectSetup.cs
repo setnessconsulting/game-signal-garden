@@ -35,8 +35,8 @@ namespace SignalGarden.Editor
             CreateIslandUnderside(islandForm.transform, materials);
             CreateGardenRim(island.transform, materials.edgeGlow);
 
-            CreateTrail(island.transform, RouteRules.StandardTrail, materials.trailStone, materials.trailMarker, 0.70f, "Gold signal trail");
-            CreateTrail(island.transform, RouteRules.DeadEndSpur, materials.deadEndStone, materials.deadEndGlow, 0.54f, "Blind spur");
+            CreateTrail(island.transform, RouteRules.StandardTrail, materials.trailStone, materials.trailStoneHighlight, materials.trailMarker, 0.70f, "Gold signal trail");
+            CreateTrail(island.transform, RouteRules.DeadEndSpur, materials.deadEndStone, null, materials.deadEndGlow, 0.54f, "Blind spur");
             var source = CreateSource(island.transform, RouteRules.StandardTrail[0], materials);
             var receiver = CreateReceiver(island.transform, RouteRules.StandardTrail[RouteRules.StandardTrail.Length - 1], materials);
             CreateGardenDetails(island.transform, materials);
@@ -202,6 +202,7 @@ namespace SignalGarden.Editor
                 clayLower = MaterialAsset("Island Stone Deep", "#344C51", 0.25f),
                 edgeGlow = MaterialAsset("Garden Edge Glaze", "#73B6A4", 0.32f, "#347D75", 0.25f),
                 trailStone = MaterialAsset("Trail Stone Warm", "#C9B47E", 0.30f, "#B48637", 0.13f),
+                trailStoneHighlight = MaterialAsset("Trail Stone Highlight", "#D8C48F", 0.34f, "#C69948", 0.08f),
                 trailMarker = MaterialAsset("Trail Thread Gold", "#F6D98C", 0.3f, "#F5B843", 1.15f),
                 deadEndStone = MaterialAsset("Blind Spur Stone", "#788A80", 0.24f),
                 deadEndGlow = MaterialAsset("Blind Spur Signal", "#9DAF9E", 0.32f, "#7F9588", 0.10f),
@@ -375,10 +376,11 @@ namespace SignalGarden.Editor
                 var wobble = 1f + 0.025f * Mathf.Sin(angle * 5f) + 0.012f * Mathf.Cos(angle * 9f);
                 var x = Mathf.Cos(angle) * 5.05f * radius * wobble;
                 var z = Mathf.Sin(angle) * 3.30f * radius * (1f + 0.018f * Mathf.Sin(angle * 7f));
-                var y = 0.26f +
+                var y = 0.25f + radius * (
+                        0.010f +
                         0.045f * Mathf.Sin(angle * 3f + radius * 4f) +
                         0.026f * Mathf.Cos(angle * 5f - radius * 3f) +
-                        0.020f * Mathf.Sin(radius * 11f + angle * 6f);
+                        0.020f * Mathf.Sin(radius * 11f + angle * 6f));
                 return new Vector3(x, y, z);
             }
 
@@ -407,9 +409,9 @@ namespace SignalGarden.Editor
             for (var segment = 0; segment < segments; segment++)
             {
                 var next = (segment + 1) % segments;
-                var noise = Mathf.PerlinNoise(segment * 0.17f, 0.31f);
-                var palette = Mathf.Clamp(Mathf.FloorToInt(noise * submeshIndices.Length), 0, submeshIndices.Length - 1);
-                AddTriangle(0, VertexIndex(1, next), VertexIndex(1, segment), palette);
+                // Keep the center meadow calm. A single restrained material on
+                // the fan removes the strongest radial seams in the diorama.
+                AddTriangle(0, VertexIndex(1, next), VertexIndex(1, segment), 1);
             }
 
             for (var ring = 1; ring < rings - 1; ring++)
@@ -563,6 +565,7 @@ namespace SignalGarden.Editor
             Transform parent,
             IList<Vector2> points,
             Material stone,
+            Material alternateStone,
             Material marker,
             float width,
             string groupName)
@@ -575,8 +578,9 @@ namespace SignalGarden.Editor
                 var end = points[i + 1];
                 var direction = new Vector3(end.x - start.x, 0f, end.y - start.y);
                 var midpoint = new Vector3((start.x + end.x) * 0.5f, 0.35f, (start.y + end.y) * 0.5f);
+                var segmentMaterial = alternateStone != null && i % 3 == 1 ? alternateStone : stone;
                 var segment = CreatePrimitive(PrimitiveType.Capsule, groupName + " path stone " + (i + 1), group.transform,
-                    midpoint, new Vector3(width * 1.18f, direction.magnitude * 0.50f, 0.22f), stone);
+                    midpoint, new Vector3(width * 1.18f, direction.magnitude * 0.50f, 0.22f), segmentMaterial);
                 segment.transform.rotation = Quaternion.LookRotation(direction.normalized, Vector3.up) * Quaternion.Euler(90f, 0f, 0f);
             }
 
@@ -791,6 +795,7 @@ namespace SignalGarden.Editor
             public Material clayLower;
             public Material edgeGlow;
             public Material trailStone;
+            public Material trailStoneHighlight;
             public Material trailMarker;
             public Material deadEndStone;
             public Material deadEndGlow;
