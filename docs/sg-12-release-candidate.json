@@ -13,7 +13,7 @@
   "releaseCandidate": {
     "runtimeSourceCommit": "1b3586f26f0c81410cbbbe33fc908e2dee2f1079",
     "runtimeBuildIdentity": "docs/sg-10-build-identity.json",
-    "runtimeBuildIdentitySha256": "8B882A25376564B9706A2D89710A79C43F2B5721A0391C618FB41CBE81925B12",
+    "runtimeBuildIdentitySha256": "ECA6A6F80BEC6F94446A0DA4C587B0EE1FBF7FE5DCC3953BD0951B10F87CA477",
     "artifactLocation": {
       "status": "LOCAL_ONLY",
       "prefixPattern": "signal-garden/<version>/Build/",

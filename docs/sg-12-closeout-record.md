@@ -15,7 +15,7 @@ evidence as an owner release approval.
 The recorded WebGL candidate is the visual-refinement local build from runtime
 source commit `1b3586f26f0c81410cbbbe33fc908e2dee2f1079`, identified by
 `docs/sg-10-build-identity.json` (SHA-256
-`8B882A25376564B9706A2D89710A79C43F2B5721A0391C618FB41CBE81925B12`). Its
+`ECA6A6F80BEC6F94446A0DA4C587B0EE1FBF7FE5DCC3953BD0951B10F87CA477`). Its
 ordered loader, data, framework, and WASM files, exact hashes, Brotli encoding,
 MIME types, and immutable R2 prefix pattern remain authoritative in that
 manifest. The closeout record is based on the current merged `main`
