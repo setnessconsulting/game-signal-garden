@@ -12,18 +12,20 @@ evidence as an owner release approval.
 
 ## Candidate identity
 
-The recorded WebGL candidate is the local build from runtime source commit
-`34122315f6f31718ffa616517495392be5c91a2b`, identified by
+The recorded WebGL candidate is the replacement local build from runtime source
+commit `20bf9b0595b2b16bb341a3bed119e37e615491aa`, identified by
 `docs/sg-10-build-identity.json` (SHA-256
-`6886B4CD48F3B5CB1ABBCAC3D983428DBF3F6159E5398E794FE2EC00999CA161`). Its
+`6D092D9290EB64F935A5D322E8600B87BFC5FFE80E7E1F65E7AE7D8DEABCEDD6`). Its
 ordered loader, data, framework, and WASM files, exact hashes, Brotli encoding,
 MIME types, and immutable R2 prefix pattern remain authoritative in that
 manifest. The closeout record is based on the current merged `main`
 `318647a4143f22cd4da4e16b6cb4d9bcea023eb4`. Earlier SG-12 evidence was
 assembled against `c388226fb02b66ea4084a0e52d4ce97fe844d784`; this metadata
 refresh preserves that evidence while making the current repository baseline
-explicit. Neither documentation commit changes the Unity input tree or the
-recorded runtime artifact.
+explicit. The WebGL settings replacement is recorded in [the SG-13 rendering
+fix record](sg-13-webgl-rendering-fix.md). It changes the Unity input tree and
+produces a replacement data bundle; the prior qualification observations
+therefore require a fresh run.
 
 The artifact location is **local only**. A future reviewed release will use
 `signal-garden/<version>/Build/` in private R2 and the host-supplied
@@ -34,31 +36,26 @@ Git-derived prefix
 
 ## Qualification update — 2026-09-19
 
-The existing local candidate was opened in a visible desktop Chrome session
-(Chrome `153.0.8010.52`) through the nested host preview. At the exact
-1920×1080 render, the harness completed 30/30 focused seconds with a `101.9`
-fps mean and `27.6` fps minimum one-second sample (`PASS` under the mean-at-least
-60 fps gate). The minimum is retained as an informational dip; it is not
-converted into a sustained frame-rate failure. Escape produced the readable
-Paused state and a second Escape restored the Ready state.
+The earlier local browser and timing observations were made against the
+superseded blank-world candidate. They remain in [the historical diagnostics
+record](sg-12-local-diagnostics.md) for traceability but are marked
+`SUPERSEDED` in the machine-readable closeout manifest. The replacement
+candidate has passed the local rendering and route smoke checks documented in
+[SG-13](sg-13-webgl-rendering-fix.md); all performance and owner gates must be
+rerun against it.
 
-A warm-cache reload reached the readable Ready state in `681 ms`, below the
-10-second local target. This is local warm-cache evidence only. It does not
-qualify a cold load, independent Edge run, production CDN, browser working set,
-physical focus loss, screen reader, or human benchmark.
+The replacement was opened in the local nested host preview at the exact
+`1920x1080` render. The full diorama rendered, and a source-to-receiver drag
+reached the readable verified state and offered replay. This is a visual and
+functional smoke check only. The earlier frame-rate, timing, and headless
+diagnostic observations belong to the superseded candidate and are not carried
+forward. Fresh focused Chrome and Edge samples, cold and warm timing, and all
+owner gates must be recorded against the replacement.
 
-Automated local headless diagnostics are recorded in the
-[SG-12 local diagnostics record](sg-12-local-diagnostics.md). Fresh-profile
-Chrome and Edge runs reached the exact `1920x1080` render with 30 samples and
-mean frame rates of `60.99` and `60.88` fps, and local time to interactive of
-`1,833.4 ms` and `1,533.5 ms`. Because these were headless CDP sessions, they
-remain diagnostic and do not replace independently observed foreground browser
-qualification.
-
-The exact observation is recorded under `qualificationUpdates` in the
-[release-candidate manifest](sg-12-release-candidate.json). The closeout
-decision remains `NOT_READY` until the remaining owner and human gates are
-resolved.
+The replacement observation is recorded under `qualificationUpdates` in the
+[release-candidate manifest](sg-12-release-candidate.json) with status
+`SUPERSEDED` for the prior measurements. The closeout decision remains
+`NOT_READY` until the replacement's owner and human gates are resolved.
 
 The owner-observed qualification procedure is in [the SG-12 runbook](sg-12-owner-qualification-runbook.md).
 Its machine-readable gate record is `ownerQualification` in the closeout

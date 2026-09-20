@@ -11,9 +11,9 @@
     "closeoutRecord": "docs/sg-12-closeout-record.md"
   },
   "releaseCandidate": {
-    "runtimeSourceCommit": "34122315f6f31718ffa616517495392be5c91a2b",
+    "runtimeSourceCommit": "20bf9b0595b2b16bb341a3bed119e37e615491aa",
     "runtimeBuildIdentity": "docs/sg-10-build-identity.json",
-    "runtimeBuildIdentitySha256": "6886B4CD48F3B5CB1ABBCAC3D983428DBF3F6159E5398E794FE2EC00999CA161",
+    "runtimeBuildIdentitySha256": "9541B038D810AE10817DC47E2885244F67EDBFF2AF9F6EB7595B5C4DB324C644",
     "artifactLocation": {
       "status": "LOCAL_ONLY",
       "prefixPattern": "signal-garden/<version>/Build/",
@@ -37,75 +37,24 @@
   },
   "qualificationUpdates": {
     "recordedAt": "2026-09-19",
-    "candidateRuntimeSourceCommit": "34122315f6f31718ffa616517495392be5c91a2b",
-    "desktopChromeForeground": {
+    "candidateRuntimeSourceCommit": "20bf9b0595b2b16bb341a3bed119e37e615491aa",
+    "status": "SUPERSEDED",
+    "previousCandidateRuntimeSourceCommit": "34122315f6f31718ffa616517495392be5c91a2b",
+    "replacementRequired": true,
+    "reason": "The previous local browser and timing observations were captured against a candidate that rendered a blank world in the current WebGL preview. The replacement disables unsupported mobile URP paths, so all performance and owner qualification observations must be rerun.",
+    "evidence": "docs/sg-13-webgl-rendering-fix.md",
+    "localRenderSmoke": {
       "status": "PASS_LOCAL",
-      "browser": "Chrome 153.0.8010.52",
       "render": "1920x1080",
-      "sampleSeconds": 30,
-      "sampleCount": 30,
-      "meanFps": 101.9,
-      "minimumOneSecondSampleFps": 27.6,
-      "result": "PASS",
-      "method": "Visible Codex Chrome extension session against the local nested host preview; canvas remained focused and the harness reported 30/30 seconds.",
-      "classification": "Local evidence only; the mean gate is at least 60 fps, while the one-second minimum is informational."
-    },
-    "pauseResume": {
-      "status": "PASS_LOCAL",
-      "method": "Escape produced the readable Paused state and a second Escape restored Ready in the same desktop Chrome session."
-    },
-    "localWarmReloadTimeToInteractive": {
-      "status": "PASS_LOCAL_WARM",
-      "milliseconds": 681,
-      "targetMilliseconds": 10000,
-      "method": "Visible local nested preview reload with the existing candidate cached; this is a warm-cache observation, not a cold or production CDN qualification."
-    },
-    "localDiagnostics": {
-      "status": "RECORDED_NOT_OWNER_QUALIFICATION",
-      "classification": "AUTOMATED_LOCAL_HEADLESS_ONLY",
-      "recordedAt": "2026-09-19",
-      "runtimeSourceCommit": "34122315f6f31718ffa616517495392be5c91a2b",
-      "route": "/signal-garden/play/?sg-render=1920x1080&sg-stats=1",
-      "host": "http://127.0.0.1:4183",
-      "assetCacheKey": "7201692b3f2f2f53",
-      "render": "1920x1080",
-      "sampleSeconds": 30,
-      "sampleCount": 30,
-      "browsers": [
-        {
-          "browser": "Chrome",
-          "version": "153.0.8010.52",
-          "mode": "headless",
-          "freshProfile": true,
-          "timeToInteractiveMilliseconds": 1833.4,
-          "meanFps": 60.988686879475914,
-          "minimumOneSecondSampleFps": 60.09852981567383,
-          "result": "PASS_DIAGNOSTIC"
-        },
-        {
-          "browser": "Edge",
-          "version": "153.0.4234.32",
-          "mode": "headless",
-          "freshProfile": true,
-          "timeToInteractiveMilliseconds": 1533.5,
-          "meanFps": 60.87905451456706,
-          "minimumOneSecondSampleFps": 59.70148468017578,
-          "result": "PASS_DIAGNOSTIC"
-        }
-      ],
-      "focusQualified": false,
-      "ownerQualificationSubstitute": false,
-      "limitations": [
-        "Headless CDP runs are automated diagnostics and do not satisfy independently observed foreground Chrome or Edge qualification.",
-        "Timings are local-only and do not qualify production CDN time to interactive.",
-        "These runs do not measure browser-tab working set, physical focus loss, screen-reader behavior, or fresh-player comprehension."
-      ]
+      "route": "/signal-garden/play/",
+      "method": "Local nested preview on the replacement build rendered the full diorama and completed a valid source-to-receiver drag.",
+      "classification": "VISUAL_SMOKE_ONLY; does not satisfy owner FPS, TTI, focus, accessibility, or human gates."
     }
   },
   "ownerQualification": {
     "schemaVersion": 1,
     "status": "NOT_RUN",
-    "runtimeSourceCommit": "34122315f6f31718ffa616517495392be5c91a2b",
+    "runtimeSourceCommit": "20bf9b0595b2b16bb341a3bed119e37e615491aa",
     "target": {
       "render": "1920x1080",
       "meanFpsMinimum": 60,
@@ -116,38 +65,38 @@
     "desktopChromeForeground": {
       "status": "NOT_RUN",
       "classification": "OWNER_NOT_RUN",
-      "reason": "An independently observed owner Chrome run remains open; the recorded local Chrome result is not substituted."
+      "reason": "Replacement candidate requires a fresh independently observed foreground Chrome run after the WebGL rendering fix."
     },
     "desktopEdgeForeground": {
       "status": "NOT_RUN",
       "classification": "OWNER_NOT_RUN",
-      "reason": "An independently observed owner Edge run remains open."
+      "reason": "Replacement candidate requires a fresh independently observed foreground Edge run after the WebGL rendering fix."
     },
     "localColdTimeToInteractive": {
       "status": "NOT_RUN",
       "classification": "OWNER_NOT_RUN",
-      "reason": "A cold-cache local measurement remains open; the existing warm-cache result is recorded separately."
+      "reason": "Replacement candidate requires fresh cold-cache timing after the WebGL rendering fix."
     },
     "browserWorkingSet": {
       "status": "NOT_RUN",
       "classification": "OWNER_NOT_RUN",
-      "reason": "The game tab working set has not been measured with an operating-system process view."
+      "reason": "Replacement candidate has not been measured with an operating-system process view."
     },
     "physicalFocusLoss": {
       "status": "NOT_RUN",
       "classification": "OWNER_NOT_RUN",
-      "reason": "A real browser window or tab focus interruption remains open."
+      "reason": "Replacement candidate requires a real browser focus interruption."
     },
     "screenReader": {
       "status": "NOT_RUN",
       "classification": "OWNER_NOT_RUN",
-      "reason": "External screen-reader operation remains an owner-observed gate."
+      "reason": "Replacement candidate requires external screen-reader operation."
     },
     "humanBenchmark": {
       "status": "NOT_RUN",
       "evidence": "docs/sg-11-playtest-evidence.json",
       "classification": "OWNER_NOT_RUN",
-      "reason": "Five fresh-player sessions have not been recorded."
+      "reason": "Five fresh-player sessions must be run against the replacement candidate."
     }
   },
   "childStories": [
@@ -155,84 +104,117 @@
       "key": "GAME-279",
       "name": "SG-01",
       "evidenceStatus": "MERGED_EVIDENCE",
-      "evidence": ["docs/signal-garden-gdd.md", "docs/local-build-evidence.md"],
+      "evidence": [
+        "docs/signal-garden-gdd.md",
+        "docs/local-build-evidence.md"
+      ],
       "ownerDisposition": "Scope and first playable are recorded; Jira status was not changed."
     },
     {
       "key": "GAME-280",
       "name": "SG-02",
       "evidenceStatus": "MERGED_EVIDENCE",
-      "evidence": ["docs/signal-garden-gdd.md"],
+      "evidence": [
+        "docs/signal-garden-gdd.md"
+      ],
       "ownerDisposition": "Gameplay loop is represented by the existing SignalGarden scene and route tests; Jira status was not changed."
     },
     {
       "key": "GAME-281",
       "name": "SG-03",
       "evidenceStatus": "MERGED_EVIDENCE",
-      "evidence": ["docs/signal-garden-gdd.md", "docs/sg-05-asset-record.md"],
+      "evidence": [
+        "docs/signal-garden-gdd.md",
+        "docs/sg-05-asset-record.md"
+      ],
       "ownerDisposition": "Diorama and receiver presentation evidence are recorded; Jira status was not changed."
     },
     {
       "key": "GAME-282",
       "name": "SG-04",
       "evidenceStatus": "MERGED_EVIDENCE",
-      "evidence": ["docs/sg-06-ui-record.md", "docs/sg-08-feedback-record.md"],
+      "evidence": [
+        "docs/sg-06-ui-record.md",
+        "docs/sg-08-feedback-record.md"
+      ],
       "ownerDisposition": "HUD, accessibility text, and feedback decisions are recorded; Jira status was not changed."
     },
     {
       "key": "GAME-283",
       "name": "SG-05",
       "evidenceStatus": "MERGED_EVIDENCE",
-      "evidence": ["docs/sg-05-asset-record.md"],
+      "evidence": [
+        "docs/sg-05-asset-record.md"
+      ],
       "ownerDisposition": "Blender source, FBX, prefab, provenance, and validator evidence are recorded; owner visual review remains a release gate."
     },
     {
       "key": "GAME-284",
       "name": "SG-06",
       "evidenceStatus": "MERGED_EVIDENCE",
-      "evidence": ["docs/sg-06-ui-record.md", "docs/sg-06-browser-review.md"],
+      "evidence": [
+        "docs/sg-06-ui-record.md",
+        "docs/sg-06-browser-review.md"
+      ],
       "ownerDisposition": "UGUI HUD handoff and browser review are recorded; independent screen-reader review remains open."
     },
     {
       "key": "GAME-285",
       "name": "SG-07",
       "evidenceStatus": "MERGED_EVIDENCE",
-      "evidence": ["docs/sg-07-motion-decision.md"],
+      "evidence": [
+        "docs/sg-07-motion-decision.md"
+      ],
       "ownerDisposition": "Rive is explicitly declined for v1; Unity-native motion remains."
     },
     {
       "key": "GAME-286",
       "name": "SG-08",
       "evidenceStatus": "MERGED_EVIDENCE",
-      "evidence": ["docs/sg-08-feedback-record.md", "docs/sg-08-browser-review.md"],
+      "evidence": [
+        "docs/sg-08-feedback-record.md",
+        "docs/sg-08-browser-review.md"
+      ],
       "ownerDisposition": "Visual/audio feedback is documented; human listening and owner review remain open."
     },
     {
       "key": "GAME-287",
       "name": "SG-09",
       "evidenceStatus": "EVIDENCE_WITH_OPEN_GATES",
-      "evidence": ["docs/sg-09-qualification-matrix.md", "docs/sg-09-build-evidence.md"],
+      "evidence": [
+        "docs/sg-09-qualification-matrix.md",
+        "docs/sg-09-build-evidence.md"
+      ],
       "ownerDisposition": "Local and automated evidence is recorded; desktop foreground, focus-loss, screen-reader, working-set, TTI, and human gates remain open."
     },
     {
       "key": "GAME-288",
       "name": "SG-10",
       "evidenceStatus": "EVIDENCE_WITH_OPEN_GATES",
-      "evidence": ["docs/sg-10-ci-and-release-evidence.md", "docs/sg-10-build-identity.json"],
+      "evidence": [
+        "docs/sg-10-ci-and-release-evidence.md",
+        "docs/sg-10-build-identity.json"
+      ],
       "ownerDisposition": "Credential-free repository and build identity checks pass; production and owner gates remain open."
     },
     {
       "key": "GAME-289",
       "name": "SG-11",
       "evidenceStatus": "PROTOCOL_READY_HUMAN_RUN_REQUIRED",
-      "evidence": ["docs/sg-11-human-benchmark.md", "docs/sg-11-playtest-evidence.json"],
+      "evidence": [
+        "docs/sg-11-human-benchmark.md",
+        "docs/sg-11-playtest-evidence.json"
+      ],
       "ownerDisposition": "The five-session benchmark is NOT_RUN with zero sessions; no human result is claimed."
     },
     {
       "key": "GAME-290",
       "name": "SG-12",
       "evidenceStatus": "CLOSEOUT_IN_PROGRESS",
-      "evidence": ["docs/sg-12-closeout-record.md", "docs/sg-12-release-candidate.json"],
+      "evidence": [
+        "docs/sg-12-closeout-record.md",
+        "docs/sg-12-release-candidate.json"
+      ],
       "ownerDisposition": "Closeout is not ready until the listed owner and human gates are resolved."
     }
   ],
@@ -277,14 +259,46 @@
     }
   },
   "knownLimitations": [
-    {"id": "human-benchmark", "status": "OPEN", "ownerAction": "Run and record five fresh-player sessions."},
-    {"id": "foreground-browser", "status": "OPEN", "ownerAction": "Capture independently observed Chrome and Edge runs."},
-    {"id": "time-to-interactive", "status": "OPEN", "ownerAction": "Measure the local target and later production CDN separately."},
-    {"id": "browser-working-set", "status": "OPEN", "ownerAction": "Measure the game tab against the provisional 512 MiB budget."},
-    {"id": "physical-focus-loss", "status": "OPEN", "ownerAction": "Observe a real browser focus interruption."},
-    {"id": "screen-reader", "status": "OPEN", "ownerAction": "Run independent screen-reader review."},
-    {"id": "owner-approval", "status": "OPEN", "ownerAction": "Approve visuals, audio, accessibility, and provisional budgets."},
-    {"id": "production-cdn", "status": "OPEN", "ownerAction": "Only after review, upload immutable artifacts and qualify production."}
+    {
+      "id": "human-benchmark",
+      "status": "OPEN",
+      "ownerAction": "Run and record five fresh-player sessions."
+    },
+    {
+      "id": "foreground-browser",
+      "status": "OPEN",
+      "ownerAction": "Capture independently observed Chrome and Edge runs."
+    },
+    {
+      "id": "time-to-interactive",
+      "status": "OPEN",
+      "ownerAction": "Measure the local target and later production CDN separately."
+    },
+    {
+      "id": "browser-working-set",
+      "status": "OPEN",
+      "ownerAction": "Measure the game tab against the provisional 512 MiB budget."
+    },
+    {
+      "id": "physical-focus-loss",
+      "status": "OPEN",
+      "ownerAction": "Observe a real browser focus interruption."
+    },
+    {
+      "id": "screen-reader",
+      "status": "OPEN",
+      "ownerAction": "Run independent screen-reader review."
+    },
+    {
+      "id": "owner-approval",
+      "status": "OPEN",
+      "ownerAction": "Approve visuals, audio, accessibility, and provisional budgets."
+    },
+    {
+      "id": "production-cdn",
+      "status": "OPEN",
+      "ownerAction": "Only after review, upload immutable artifacts and qualify production."
+    }
   ],
   "jira": {
     "epicKey": "GAME-278",
@@ -307,7 +321,7 @@
   "releaseDecision": {
     "status": "NOT_READY",
     "promotionAllowed": false,
-    "reason": "Evidence is recorded, but human qualification, owner approvals, Jira reconciliation, and production CDN qualification are incomplete."
+    "reason": "The WebGL rendering replacement is locally verified, but all owner and human qualification evidence must be rerun before promotion."
   },
   "provenance": {
     "license": "Original Setness Consulting work; no third-party game assets, code, branding, or protected content copied.",

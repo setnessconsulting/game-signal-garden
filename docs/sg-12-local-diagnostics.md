@@ -7,6 +7,13 @@ owner-observed qualification session. It does not advance
 `ownerQualification.status`, does not replace foreground browser evidence, and
 does not provide owner approval.
 
+**Historical status:** these measurements belong to the superseded SG-10
+candidate `34122315f6f31718ffa616517495392be5c91a2b`, which rendered a blank
+world in the current WebGL preview. They are retained for traceability and do
+not apply to the replacement candidate `20bf9b0595b2b16bb341a3bed119e37e615491aa`.
+See [the rendering replacement record](sg-13-webgl-rendering-fix.md) and rerun
+all owner gates against that candidate.
+
 ## Candidate and host
 
 - Runtime source: `34122315f6f31718ffa616517495392be5c91a2b`
