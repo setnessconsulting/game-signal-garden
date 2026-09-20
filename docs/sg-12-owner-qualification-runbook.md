@@ -2,14 +2,14 @@
 
 **Issue:** [GAME-290 / SG-12](https://setnessconsulting.atlassian.net/browse/GAME-290)
 
-This runbook qualifies the current SG-10 visual-polish candidate without changing gameplay,
+This runbook qualifies the current SG-10 visual-refinement candidate without changing gameplay,
 scenes, assets, packages, or runtime code. It is an owner-observed evidence
 procedure; automated tests and agent-controlled play do not replace the manual
 gates below.
 
 ## Candidate and environment
 
-- Runtime source: `47fd09f8567d02bca8a4f4d38404b451ede5e0c6`
+- Runtime source: `1b3586f26f0c81410cbbbe33fc908e2dee2f1079`
 - Unity: `6000.6.0f1`
 - Build identity: `docs/sg-10-build-identity.json`
 - Browser target: desktop Chrome and Edge
