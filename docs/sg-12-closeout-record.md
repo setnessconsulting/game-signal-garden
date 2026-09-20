@@ -6,35 +6,35 @@
 
 This is the final reconciliation layer for the first playable. It records the
 exact runtime candidate, child-story evidence, technology decisions, known
-limitations, and owner gates. It deliberately does not mark Jira issues Done,
-upload anything to R2, change the games-site catalog, deploy, or treat local
-evidence as an owner release approval.
+limitations, owner gates, and the separately recorded production deployment.
+It does not treat production readback as owner qualification or as approval to
+close the Epic.
 
 ## Candidate identity
 
 The recorded WebGL candidate is the visual-refinement local build from runtime
 source commit `1b3586f26f0c81410cbbbe33fc908e2dee2f1079`, identified by
 `docs/sg-10-build-identity.json` (SHA-256
-`ECA6A6F80BEC6F94446A0DA4C587B0EE1FBF7FE5DCC3953BD0951B10F87CA477`). Its
+`78EF75BE07C142F35949ECA3032CAC9A777A8082188231BA8FF831E092FF08AF`). Its
 ordered loader, data, framework, and WASM files, exact hashes, Brotli encoding,
-MIME types, and immutable R2 prefix pattern remain authoritative in that
-manifest. The closeout record is based on the current merged `main`
-`318647a4143f22cd4da4e16b6cb4d9bcea023eb4`. Earlier SG-12 evidence was
-assembled against `c388226fb02b66ea4084a0e52d4ce97fe844d784`; this metadata
-refresh preserves that evidence while making the current repository baseline
-explicit. The WebGL compatibility replacement is recorded in [the SG-13 rendering
+MIME types, and immutable R2 prefix remain authoritative in that manifest. The
+closeout record is based on the current merged game `main`
+`89e7afc161ce16404929a394b2ba89cbd2c136ec`. Earlier SG-12 evidence was
+assembled against older baselines; this reconciliation preserves that evidence
+while identifying the runtime and deployment actually in production. The WebGL
+compatibility replacement is recorded in [the SG-13 rendering
 fix record](sg-13-webgl-rendering-fix.md), and the current authored presentation
 change is recorded in [SG-14](sg-14-visual-polish.md), and the current refinement
 is recorded in [SG-15](sg-15-visual-audit.md). The visual changes the Unity input
 tree and produces a replacement data bundle; the prior
 qualification observations therefore require a fresh run.
 
-The artifact location is **local only**. A future reviewed release will use
-`signal-garden/<version>/Build/` in private R2 and the host-supplied
-`<assetBase>/Build/<exact-filename>` pattern. No production object or catalog
-entry exists as part of SG-12. An approved promotion will use the deterministic
-Git-derived prefix
-`signal-garden/<UTC-date>-<first-7-chars-of-runtime-source-commit>/Build/`.
+The artifact location is the production readback recorded in
+[the SG-16 production closeout](sg-16-production-closeout.md):
+`signal-garden/2026-09-20-1b3586f/Build/` in private R2, served through the
+host-supplied `<assetBase>/Build/<exact-filename>` pattern. The games-site
+catalog is `playable` and the nested route is live. This deployment record is
+separate from the formal owner qualification gate, which remains `NOT_READY`.
 
 ## Qualification update — 2026-09-20
 
@@ -63,8 +63,9 @@ The owner-observed qualification procedure is in [the SG-12 runbook](sg-12-owner
 Its machine-readable gate record is `ownerQualification` in the closeout
 manifest. The record starts at `NOT_RUN`, may advance to
 `READY_FOR_OWNER_REVIEW` only after all required observations and findings are
-complete, and cannot enable promotion until owner approval and Jira
-reconciliation are recorded.
+complete, and cannot mark the formal promotion gate ready until owner approval
+and Jira reconciliation are recorded. The separately authorized deployment is
+documented in SG-16.
 
 ## Scope agreement
 
@@ -91,7 +92,7 @@ artifact or session data.
 | SG-07 | Motion decision | Rive is declined for v1; Unity-native motion remains. |
 | SG-08 | Feedback/audio record and browser review | Sound is optional and muted by default; human listening and owner review remain open. |
 | SG-09 | Qualification matrix and build evidence | Local/automated evidence is recorded; desktop, accessibility, and human gates remain open. |
-| SG-10 | Build identity, clean checkout, credential-free workflow | Repository/evidence lane passes; production and owner gates remain open. |
+| SG-10 | Build identity, clean checkout, credential-free workflow | Repository/evidence lane and production artifact readback pass; owner gates remain open. |
 | SG-11 | Benchmark protocol and anonymous evidence manifest | `NOT_RUN`, zero sessions, owner review pending. No human result is claimed. |
 | SG-12 | This record and the closeout manifest | `NOT_READY` until the listed owner and human gates are resolved. |
 
@@ -122,13 +123,15 @@ evidence:
   external screen-reader operation;
 - owner visual, audio, accessibility, and provisional 12 MiB / 512 MiB budget
   approval; and
-- Jira Epic/story status reconciliation before any release promotion.
+- Jira Epic/story status reconciliation before closeout.
 
 The closeout manifest keeps `releaseDecision.status` at `NOT_READY` and
 `promotionAllowed` false until those gates have owner-backed evidence. A future
 closeout revision may change that classification only after the evidence is
-added and reviewed. Production R2, the games-site catalog, deployment, and
-Jira statuses remain untouched by this branch.
+added and reviewed. The production route and artifact readback are recorded
+separately in [SG-16](sg-16-production-closeout.md); no owner qualification is
+inferred from the deployment. Jira statuses remain unchanged by this evidence
+branch.
 
 ## Verification commands
 
@@ -143,6 +146,7 @@ python3 scripts/ci/validate_closeout_evidence.py
 ```
 
 The closeout validator checks that the exact runtime build identity, SG-11
-record, required evidence links, technology dispositions, provenance boundary,
-and `NOT_READY` release decision remain internally consistent. It does not
-claim Unity, browser, human, or production qualification.
+record, production deployment readback, required evidence links, technology
+dispositions, provenance boundary, and `NOT_READY` release decision remain
+internally consistent. A production readback pass does not claim foreground
+browser, accessibility, human, or owner qualification.

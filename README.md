@@ -50,6 +50,7 @@ GitHub Actions runs credential-free repository checks on pull requests. See [doc
 - [SG-12 owner qualification runbook](docs/sg-12-owner-qualification-runbook.md)
 - [SG-12 closeout record](docs/sg-12-closeout-record.md)
 - [SG-12 release-candidate manifest](docs/sg-12-release-candidate.json)
+- [Production promotion and artifact readback](docs/sg-16-production-closeout.md)
 - [GAME-278 Epic](https://setnessconsulting.atlassian.net/browse/GAME-278)
 - [GAME-279 SG-01](https://setnessconsulting.atlassian.net/browse/GAME-279) · [GAME-280 SG-02](https://setnessconsulting.atlassian.net/browse/GAME-280) · [GAME-281 SG-03](https://setnessconsulting.atlassian.net/browse/GAME-281) · [GAME-282 SG-04](https://setnessconsulting.atlassian.net/browse/GAME-282)
 - [GAME-283 SG-05](https://setnessconsulting.atlassian.net/browse/GAME-283)
@@ -60,4 +61,4 @@ GitHub Actions runs credential-free repository checks on pull requests. See [doc
 - [GAME-290 SG-12](https://setnessconsulting.atlassian.net/browse/GAME-290)
 - [Games site release contract](https://github.com/setnessconsulting/games-site/blob/main/docs/game-release-contract.md)
 
-The Unity WebGL files are released under the immutable private-R2 prefix signal-garden/<version>/Build/. The host supplies an asset base URL; the player must load its loader, data, framework, and WASM files from <assetBase>/Build/<exact-filename>. Brotli builds require Content-Encoding: br on compressed files and the correct Content-Type (in particular application/wasm for compressed WebAssembly). The production bucket and catalog stay unchanged until a separately reviewed release PR.
+The Unity WebGL files are released under the immutable private-R2 prefix signal-garden/<version>/Build/. The host supplies an asset base URL; the player must load its loader, data, framework, and WASM files from <assetBase>/Build/<exact-filename>. Brotli builds require Content-Encoding: br on compressed files and the correct Content-Type (in particular application/wasm for compressed WebAssembly). The current production promotion and readback are recorded in [docs/sg-16-production-closeout.md](docs/sg-16-production-closeout.md); formal owner qualification remains a separate fail-closed gate.
