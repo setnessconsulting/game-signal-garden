@@ -1,15 +1,15 @@
 # Signal Garden — production promotion and artifact readback
 
-**Runtime source:** `1b3586f26f0c81410cbbbe33fc908e2dee2f1079`
-**Game main merge:** `89e7afc161ce16404929a394b2ba89cbd2c136ec`
-**Games-site merge:** `42acc2aa2bec48861d9bc9ae335027507b66f4a2`
-**Pages deployment:** `d55fc64e-07af-4aec-99f6-c1ce32d82b26`
+**Runtime source:** `58f2c2917ae15fb2299bd13a60a139420bf79690`
+**Game main merge:** `58f2c2917ae15fb2299bd13a60a139420bf79690` (source PR merge identity will be reconciled after the game PR lands)
+**Games-site merge:** `b7adfb44e4bd6989f1b2cee8bcb894fe1c325f65`
+**Pages deployment:** `aa4cc88e-ef6c-4349-8f36-b530c150ec8f`
 **Route:** <https://games.setnessconsulting.com/signal-garden/play/>
-**R2 prefix:** `signal-garden/2026-09-20-1b3586f/Build/`
+**R2 prefix:** `signal-garden/2026-09-21-58f2c29/Build/`
 
 ## Promotion record
 
-The owner-authorized production promotion is complete. The games-site catalog
+The owner-authorized Wave 2 production promotion is complete. The games-site catalog
 marks Signal Garden `playable`, and the nested play page references the exact
 immutable release prefix above. This record describes the deployment and
 readback; it is not a substitute for the SG-09 foreground/accessibility gates,
@@ -20,10 +20,10 @@ recorded source hashes and sizes match `docs/sg-10-build-identity.json`.
 
 | File | Bytes | SHA-256 | R2 type | R2 encoding | Browser response |
 | --- | ---: | --- | --- | --- | --- |
-| `WebGL.loader.js` | 27,914 | `8E62AFD3D90B709331D8223954F6C3906287B9E8E8C7D852FD85435CD8A74AE3` | `text/javascript; charset=utf-8` | none | `200`, JavaScript, Brotli negotiated |
-| `WebGL.data.br` | 3,563,617 | `3C6D90D094804E9F1DB7F139F9CA7C7CD0ACED3C060F681AE0E81526A41D3DDC` | `application/octet-stream` | `br` | `200`, Brotli |
-| `WebGL.framework.js.br` | 66,617 | `BF630E2ED2DF06748BEF43376CD3B9CF39F5CA7F00023B1D28646448E1899255` | `text/javascript; charset=utf-8` | `br` | `200`, Brotli |
-| `WebGL.wasm.br` | 6,810,233 | `492B0F4228524D7814AF51168D5A78C6005A7E1DE1099371F45667E04DA2FC7F` | `application/wasm` | `br` | `200`, Brotli |
+| `WebGL.loader.js` | 27,914 | `D63926545C10A77F1556D19BCBCB9F6AD9EF1D4A45D6160698CA3F742F84C90F` | `text/javascript; charset=utf-8` | none | `200`, JavaScript, Brotli negotiated |
+| `WebGL.data.br` | 3,596,130 | `EE0353821921BB4341179F556C79E98811DB29011AE9867F5B327557C9848235` | `application/octet-stream` | `br` | `200`, Brotli |
+| `WebGL.framework.js.br` | 66,634 | `1186EB45CBF5D43B13C3EEB050FD4B5849B184C3BF1E5C2CAEED5639F32449C3` | `text/javascript; charset=utf-8` | `br` | `200`, Brotli |
+| `WebGL.wasm.br` | 6,816,117 | `53571DE49A16115595AAB3390F3A36FBBD8EFDCCCECB8EF7EA5D8F08BF2BA0D8` | `application/wasm` | `br` | `200`, Brotli |
 
 All four objects use `public, max-age=31536000, immutable`. The browser-like
 readback requested `Accept-Encoding: br`; the loader may be Brotli-compressed

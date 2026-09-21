@@ -3,9 +3,9 @@
   "game": "signal-garden",
   "issue": "GAME-288",
   "source": {
-    "commit": "1b3586f26f0c81410cbbbe33fc908e2dee2f1079",
-    "commitRole": "Visual refinement replacement revision: calmer center terrain shading and restrained alternate signal-trail stones added while gameplay, route rules, controls, and scene footprint remain unchanged.",
-    "unityInputTreeSha256": "2473ED6D51575A17D38198EE9D8733AEF023EEC6BF16EB4BAE15C698ADDBA003",
+    "commit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
+    "commitRole": "Wave 2 production-hardening revision: deterministic recovery traces, one-time pan guidance, unmistakable success reaction, WebGL decorative-cost tuning, and a local route-smoke harness while preserving the existing puzzle, controls, and accessibility contract.",
+    "unityInputTreeSha256": "261846CBEEFAD73EFB3C54A62B39F57BF9ED9017F46A355F29908199A089C411",
     "scene": "Assets/Scenes/SignalGarden.unity",
     "packagesLock": "Packages/packages-lock.json",
     "packagesLockSha256": "60E10C79BC5920DE75236CB939688B7BBA27EA4246A5171DDA556D3C7E173A22",
@@ -34,7 +34,7 @@
     "threading": "single",
     "outputPrefix": "signal-garden/<version>/Build/",
     "assetBasePattern": "<assetBase>/Build/<filename>",
-    "totalBytes": 10468381,
+    "totalBytes": 10506795,
     "compressedBudgetBytes": 12582912,
     "budgetApprovalStatus": "PENDING_OWNER_SIGN_OFF",
     "status": "PASS_LOCAL",
@@ -44,7 +44,7 @@
         "filename": "WebGL.loader.js",
         "relativePath": "Build/WebGL.loader.js",
         "bytes": 27914,
-        "sha256": "8E62AFD3D90B709331D8223954F6C3906287B9E8E8C7D852FD85435CD8A74AE3",
+        "sha256": "D63926545C10A77F1556D19BCBCB9F6AD9EF1D4A45D6160698CA3F742F84C90F",
         "contentType": "text/javascript; charset=utf-8",
         "contentEncoding": null
       },
@@ -52,8 +52,8 @@
         "role": "data",
         "filename": "WebGL.data.br",
         "relativePath": "Build/WebGL.data.br",
-        "bytes": 3563617,
-        "sha256": "3C6D90D094804E9F1DB7F139F9CA7C7CD0ACED3C060F681AE0E81526A41D3DDC",
+        "bytes": 3596130,
+        "sha256": "EE0353821921BB4341179F556C79E98811DB29011AE9867F5B327557C9848235",
         "contentType": "application/octet-stream",
         "contentEncoding": "br"
       },
@@ -61,8 +61,8 @@
         "role": "framework",
         "filename": "WebGL.framework.js.br",
         "relativePath": "Build/WebGL.framework.js.br",
-        "bytes": 66617,
-        "sha256": "BF630E2ED2DF06748BEF43376CD3B9CF39F5CA7F00023B1D28646448E1899255",
+        "bytes": 66634,
+        "sha256": "1186EB45CBF5D43B13C3EEB050FD4B5849B184C3BF1E5C2CAEED5639F32449C3",
         "contentType": "text/javascript; charset=utf-8",
         "contentEncoding": "br"
       },
@@ -70,14 +70,14 @@
         "role": "wasm",
         "filename": "WebGL.wasm.br",
         "relativePath": "Build/WebGL.wasm.br",
-        "bytes": 6810233,
-        "sha256": "492B0F4228524D7814AF51168D5A78C6005A7E1DE1099371F45667E04DA2FC7F",
+        "bytes": 6816117,
+        "sha256": "53571DE49A16115595AAB3390F3A36FBBD8EFDCCCECB8EF7EA5D8F08BF2BA0D8",
         "contentType": "application/wasm",
         "contentEncoding": "br"
       }
     ],
-    "releaseVersion": "2026-09-20-1b3586f",
-    "releasePrefix": "signal-garden/2026-09-20-1b3586f/Build/"
+    "releaseVersion": "2026-09-21-58f2c29",
+    "releasePrefix": "signal-garden/2026-09-21-58f2c29/Build/"
   },
   "verification": {
     "provenance": {
@@ -86,23 +86,23 @@
     },
     "unityEditMode": {
       "status": "PASS_RECORDED",
-      "evidence": "docs/sg-10-ci-and-release-evidence.md (24/24 local Unity run)"
+      "evidence": "Artifacts/wave2-editmode-final.xml (24/24 local Unity run)"
     },
     "unityPlayMode": {
       "status": "PASS_RECORDED",
-      "evidence": "docs/sg-10-ci-and-release-evidence.md (8/8 local Unity run)"
+      "evidence": "Artifacts/wave2-playmode-final.xml (12/12 local Unity run)"
     },
     "webglBuild": {
       "status": "PASS_LOCAL",
-      "evidence": "docs/sg-15-visual-audit.md (Unity Success, four artifact hashes, Brotli/MIME readback)"
+      "evidence": "Artifacts/wave2-webgl-final-build.log (Unity Success, four artifact hashes, Brotli/MIME readback)"
     },
     "nestedBrowserPreview": {
       "status": "PASS_LOCAL",
-      "evidence": "docs/sg-15-visual-audit.md (local nested preview rendered the refined diorama and completed a route)"
+      "evidence": "tests/host-preview/README.md and local nested preview (1920x1080 route-smoke harness)"
     },
     "hostedCredentialFree": {
       "status": "NOT_RUN",
-      "evidence": "Credential-free Repository integrity will run on the replacement branch; no hosted result is claimed here."
+      "evidence": "Credential-free Repository integrity workflow for the Wave 2 release PR"
     },
     "cleanCheckout": {
       "status": "PASS_RECORDED",
@@ -111,8 +111,8 @@
   },
   "releaseGates": {
     "inAppBrowserFrameRate": {
-      "status": "NOT_RUN",
-      "reason": "The prior frame-rate sample belonged to the superseded blank-world candidate; the replacement renders correctly but requires a fresh focused 30-sample measurement."
+      "status": "PASS_LOCAL",
+      "reason": "Visible nested preview completed 30 focused samples at exact 1920x1080: minimum 60.3 fps, mean 61.0 fps, 30/30 seconds. This is local in-app evidence, not independent desktop Chrome/Edge qualification."
     },
     "desktopChromeForeground": {
       "status": "NOT_RUN",
@@ -148,21 +148,21 @@
     },
     "productionCdn": {
       "status": "PASS_RECORDED",
-      "reason": "Production route and immutable R2 artifact readback completed after the owner-authorized promotion.",
-      "recordedAt": "2026-09-20",
-      "runtimeSourceCommit": "1b3586f26f0c81410cbbbe33fc908e2dee2f1079",
-      "gameMergeCommit": "89e7afc161ce16404929a394b2ba89cbd2c136ec",
-      "siteMergeCommit": "42acc2aa2bec48861d9bc9ae335027507b66f4a2",
-      "pagesDeploymentId": "d55fc64e-07af-4aec-99f6-c1ce32d82b26",
-      "pagesDeploymentUrl": "https://d55fc64e.games-site-7pn.pages.dev",
+      "reason": "Wave 2 production route and immutable R2 artifact readback completed after the explicit owner-authorized promotion.",
+      "recordedAt": "2026-09-21",
+      "runtimeSourceCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
+      "gameMergeCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
+      "siteMergeCommit": "b7adfb44e4bd6989f1b2cee8bcb894fe1c325f65",
+      "pagesDeploymentId": "aa4cc88e-ef6c-4349-8f36-b530c150ec8f",
+      "pagesDeploymentUrl": "https://aa4cc88e.games-site-7pn.pages.dev",
       "route": "https://games.setnessconsulting.com/signal-garden/play/",
-      "r2Prefix": "signal-garden/2026-09-20-1b3586f/Build/",
+      "r2Prefix": "signal-garden/2026-09-21-58f2c29/Build/",
       "requestAcceptEncoding": "br",
       "artifacts": [
         {
           "filename": "WebGL.loader.js",
           "bytes": 27914,
-          "sha256": "8E62AFD3D90B709331D8223954F6C3906287B9E8E8C7D852FD85435CD8A74AE3",
+          "sha256": "D63926545C10A77F1556D19BCBCB9F6AD9EF1D4A45D6160698CA3F742F84C90F",
           "r2ContentType": "text/javascript; charset=utf-8",
           "r2ContentEncoding": null,
           "httpStatus": 200,
@@ -172,8 +172,8 @@
         },
         {
           "filename": "WebGL.data.br",
-          "bytes": 3563617,
-          "sha256": "3C6D90D094804E9F1DB7F139F9CA7C7CD0ACED3C060F681AE0E81526A41D3DDC",
+          "bytes": 3596130,
+          "sha256": "EE0353821921BB4341179F556C79E98811DB29011AE9867F5B327557C9848235",
           "r2ContentType": "application/octet-stream",
           "r2ContentEncoding": "br",
           "httpStatus": 200,
@@ -183,8 +183,8 @@
         },
         {
           "filename": "WebGL.framework.js.br",
-          "bytes": 66617,
-          "sha256": "BF630E2ED2DF06748BEF43376CD3B9CF39F5CA7F00023B1D28646448E1899255",
+          "bytes": 66634,
+          "sha256": "1186EB45CBF5D43B13C3EEB050FD4B5849B184C3BF1E5C2CAEED5639F32449C3",
           "r2ContentType": "text/javascript; charset=utf-8",
           "r2ContentEncoding": "br",
           "httpStatus": 200,
@@ -194,8 +194,8 @@
         },
         {
           "filename": "WebGL.wasm.br",
-          "bytes": 6810233,
-          "sha256": "492B0F4228524D7814AF51168D5A78C6005A7E1DE1099371F45667E04DA2FC7F",
+          "bytes": 6816117,
+          "sha256": "53571DE49A16115595AAB3390F3A36FBBD8EFDCCCECB8EF7EA5D8F08BF2BA0D8",
           "r2ContentType": "application/wasm",
           "r2ContentEncoding": "br",
           "httpStatus": 200,

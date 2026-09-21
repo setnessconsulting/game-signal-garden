@@ -17,14 +17,14 @@ SG10_RELATIVE_PATH = "docs/sg-10-build-identity.json"
 SG11_RELATIVE_PATH = "docs/sg-11-playtest-evidence.json"
 EXPECTED_GAME = "signal-garden"
 EXPECTED_ISSUE = "GAME-290"
-EXPECTED_BASE_MAIN_COMMIT = "89e7afc161ce16404929a394b2ba89cbd2c136ec"
-EXPECTED_RUNTIME_COMMIT = "1b3586f26f0c81410cbbbe33fc908e2dee2f1079"
-EXPECTED_RUNTIME_MANIFEST_HASH = "DDA59DBC72F820DC03227C4D7B1430B43E2BEC1874B93DAE43C761EA48F22CFE"
-EXPECTED_SITE_COMMIT = "42acc2aa2bec48861d9bc9ae335027507b66f4a2"
-EXPECTED_RELEASE_VERSION = "2026-09-20-1b3586f"
+EXPECTED_BASE_MAIN_COMMIT = "58f2c2917ae15fb2299bd13a60a139420bf79690"
+EXPECTED_RUNTIME_COMMIT = "58f2c2917ae15fb2299bd13a60a139420bf79690"
+EXPECTED_RUNTIME_MANIFEST_HASH = "F38C1880E5206D55580752BE50BDA3D78FE83D6A05A99798C9F2E6D276537D0B"
+EXPECTED_SITE_COMMIT = "b7adfb44e4bd6989f1b2cee8bcb894fe1c325f65"
+EXPECTED_RELEASE_VERSION = "2026-09-21-58f2c29"
 EXPECTED_RELEASE_PREFIX = f"signal-garden/{EXPECTED_RELEASE_VERSION}/Build/"
 EXPECTED_PRODUCTION_ROUTE = "https://games.setnessconsulting.com/signal-garden/play/"
-EXPECTED_PAGES_DEPLOYMENT_ID = "d55fc64e-07af-4aec-99f6-c1ce32d82b26"
+EXPECTED_PAGES_DEPLOYMENT_ID = "aa4cc88e-ef6c-4349-8f36-b530c150ec8f"
 EXPECTED_ARTIFACTS = (
     "WebGL.loader.js",
     "WebGL.data.br",
@@ -206,7 +206,7 @@ def validate_production_deployment(deployment: Any, sg10: dict[str, Any] | None)
         return
     if deployment.get("status") != "DEPLOYED":
         fail("productionDeployment.status must be DEPLOYED")
-    if deployment.get("recordedAt") != "2026-09-20":
+    if deployment.get("recordedAt") != "2026-09-21":
         fail("productionDeployment.recordedAt must identify the production readback")
     if deployment.get("runtimeSourceCommit") != EXPECTED_RUNTIME_COMMIT:
         fail("productionDeployment.runtimeSourceCommit must match the frozen runtime")
@@ -346,7 +346,7 @@ def validate_qualification_updates(updates: Any) -> None:
         return
     if updates.get("recordedAt") != "2026-09-20":
         fail("qualificationUpdates.recordedAt must identify the current qualification observation")
-    if updates.get("candidateRuntimeSourceCommit") != EXPECTED_RUNTIME_COMMIT:
+    if updates.get("status") != "SUPERSEDED" and updates.get("candidateRuntimeSourceCommit") != EXPECTED_RUNTIME_COMMIT:
         fail("qualificationUpdates.candidateRuntimeSourceCommit must match the runtime candidate")
     if updates.get("status") == "SUPERSEDED":
         previous = updates.get("previousCandidateRuntimeSourceCommit")

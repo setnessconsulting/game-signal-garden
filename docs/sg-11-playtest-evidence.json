@@ -4,10 +4,10 @@
   "issue": "GAME-289",
   "status": "NOT_RUN",
   "source": {
-    "candidateReviewCommit": "1b3586f26f0c81410cbbbe33fc908e2dee2f1079",
+    "candidateReviewCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
     "runtimeBuildIdentity": "docs/sg-10-build-identity.json",
-    "runtimeBuildIdentitySha256": "DDA59DBC72F820DC03227C4D7B1430B43E2BEC1874B93DAE43C761EA48F22CFE",
-    "runtimeBuildSourceCommit": "1b3586f26f0c81410cbbbe33fc908e2dee2f1079"
+    "runtimeBuildIdentitySha256": "F38C1880E5206D55580752BE50BDA3D78FE83D6A05A99798C9F2E6D276537D0B",
+    "runtimeBuildSourceCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690"
   },
   "target": {
     "browser": "Desktop Chrome or Edge",
