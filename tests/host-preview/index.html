@@ -114,6 +114,7 @@
       const query = new URLSearchParams(location.search);
       const referenceRender = query.get("sg-render") === "1920x1080";
       const statsEnabled = query.get("sg-stats") === "1";
+      const smokeEnabled = query.get("sg-smoke") === "route";
       const referenceWidth = 1920;
       const referenceHeight = 1080;
       const sampleSeconds = Math.max(1, Math.min(120, Number.parseInt(query.get("sg-sample-seconds") || "30", 10)));
@@ -121,7 +122,7 @@
       const stage = document.getElementById("game-stage");
       const performanceReadout = document.getElementById("performance-readout");
       if (referenceRender) document.body.classList.add("reference-render");
-      if (statsEnabled) performanceReadout.hidden = false;
+      if (statsEnabled || smokeEnabled) performanceReadout.hidden = false;
 
       window.signalGardenBuildFiles = __BUILD_MANIFEST__;
       window.signalGardenAssetBase = new URL("/game-assets/signal-garden/local", location.origin).href.replace(/\/$/, "");
@@ -149,6 +150,102 @@
       function delay(milliseconds) {
         return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
       }
+
+      function smokeUpdate(message) {
+        if (smokeEnabled) performanceReadout.textContent = "route smoke · " + message;
+      }
+
+      function smokePatch(patch) {
+        if (!smokeEnabled) return;
+        window.signalGardenSmokeResult = Object.assign(window.signalGardenSmokeResult || {
+          mode: "route",
+          canvasReady: false,
+          observeSeen: false,
+          tracingSeen: false,
+          verifiedSeen: false,
+          passed: false
+        }, patch);
+      }
+
+      async function waitForSmokeStatus(predicate, timeoutMilliseconds) {
+        const startedAt = performance.now();
+        while (performance.now() - startedAt < timeoutMilliseconds) {
+          const status = document.getElementById("signal-garden-accessible-status").textContent || "";
+          if (predicate(status)) return status;
+          await delay(50);
+        }
+        throw new Error("Timed out waiting for Signal Garden status.");
+      }
+
+      async function waitForSmokeCanvas(timeoutMilliseconds) {
+        const startedAt = performance.now();
+        while (performance.now() - startedAt < timeoutMilliseconds) {
+          if (canvas.width === referenceWidth && canvas.height === referenceHeight) return;
+          await delay(50);
+        }
+        throw new Error("Timed out waiting for the exact 1920×1080 canvas.");
+      }
+
+      async function waitForSmokeCompletion(timeoutMilliseconds) {
+        const startedAt = performance.now();
+        while (performance.now() - startedAt < timeoutMilliseconds) {
+          const status = document.getElementById("signal-garden-accessible-status").textContent || "";
+          if (status.indexOf("Signal received") >= 0) return status;
+          if (status.indexOf("Try again") >= 0 || status.indexOf("canceled") >= 0 || status.indexOf("Focus changed") >= 0) {
+            throw new Error(status);
+          }
+          await delay(100);
+        }
+        throw new Error("Timed out waiting for a real pointer drag to reach Verified.");
+      }
+
+      async function waitForSmokeTracing(timeoutMilliseconds) {
+        const startedAt = performance.now();
+        while (performance.now() - startedAt < timeoutMilliseconds) {
+          const status = document.getElementById("signal-garden-accessible-status").textContent || "";
+          if (status.indexOf("Tracing the signal") >= 0) return status;
+          if (status.indexOf("Try again") >= 0 || status.indexOf("canceled") >= 0 || status.indexOf("Focus changed") >= 0) {
+            throw new Error(status);
+          }
+          await delay(100);
+        }
+        throw new Error("Timed out waiting for a real pointer drag to begin.");
+      }
+
+      async function runRouteSmoke() {
+        if (!smokeEnabled) return;
+
+        let smokeStage = "canvas";
+        try {
+          smokePatch({
+            canvasReady: false,
+            canvasWidth: canvas.width,
+            canvasHeight: canvas.height
+          });
+          smokeStage = "Observe";
+          smokeUpdate("waiting for Observe");
+          await waitForSmokeStatus((status) => status.indexOf("Ready.") >= 0, 15000);
+          await waitForSmokeCanvas(15000);
+          smokePatch({ canvasReady: true, canvasWidth: canvas.width, canvasHeight: canvas.height });
+          smokePatch({ observeSeen: true });
+
+          smokeStage = "Tracing";
+          smokeUpdate("use a real pointer drag from coral to blue");
+          canvas.focus({ preventScroll: true });
+          await waitForSmokeTracing(120000);
+          smokePatch({ tracingSeen: true });
+          smokeStage = "Verified";
+          await waitForSmokeCompletion(120000);
+          smokePatch({ verifiedSeen: true, passed: true });
+          smokeUpdate("PASS · canvas → Observe → Verified");
+        } catch (error) {
+          smokePatch({ passed: false, error: smokeStage + ": " + error.message });
+          smokeUpdate("FAIL · " + smokeStage + " · " + error.message);
+          console.error("Signal Garden route smoke failed:", error);
+        }
+      }
+
+      window.signalGardenRunRouteSmoke = runRouteSmoke;
 
       async function waitForActiveTime(milliseconds, updateStatus) {
         let activeMilliseconds = 0;
@@ -233,6 +330,7 @@
           loading.hidden = true;
           canvas.focus({ preventScroll: true });
           void runPerformanceSample();
+          void runRouteSmoke();
         } catch (error) {
           console.error("Signal Garden failed to start:", error);
           showFailure();

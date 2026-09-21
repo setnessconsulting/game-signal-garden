@@ -24,6 +24,14 @@ mergeInto(LibraryManager.library, {
       if (canvas.hasPointerCapture && canvas.hasPointerCapture(event.pointerId)) {
         canvas.releasePointerCapture(event.pointerId);
       }
+
+      if (event.isPrimary !== false && typeof SendMessage === "function") {
+        try {
+          SendMessage("Signal Garden Game", "HandleBrowserPointerCancel");
+        } catch (error) {
+          // Unity may already be unloading the scene when the pointer is canceled.
+        }
+      }
     });
   },
 

@@ -184,7 +184,7 @@ namespace SignalGarden.Editor
                 new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(-44f, 26f), new Vector2(22f, -14f));
             CreateText(objectivePanel.rectTransform, "Title", "Wake the garden with one clear line.", font, 25, TextColor, FontStyle.Bold, TextAnchor.MiddleLeft,
                 new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(-44f, 48f), new Vector2(22f, -48f));
-            CreateText(objectivePanel.rectTransform, "Instruction", "Drag coral to blue along the gold stones. WASD pans. Esc cancels or pauses.", font, 15, MutedTextColor, FontStyle.Normal, TextAnchor.UpperLeft,
+            CreateText(objectivePanel.rectTransform, "Instruction", "Drag coral to blue along the gold stones. Optional: WASD pans the view. Esc cancels or pauses.", font, 15, MutedTextColor, FontStyle.Normal, TextAnchor.UpperLeft,
                 new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(-44f, 58f), new Vector2(22f, -94f));
 
             var soundButton = CreateButton(canvasRect, "Sound Cues Button", "Sound cues: Off", font, 168f, 56f, Vector2.zero);

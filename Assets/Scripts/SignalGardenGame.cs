@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace SignalGarden
 {
@@ -14,6 +16,10 @@ namespace SignalGarden
         private const float DefaultSoundVolume = 0.55f;
         private const float InteractionPulseDuration = 0.42f;
         private const float VerifiedPulseDuration = 0.72f;
+        private const float GardenReactionDuration = 1.80f;
+        private const float GardenReactionLift = 0.16f;
+        private const float GardenReactionScale = 0.42f;
+        private const float WebGlRenderScale = 0.60f;
         private const int FeedbackSampleRate = 22050;
 
         private enum FeedbackCue
@@ -38,6 +44,9 @@ namespace SignalGarden
 
         private readonly GardenRunState runState = new GardenRunState();
         private readonly List<Vector2> routeTrail = new List<Vector2>(RouteRules.StandardTrail);
+        private readonly List<Transform> fireflyReactors = new List<Transform>(12);
+        private readonly List<Vector3> fireflyBasePositions = new List<Vector3>(12);
+        private readonly List<Vector3> fireflyBaseScales = new List<Vector3>(12);
         private Vector3 cameraHomePosition;
         private Vector3 cameraHomeFocus;
         private Vector3 cameraPanOffset;
@@ -50,7 +59,11 @@ namespace SignalGarden
         private bool reducedMotion;
         private float sourceFeedbackPulseSeconds;
         private float receiverFeedbackPulseSeconds;
+        private float gardenReactionSeconds;
         private bool audioFailureReported;
+        private bool panHintShown;
+        private bool performanceTuningApplied;
+        private bool fireflyReactionApplied;
         private string statusText = "Ready. Drag from the coral source to begin.";
 
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -92,6 +105,26 @@ namespace SignalGarden
         public bool ReducedMotionEnabled
         {
             get { return reducedMotion; }
+        }
+
+        public bool PanHintShown
+        {
+            get { return panHintShown; }
+        }
+
+        public bool SuccessReactionActive
+        {
+            get { return gardenReactionSeconds > 0f; }
+        }
+
+        public int SuccessReactionCount
+        {
+            get { return fireflyReactors.Count; }
+        }
+
+        public bool PerformanceTuningApplied
+        {
+            get { return performanceTuningApplied; }
         }
 
         public void Configure(
@@ -151,6 +184,9 @@ namespace SignalGarden
             {
                 hud.Bind(this);
             }
+
+            CollectFireflyReactors();
+            ApplyPerformanceTuning();
 
             Application.targetFrameRate = 60;
             Cursor.visible = true;
@@ -315,16 +351,27 @@ namespace SignalGarden
                 statusText = "Signal received. The garden is awake. Choose Play again for the next turn.";
                 SetLineMaterial(routeSuccessMaterial);
                 receiverFeedbackPulseSeconds = VerifiedPulseDuration;
+                StartSuccessReaction();
                 PlayFeedback(FeedbackCue.Success);
+                UpdateRouteVisual();
+                Announce(statusText);
             }
             else
             {
-                statusText = RecoveryMessage(result);
-                SetLineMaterial(routeFailureMaterial);
-                sourceFeedbackPulseSeconds = InteractionPulseDuration;
-                PlayFeedback(FeedbackCue.Recovery);
+                EnterRecovery(result, true);
+                return;
             }
 
+            UpdateRouteVisual();
+            Announce(statusText);
+        }
+
+        private void EnterRecovery(RouteFailure failure, bool preserveFailureTrace)
+        {
+            statusText = RecoveryMessage(failure);
+            SetLineMaterial(preserveFailureTrace ? routeFailureMaterial : routeActiveMaterial);
+            sourceFeedbackPulseSeconds = InteractionPulseDuration;
+            PlayFeedback(FeedbackCue.Recovery);
             UpdateRouteVisual();
             Announce(statusText);
         }
@@ -354,13 +401,10 @@ namespace SignalGarden
         {
             if (runState.phase == GardenPhase.Routing)
             {
-                runState.CancelRoute(RouteFailure.Cancelled);
-                statusText = RecoveryMessage(RouteFailure.Cancelled);
-                sourceFeedbackPulseSeconds = InteractionPulseDuration;
-                PlayFeedback(FeedbackCue.Recovery);
-                SetLineMaterial(routeActiveMaterial);
-                UpdateRouteVisual();
-                Announce(statusText);
+                if (runState.CancelRoute(RouteFailure.Cancelled))
+                {
+                    EnterRecovery(RouteFailure.Cancelled, false);
+                }
                 return;
             }
 
@@ -393,6 +437,13 @@ namespace SignalGarden
                 return;
             }
 
+            if (!panHintShown)
+            {
+                panHintShown = true;
+                statusText = "Optional pan: WASD moves the garden view. Route tracing still uses drag.";
+                Announce(statusText);
+            }
+
             cameraPanOffset += movement.normalized * CameraPanSpeed * Time.unscaledDeltaTime;
             cameraPanOffset.x = Mathf.Clamp(cameraPanOffset.x, -1.45f, 1.45f);
             cameraPanOffset.z = Mathf.Clamp(cameraPanOffset.z, -0.95f, 0.95f);
@@ -419,6 +470,8 @@ namespace SignalGarden
                 receiverGlow.intensity = completedBoost * pulse + receiverFeedback;
             }
 
+            UpdateGardenReaction();
+
             if (!reducedMotion && receiverMarker != null &&
                 (runState.phase == GardenPhase.Verified ||
                  (runState.phase == GardenPhase.Paused && runState.phaseBeforePause == GardenPhase.Verified)))
@@ -442,6 +495,229 @@ namespace SignalGarden
             }
 
             return Mathf.Sin(Mathf.PI * Mathf.Clamp01(progress)) * strength;
+        }
+
+        private void CollectFireflyReactors()
+        {
+            fireflyReactors.Clear();
+            fireflyBasePositions.Clear();
+            fireflyBaseScales.Clear();
+
+            for (var index = 1; index <= 12; index++)
+            {
+                var firefly = GameObject.Find("Garden firefly " + index);
+                if (firefly == null)
+                {
+                    continue;
+                }
+
+                fireflyReactors.Add(firefly.transform);
+                fireflyBasePositions.Add(firefly.transform.localPosition);
+                fireflyBaseScales.Add(firefly.transform.localScale);
+            }
+        }
+
+        private void StartSuccessReaction()
+        {
+            gardenReactionSeconds = GardenReactionDuration;
+            fireflyReactionApplied = false;
+            RestoreFireflyReactors();
+        }
+
+        private void UpdateGardenReaction()
+        {
+            if (fireflyReactors.Count == 0)
+            {
+                return;
+            }
+
+            if (gardenReactionSeconds <= 0f)
+            {
+                if (fireflyReactionApplied)
+                {
+                    RestoreFireflyReactors();
+                    fireflyReactionApplied = false;
+                }
+                return;
+            }
+
+            gardenReactionSeconds = Mathf.Max(0f, gardenReactionSeconds - Time.unscaledDeltaTime);
+            if (reducedMotion)
+            {
+                RestoreFireflyReactors();
+                fireflyReactionApplied = false;
+                return;
+            }
+
+            var progress = 1f - gardenReactionSeconds / GardenReactionDuration;
+            var envelope = Mathf.Sin(Mathf.PI * Mathf.Clamp01(progress));
+            for (var index = 0; index < fireflyReactors.Count; index++)
+            {
+                var reactor = fireflyReactors[index];
+                if (reactor == null)
+                {
+                    continue;
+                }
+
+                var phase = index * 0.73f;
+                var lift = GardenReactionLift * envelope * (0.70f + 0.30f * Mathf.Sin(phase + 1f));
+                reactor.localPosition = fireflyBasePositions[index] + Vector3.up * lift;
+                reactor.localScale = fireflyBaseScales[index] * (1f + GardenReactionScale * envelope);
+            }
+
+            fireflyReactionApplied = true;
+        }
+
+        private void RestoreFireflyReactors()
+        {
+            for (var index = 0; index < fireflyReactors.Count; index++)
+            {
+                var reactor = fireflyReactors[index];
+                if (reactor == null)
+                {
+                    continue;
+                }
+
+                reactor.localPosition = fireflyBasePositions[index];
+                reactor.localScale = fireflyBaseScales[index];
+            }
+        }
+
+        private void ApplyPerformanceTuning()
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            // WebGL uses the Mobile quality profile, but enforce that selection at runtime as
+            // well. This keeps an editor's active desktop quality level from leaking into the
+            // browser build and retains the exact canvas size while avoiding desktop-only HDR,
+            // MSAA, and shadow costs.
+            QualitySettings.SetQualityLevel(0, true);
+            QualitySettings.antiAliasing = 0;
+            var pipeline = QualitySettings.renderPipeline as UniversalRenderPipelineAsset ??
+                           GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset;
+            if (pipeline != null)
+            {
+                // Keep the browser canvas at 1920x1080 while reducing only the internal
+                // color/depth buffers. Route markers and UI remain at the exact target size.
+                pipeline.renderScale = Mathf.Min(pipeline.renderScale, WebGlRenderScale);
+            }
+            QualitySettings.shadows = UnityEngine.ShadowQuality.Disable;
+            QualitySettings.softParticles = false;
+            QualitySettings.realtimeReflectionProbes = false;
+            if (gardenCamera != null)
+            {
+                gardenCamera.allowHDR = false;
+                gardenCamera.allowMSAA = false;
+            }
+#endif
+
+            var renderers = FindObjectsByType<Renderer>(FindObjectsInactive.Exclude);
+            var staticDecorativeObjects = new List<GameObject>(renderers.Length);
+            for (var index = 0; index < renderers.Length; index++)
+            {
+                var renderer = renderers[index];
+                if (!IsDecorativeRenderer(renderer.gameObject.name))
+                {
+                    continue;
+                }
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+                if (ShouldCullOptionalDecorative(renderer))
+                {
+                    renderer.enabled = false;
+                    continue;
+                }
+#endif
+
+                renderer.shadowCastingMode = ShadowCastingMode.Off;
+                renderer.receiveShadows = false;
+                renderer.motionVectorGenerationMode = MotionVectorGenerationMode.ForceNoMotion;
+                renderer.lightProbeUsage = LightProbeUsage.Off;
+                renderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+                var decorativeLine = renderer as LineRenderer;
+                if (decorativeLine != null)
+                {
+                    decorativeLine.numCornerVertices = 0;
+                    decorativeLine.numCapVertices = 0;
+                }
+#endif
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+                if (!IsDynamicDecorativeRenderer(renderer.gameObject.name))
+                {
+                    renderer.gameObject.isStatic = true;
+                    staticDecorativeObjects.Add(renderer.gameObject);
+                }
+#endif
+            }
+
+            var lights = FindObjectsByType<Light>(FindObjectsInactive.Exclude);
+            for (var index = 0; index < lights.Length; index++)
+            {
+                var light = lights[index];
+                if (light.type == LightType.Directional && light.gameObject.name == "Warm canopy light")
+                {
+                    light.shadows = LightShadows.None;
+                }
+            }
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+            ApplyDecorativeStaticBatching(staticDecorativeObjects);
+#endif
+
+            performanceTuningApplied = true;
+        }
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        private static void ApplyDecorativeStaticBatching(List<GameObject> decorativeObjects)
+        {
+            if (decorativeObjects.Count == 0)
+            {
+                return;
+            }
+
+            var batchRoot = new GameObject("Signal Garden Decorative Static Batch");
+            batchRoot.hideFlags = HideFlags.HideAndDontSave;
+            batchRoot.isStatic = true;
+            StaticBatchingUtility.Combine(decorativeObjects.ToArray(), batchRoot);
+        }
+
+        private static bool ShouldCullOptionalDecorative(Renderer renderer)
+        {
+            var objectName = renderer.gameObject.name;
+            if (objectName.Contains("Plant contact shadow"))
+            {
+                return true;
+            }
+
+            // Keep three petals per flower so the garden still reads as planted while
+            // removing the redundant back-facing decorative overdraw on WebGL.
+            return objectName == "Wildflower petal" && renderer.transform.GetSiblingIndex() % 2 == 1;
+        }
+#endif
+
+        private static bool IsDecorativeRenderer(string objectName)
+        {
+            return objectName.StartsWith("Garden firefly", System.StringComparison.Ordinal) ||
+                   objectName.Contains("Wildflower") ||
+                   objectName.Contains("Fern") ||
+                   objectName.Contains("Moss pebble") ||
+                   objectName.Contains("Moss-polished pebble") ||
+                   objectName.Contains("Plant contact shadow") ||
+                   objectName.Contains("Dead end") ||
+                   objectName.StartsWith("Wild growth", System.StringComparison.Ordinal) ||
+                   objectName.StartsWith("Suspended basalt shard", System.StringComparison.Ordinal) ||
+                   objectName == "Upper warm earth band" ||
+                   objectName == "Rose clay stratum" ||
+                   objectName == "Deep floating stone" ||
+                   objectName == "Faceted moss surface" ||
+                   objectName == "Glazed garden edge";
+        }
+
+        private static bool IsDynamicDecorativeRenderer(string objectName)
+        {
+            return objectName.StartsWith("Garden firefly", System.StringComparison.Ordinal);
         }
 
         private void UpdateRouteVisual()
@@ -535,6 +811,14 @@ namespace SignalGarden
             ToggleReducedMotion();
         }
 
+        public void HandleBrowserPointerCancel()
+        {
+            if (runState.phase == GardenPhase.Routing && runState.CancelRoute(RouteFailure.FocusInterrupted))
+            {
+                EnterRecovery(RouteFailure.FocusInterrupted, false);
+            }
+        }
+
         private void ResumeGame()
         {
             if (!runState.Resume())
@@ -564,6 +848,9 @@ namespace SignalGarden
         private void ResetGame()
         {
             runState.Reset();
+            gardenReactionSeconds = 0f;
+            fireflyReactionApplied = false;
+            RestoreFireflyReactors();
             cameraPanOffset = Vector3.zero;
             if (gardenCamera != null)
             {
@@ -681,12 +968,7 @@ namespace SignalGarden
             Cursor.lockState = CursorLockMode.None;
             if (!focus && runState.phase == GardenPhase.Routing && runState.CancelRoute(RouteFailure.FocusInterrupted))
             {
-                statusText = RecoveryMessage(RouteFailure.FocusInterrupted);
-                sourceFeedbackPulseSeconds = InteractionPulseDuration;
-                PlayFeedback(FeedbackCue.Recovery);
-                SetLineMaterial(routeActiveMaterial);
-                UpdateRouteVisual();
-                Announce(statusText);
+                EnterRecovery(RouteFailure.FocusInterrupted, false);
             }
         }
 
@@ -694,12 +976,7 @@ namespace SignalGarden
         {
             if (paused && runState.phase == GardenPhase.Routing && runState.CancelRoute(RouteFailure.FocusInterrupted))
             {
-                statusText = RecoveryMessage(RouteFailure.FocusInterrupted);
-                sourceFeedbackPulseSeconds = InteractionPulseDuration;
-                PlayFeedback(FeedbackCue.Recovery);
-                SetLineMaterial(routeActiveMaterial);
-                UpdateRouteVisual();
-                Announce(statusText);
+                EnterRecovery(RouteFailure.FocusInterrupted, false);
             }
         }
 

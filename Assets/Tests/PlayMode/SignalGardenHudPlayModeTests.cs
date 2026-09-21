@@ -159,6 +159,99 @@ namespace SignalGarden.Tests
         }
 
         [UnityTest]
+        public IEnumerator InvalidReleaseKeepsFailureTraceAndNamesTheRetryAction()
+        {
+            yield return SceneManager.LoadSceneAsync("SignalGarden");
+            yield return null;
+
+            var game = UnityEngine.Object.FindAnyObjectByType<SignalGardenGame>();
+            var routeLine = typeof(SignalGardenGame)
+                .GetField("playerRouteLine", BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetValue(game) as LineRenderer;
+            Assert.That(game, Is.Not.Null);
+            Assert.That(routeLine, Is.Not.Null);
+
+            game.RunState.BeginRoute(RouteRules.StandardTrail[0]);
+            game.RunState.AppendRoutePoint(RouteRules.StandardTrail[1]);
+            ResolveCurrentRoute(game);
+            yield return null;
+
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Recovery));
+            Assert.That(game.RunState.lastFailure, Is.EqualTo(RouteFailure.EndsBeforeReceiver));
+            Assert.That(routeLine.enabled, Is.True);
+            Assert.That(routeLine.positionCount, Is.GreaterThanOrEqualTo(2));
+            Assert.That(routeLine.sharedMaterial.name, Does.Contain("Faded"));
+            Assert.That(game.StatusText, Does.Contain("stopped short"));
+            Assert.That(game.StatusText, Does.Contain("Try again"));
+        }
+
+        [UnityTest]
+        public IEnumerator BrowserPointerCancelUsesDistinctFocusRecovery()
+        {
+            yield return SceneManager.LoadSceneAsync("SignalGarden");
+            yield return null;
+
+            var game = UnityEngine.Object.FindAnyObjectByType<SignalGardenGame>();
+            Assert.That(game, Is.Not.Null);
+            game.RunState.BeginRoute(RouteRules.StandardTrail[0]);
+            game.RunState.AppendRoutePoint(RouteRules.StandardTrail[1]);
+
+            game.HandleBrowserPointerCancel();
+            yield return null;
+
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Recovery));
+            Assert.That(game.RunState.lastFailure, Is.EqualTo(RouteFailure.FocusInterrupted));
+            Assert.That(game.RunState.routePoints, Is.Empty);
+            Assert.That(game.StatusText, Does.Contain("Focus changed"));
+        }
+
+        [UnityTest]
+        public IEnumerator SuccessReactionWakesFirefliesAndReducedMotionRestoresTheirMaterialState()
+        {
+            yield return SceneManager.LoadSceneAsync("SignalGarden");
+            yield return null;
+
+            var game = UnityEngine.Object.FindAnyObjectByType<SignalGardenGame>();
+            var firefly = GameObject.Find("Garden firefly 1");
+            Assert.That(game, Is.Not.Null);
+            Assert.That(firefly, Is.Not.Null);
+            Assert.That(game.SuccessReactionCount, Is.GreaterThan(0));
+
+            var basePosition = firefly.transform.localPosition;
+            game.RunState.BeginRoute(RouteRules.StandardTrail[0]);
+            for (var i = 1; i < RouteRules.StandardTrail.Length; i++)
+            {
+                game.RunState.AppendRoutePoint(RouteRules.StandardTrail[i]);
+            }
+
+            ResolveCurrentRoute(game);
+            Assert.That(game.Phase, Is.EqualTo(GardenPhase.Verified));
+            Assert.That(game.SuccessReactionActive, Is.True);
+            yield return null;
+            Assert.That(firefly.transform.localPosition, Is.Not.EqualTo(basePosition));
+
+            game.ToggleReducedMotionFromHud();
+            yield return null;
+            Assert.That(firefly.transform.localPosition, Is.EqualTo(basePosition));
+            Assert.That(game.StatusText, Does.Contain("Reduced motion on"));
+        }
+
+        [UnityTest]
+        public IEnumerator PerformanceTuningRemovesDecorativeShadowCostWithoutHidingGameplayMarkers()
+        {
+            yield return SceneManager.LoadSceneAsync("SignalGarden");
+            yield return null;
+
+            var game = UnityEngine.Object.FindAnyObjectByType<SignalGardenGame>();
+            var fireflyRenderer = GameObject.Find("Garden firefly 1").GetComponent<Renderer>();
+            var sourceRenderer = GameObject.Find("Coral signal").GetComponent<Renderer>();
+            Assert.That(game.PerformanceTuningApplied, Is.True);
+            Assert.That(fireflyRenderer.shadowCastingMode, Is.EqualTo(UnityEngine.Rendering.ShadowCastingMode.Off));
+            Assert.That(fireflyRenderer.receiveShadows, Is.False);
+            Assert.That(sourceRenderer.shadowCastingMode, Is.Not.EqualTo(UnityEngine.Rendering.ShadowCastingMode.Off));
+        }
+
+        [UnityTest]
         public IEnumerator ReducedMotionKeepsVerificationVisibleAndStopsReceiverMotion()
         {
             yield return SceneManager.LoadSceneAsync("SignalGarden");
