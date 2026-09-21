@@ -1,7 +1,7 @@
 # Signal Garden — production promotion and artifact readback
 
 **Runtime source:** `58f2c2917ae15fb2299bd13a60a139420bf79690`
-**Game main merge:** `58f2c2917ae15fb2299bd13a60a139420bf79690` (source PR merge identity will be reconciled after the game PR lands)
+**Game main merge:** `cb3a6cc96bf26dd8ad8da4e6381e04242e34d681`
 **Games-site merge:** `b7adfb44e4bd6989f1b2cee8bcb894fe1c325f65`
 **Pages deployment:** `aa4cc88e-ef6c-4349-8f36-b530c150ec8f`
 **Route:** <https://games.setnessconsulting.com/signal-garden/play/>
