@@ -6,7 +6,7 @@
   "source": {
     "candidateReviewCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
     "runtimeBuildIdentity": "docs/sg-10-build-identity.json",
-    "runtimeBuildIdentitySha256": "F38C1880E5206D55580752BE50BDA3D78FE83D6A05A99798C9F2E6D276537D0B",
+    "runtimeBuildIdentitySha256": "EFF50287D191349952B0E8DE86B3609ED102460AAFBF93E160552B6692013155",
     "runtimeBuildSourceCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690"
   },
   "target": {

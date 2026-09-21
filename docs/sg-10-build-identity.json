@@ -151,7 +151,7 @@
       "reason": "Wave 2 production route and immutable R2 artifact readback completed after the explicit owner-authorized promotion.",
       "recordedAt": "2026-09-21",
       "runtimeSourceCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
-      "gameMergeCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
+      "gameMergeCommit": "cb3a6cc96bf26dd8ad8da4e6381e04242e34d681",
       "siteMergeCommit": "b7adfb44e4bd6989f1b2cee8bcb894fe1c325f65",
       "pagesDeploymentId": "aa4cc88e-ef6c-4349-8f36-b530c150ec8f",
       "pagesDeploymentUrl": "https://aa4cc88e.games-site-7pn.pages.dev",
