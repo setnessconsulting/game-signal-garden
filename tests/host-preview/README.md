@@ -22,3 +22,11 @@ sustained failure. Optional `sg-warmup-seconds` and
 `sg-sample-seconds` query parameters shorten checks during harness development;
 leave their defaults for release evidence. This diagnostic does not affect the
 game build or production site.
+
+For a local-only route smoke, open
+`http://127.0.0.1:4173/signal-garden/play/?sg-render=1920x1080&sg-smoke=route`.
+After the Unity canvas is interactive, the harness waits for a tester to make a
+real browser pointer drag through the gold route and records
+`window.signalGardenSmokeResult`. A passing result proves the local
+`canvas -> Observe -> Verified` path; it does not add a production API or
+auto-solve behavior to the game.

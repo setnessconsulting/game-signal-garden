@@ -75,6 +75,7 @@ namespace SignalGarden
             var flower = Material("Wildflower coral", "#E77D6D", 0.24f, "#B74048", 0.10f);
             var flowerCream = Material("Wildflower cream", "#F0D69A", 0.24f);
             var stone = Material("Moss pebble", "#647A70", 0.18f);
+            var firefly = Material("Garden firefly", "#FFF0B7", 0.18f, "#FFD76A", 2.30f);
 
             var island = new GameObject("Floating Garden");
             CreatePrimitive(PrimitiveType.Sphere, "Upper warm earth band", island.transform,
@@ -92,6 +93,7 @@ namespace SignalGarden
             CreateTrail(island.transform, RouteRules.DeadEndSpur, spurStone, spurGlow, 0.62f, "Blind spur");
             CreateRim(island.transform, rim);
             CreateGardenDetails(island.transform, leavesA, leavesB, flower, flowerCream, stone);
+            CreateAtmosphere(island.transform, firefly);
 
             var source = CreateSource(island.transform, RouteRules.StandardTrail[0], sourceBase, path, sourceOrb, flowerCream);
             var receiver = CreateReceiver(island.transform, RouteRules.StandardTrail[RouteRules.StandardTrail.Length - 1], receiverBase, path, receiverCrystal, flowerCream);
@@ -232,6 +234,30 @@ namespace SignalGarden
                         new Vector3(-0.13f + Mathf.Cos(angle) * 0.18f, height + 0.045f, 0.10f + Mathf.Sin(angle) * 0.18f),
                         new Vector3(0.16f, 0.11f, 0.14f), flower);
                 }
+            }
+        }
+
+        private static void CreateAtmosphere(Transform parent, Material fireflyMaterial)
+        {
+            var positions = new[]
+            {
+                new Vector3(-5.65f, 1.65f, 4.20f), new Vector3(-4.95f, 2.40f, 3.70f),
+                new Vector3(4.95f, 2.05f, 3.85f), new Vector3(5.55f, 1.25f, 2.75f),
+                new Vector3(-5.20f, 1.10f, -3.30f), new Vector3(5.45f, 1.45f, -2.80f),
+                new Vector3(0.05f, 2.85f, 4.95f), new Vector3(-1.60f, 2.20f, 4.65f),
+                new Vector3(2.35f, 2.60f, 4.35f)
+            };
+
+            for (var index = 0; index < positions.Length; index++)
+            {
+                var firefly = CreatePrimitive(
+                    PrimitiveType.Sphere,
+                    "Garden firefly " + (index + 1),
+                    parent,
+                    positions[index],
+                    new Vector3(0.065f + (index % 3) * 0.018f, 0.065f + (index % 2) * 0.020f, 0.065f),
+                    fireflyMaterial);
+                firefly.transform.rotation = Quaternion.Euler(0f, index * 37f, index * 13f);
             }
         }
 

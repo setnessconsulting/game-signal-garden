@@ -3,7 +3,8 @@
   "rootNamespace": "SignalGarden",
   "references": [
     "Unity.InputSystem",
-    "Unity.ugui"
+    "Unity.ugui",
+    "Unity.RenderPipelines.Universal.Runtime"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

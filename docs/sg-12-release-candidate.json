@@ -4,24 +4,24 @@
   "issue": "GAME-290",
   "status": "NOT_READY",
   "repository": {
-    "baseMainCommit": "89e7afc161ce16404929a394b2ba89cbd2c136ec",
+    "baseMainCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
     "scope": "Single-player Unity WebGL first playable; one SignalGarden scene; desktop Chrome/Edge target; no multiplayer, network, or progression. Production deployment is recorded separately from formal owner qualification.",
     "readme": "README.md",
     "gdd": "docs/signal-garden-gdd.md",
     "closeoutRecord": "docs/sg-12-closeout-record.md"
   },
   "releaseCandidate": {
-    "runtimeSourceCommit": "1b3586f26f0c81410cbbbe33fc908e2dee2f1079",
+    "runtimeSourceCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
     "runtimeBuildIdentity": "docs/sg-10-build-identity.json",
-    "runtimeBuildIdentitySha256": "DDA59DBC72F820DC03227C4D7B1430B43E2BEC1874B93DAE43C761EA48F22CFE",
+    "runtimeBuildIdentitySha256": "F38C1880E5206D55580752BE50BDA3D78FE83D6A05A99798C9F2E6D276537D0B",
     "artifactLocation": {
       "status": "PRODUCTION_READBACK",
       "prefixPattern": "signal-garden/<version>/Build/",
       "promotionPrefixPattern": "signal-garden/<UTC-date>-<first-7-chars-of-runtime-source-commit>/Build/",
       "assetBasePattern": "<assetBase>/Build/<filename>",
       "uploadedToProductionR2": true,
-      "releaseVersion": "2026-09-20-1b3586f",
-      "prefix": "signal-garden/2026-09-20-1b3586f/Build/"
+      "releaseVersion": "2026-09-21-58f2c29",
+      "prefix": "signal-garden/2026-09-21-58f2c29/Build/"
     },
     "artifacts": [
       "WebGL.loader.js",
@@ -56,7 +56,7 @@
   "ownerQualification": {
     "schemaVersion": 1,
     "status": "NOT_RUN",
-    "runtimeSourceCommit": "1b3586f26f0c81410cbbbe33fc908e2dee2f1079",
+    "runtimeSourceCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
     "target": {
       "render": "1920x1080",
       "meanFpsMinimum": 60,
@@ -327,21 +327,21 @@
   },
   "productionDeployment": {
     "status": "DEPLOYED",
-    "recordedAt": "2026-09-20",
-    "runtimeSourceCommit": "1b3586f26f0c81410cbbbe33fc908e2dee2f1079",
-    "gameMergeCommit": "89e7afc161ce16404929a394b2ba89cbd2c136ec",
-    "siteMergeCommit": "42acc2aa2bec48861d9bc9ae335027507b66f4a2",
-    "pagesDeploymentId": "d55fc64e-07af-4aec-99f6-c1ce32d82b26",
-    "pagesDeploymentUrl": "https://d55fc64e.games-site-7pn.pages.dev",
+    "recordedAt": "2026-09-21",
+    "runtimeSourceCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
+    "gameMergeCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
+    "siteMergeCommit": "b7adfb44e4bd6989f1b2cee8bcb894fe1c325f65",
+    "pagesDeploymentId": "aa4cc88e-ef6c-4349-8f36-b530c150ec8f",
+    "pagesDeploymentUrl": "https://aa4cc88e.games-site-7pn.pages.dev",
     "route": "https://games.setnessconsulting.com/signal-garden/play/",
-    "r2Prefix": "signal-garden/2026-09-20-1b3586f/Build/",
+    "r2Prefix": "signal-garden/2026-09-21-58f2c29/Build/",
     "catalogStatus": "playable",
     "requestAcceptEncoding": "br",
     "artifacts": [
       {
         "filename": "WebGL.loader.js",
         "bytes": 27914,
-        "sha256": "8E62AFD3D90B709331D8223954F6C3906287B9E8E8C7D852FD85435CD8A74AE3",
+        "sha256": "D63926545C10A77F1556D19BCBCB9F6AD9EF1D4A45D6160698CA3F742F84C90F",
         "r2ContentType": "text/javascript; charset=utf-8",
         "r2ContentEncoding": null,
         "httpStatus": 200,
@@ -351,8 +351,8 @@
       },
       {
         "filename": "WebGL.data.br",
-        "bytes": 3563617,
-        "sha256": "3C6D90D094804E9F1DB7F139F9CA7C7CD0ACED3C060F681AE0E81526A41D3DDC",
+        "bytes": 3596130,
+        "sha256": "EE0353821921BB4341179F556C79E98811DB29011AE9867F5B327557C9848235",
         "r2ContentType": "application/octet-stream",
         "r2ContentEncoding": "br",
         "httpStatus": 200,
@@ -362,8 +362,8 @@
       },
       {
         "filename": "WebGL.framework.js.br",
-        "bytes": 66617,
-        "sha256": "BF630E2ED2DF06748BEF43376CD3B9CF39F5CA7F00023B1D28646448E1899255",
+        "bytes": 66634,
+        "sha256": "1186EB45CBF5D43B13C3EEB050FD4B5849B184C3BF1E5C2CAEED5639F32449C3",
         "r2ContentType": "text/javascript; charset=utf-8",
         "r2ContentEncoding": "br",
         "httpStatus": 200,
@@ -373,8 +373,8 @@
       },
       {
         "filename": "WebGL.wasm.br",
-        "bytes": 6810233,
-        "sha256": "492B0F4228524D7814AF51168D5A78C6005A7E1DE1099371F45667E04DA2FC7F",
+        "bytes": 6816117,
+        "sha256": "53571DE49A16115595AAB3390F3A36FBBD8EFDCCCECB8EF7EA5D8F08BF2BA0D8",
         "r2ContentType": "application/wasm",
         "r2ContentEncoding": "br",
         "httpStatus": 200,
