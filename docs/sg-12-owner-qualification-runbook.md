@@ -2,14 +2,15 @@
 
 **Issue:** [GAME-290 / SG-12](https://setnessconsulting.atlassian.net/browse/GAME-290)
 
-This runbook qualifies the current SG-10 visual-refinement candidate without changing gameplay,
-scenes, assets, packages, or runtime code. It is an owner-observed evidence
-procedure; automated tests and agent-controlled play do not replace the manual
-gates below.
+This runbook records owner qualification for the current SG-10 readability candidate.
+The candidate raises the WebGL render scale to the configured 0.8 ceiling and
+increases HUD text sizes; the observation steps below do not modify gameplay,
+scenes, assets, packages, or runtime code. Automated checks and agent-controlled
+play do not replace the manual gates below.
 
 ## Candidate and environment
 
-- Runtime source: `1b3586f26f0c81410cbbbe33fc908e2dee2f1079`
+- Runtime source: `da74c6a544066a538e7f999f18972d2b6ebe33fb`
 - Unity: `6000.6.0f1`
 - Build identity: `docs/sg-10-build-identity.json`
 - Browser target: desktop Chrome and Edge

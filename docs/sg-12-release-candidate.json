@@ -4,24 +4,24 @@
   "issue": "GAME-290",
   "status": "NOT_READY",
   "repository": {
-    "baseMainCommit": "cb3a6cc96bf26dd8ad8da4e6381e04242e34d681",
+    "baseMainCommit": "5eb5fc0e2b1ca1545db662ca9a40fe6c6d4c9062",
     "scope": "Single-player Unity WebGL first playable; one SignalGarden scene; desktop Chrome/Edge target; no multiplayer, network, or progression. Production deployment is recorded separately from formal owner qualification.",
     "readme": "README.md",
     "gdd": "docs/signal-garden-gdd.md",
     "closeoutRecord": "docs/sg-12-closeout-record.md"
   },
   "releaseCandidate": {
-    "runtimeSourceCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
+    "runtimeSourceCommit": "da74c6a544066a538e7f999f18972d2b6ebe33fb",
     "runtimeBuildIdentity": "docs/sg-10-build-identity.json",
-    "runtimeBuildIdentitySha256": "EFF50287D191349952B0E8DE86B3609ED102460AAFBF93E160552B6692013155",
+    "runtimeBuildIdentitySha256": "068D5AEF436E349B8E2204910FA2CB8B12611BF100A62352418EDF0824D51E0F",
     "artifactLocation": {
       "status": "PRODUCTION_READBACK",
       "prefixPattern": "signal-garden/<version>/Build/",
       "promotionPrefixPattern": "signal-garden/<UTC-date>-<first-7-chars-of-runtime-source-commit>/Build/",
       "assetBasePattern": "<assetBase>/Build/<filename>",
       "uploadedToProductionR2": true,
-      "releaseVersion": "2026-09-21-58f2c29",
-      "prefix": "signal-garden/2026-09-21-58f2c29/Build/"
+      "releaseVersion": "2026-09-26-da74c6a",
+      "prefix": "signal-garden/2026-09-26-da74c6a/Build/"
     },
     "artifacts": [
       "WebGL.loader.js",
@@ -56,7 +56,7 @@
   "ownerQualification": {
     "schemaVersion": 1,
     "status": "NOT_RUN",
-    "runtimeSourceCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
+    "runtimeSourceCommit": "da74c6a544066a538e7f999f18972d2b6ebe33fb",
     "target": {
       "render": "1920x1080",
       "meanFpsMinimum": 60,
@@ -327,14 +327,16 @@
   },
   "productionDeployment": {
     "status": "DEPLOYED",
-    "recordedAt": "2026-09-21",
-    "runtimeSourceCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
-    "gameMergeCommit": "cb3a6cc96bf26dd8ad8da4e6381e04242e34d681",
-    "siteMergeCommit": "b7adfb44e4bd6989f1b2cee8bcb894fe1c325f65",
-    "pagesDeploymentId": "aa4cc88e-ef6c-4349-8f36-b530c150ec8f",
-    "pagesDeploymentUrl": "https://aa4cc88e.games-site-7pn.pages.dev",
+    "recordedAt": "2026-09-26",
+    "runtimeSourceCommit": "da74c6a544066a538e7f999f18972d2b6ebe33fb",
+    "gameMergeCommit": "5eb5fc0e2b1ca1545db662ca9a40fe6c6d4c9062",
+    "siteMergeCommit": "bf33bfbc98dcf856c4ee6c3ff685f1930ce22926",
+    "pagesDeploymentId": "9f8f7b53-1912-4c25-b335-27669de09eea",
+    "pagesDeploymentUrl": "https://9f8f7b53.games-site-7pn.pages.dev",
+    "pagesCheckStatus": "PASS",
+    "pagesCheckUrl": "https://dash.cloudflare.com/?to=/0bc1e1287ce80d7065f40c4c72fc21ed/pages/view/games-site/9f8f7b53-1912-4c25-b335-27669de09eea",
     "route": "https://games.setnessconsulting.com/signal-garden/play/",
-    "r2Prefix": "signal-garden/2026-09-21-58f2c29/Build/",
+    "r2Prefix": "signal-garden/2026-09-26-da74c6a/Build/",
     "catalogStatus": "playable",
     "requestAcceptEncoding": "br",
     "artifacts": [
@@ -351,8 +353,8 @@
       },
       {
         "filename": "WebGL.data.br",
-        "bytes": 3596130,
-        "sha256": "EE0353821921BB4341179F556C79E98811DB29011AE9867F5B327557C9848235",
+        "bytes": 3593229,
+        "sha256": "27AD4EFEE4947E4D7A9D1E41F95E88E1E981B1CBABCB1CD7503F568A322EE1D6",
         "r2ContentType": "application/octet-stream",
         "r2ContentEncoding": "br",
         "httpStatus": 200,
@@ -373,8 +375,8 @@
       },
       {
         "filename": "WebGL.wasm.br",
-        "bytes": 6816117,
-        "sha256": "53571DE49A16115595AAB3390F3A36FBBD8EFDCCCECB8EF7EA5D8F08BF2BA0D8",
+        "bytes": 6820591,
+        "sha256": "BBD5A40ACE03C784E30E087EA02225CC2E4B68C6B6291D073F50E7FDD642F95A",
         "r2ContentType": "application/wasm",
         "r2ContentEncoding": "br",
         "httpStatus": 200,
@@ -383,6 +385,14 @@
         "cacheControl": "public, max-age=31536000, immutable"
       }
     ],
+    "browserSmoke": {
+      "assetBase": "/game-assets/signal-garden/2026-09-26-da74c6a",
+      "canvasCssPixels": "1178x589",
+      "webglError": 0,
+      "readyStatus": "Ready. Drag from the coral source to begin.",
+      "routeStatus": "Signal received. The garden is awake. Choose Play again for the next turn.",
+      "classification": "PRODUCTION_SMOKE_ONLY; does not satisfy owner qualification gates"
+    },
     "qualificationBoundary": "Deployment readback does not satisfy the remaining owner-only qualification gates."
   }
 }

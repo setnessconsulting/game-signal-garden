@@ -2,16 +2,16 @@
 
 Issue: [GAME-288 / SG-10](https://setnessconsulting.atlassian.net/browse/GAME-288)
 
-Status: implementation complete for the credential-free evidence lane. This
-record does not promote the game to playable production and does not replace
+Status: credential-free evidence lane complete; the readability build is deployed
+for production testing. Deployment and automated browser smoke do not replace
 the owner-gated desktop, accessibility, or human qualification work.
 
 The original SG-10 candidate, the SG-13 WebGL compatibility replacement, the
 SG-14 visual polish replacement, and the SG-15 terrain refinement are retained
-as historical evidence. The current runtime identity is the Wave 2 hardening
-candidate from source `58f2c2917ae15fb2299bd13a60a139420bf79690`; it preserves
-the existing puzzle and controls while adding bounded recovery, feedback, and
-WebGL performance work. Formal owner qualification remains separate.
+as historical evidence. The current runtime identity is the readability
+candidate from source `da74c6a544066a538e7f999f18972d2b6ebe33fb`; it preserves
+the puzzle and controls while raising WebGL render scale and enlarging the HUD.
+Formal owner qualification remains separate.
 
 ## What is checked in
 
@@ -33,12 +33,13 @@ WebGL performance work. Formal owner qualification remains separate.
   summary that keeps Unity compilation, Unity tests, WebGL generation, and
   browser qualification classified as `NOT_RUN` in hosted CI.
 
-The current recorded local candidate is the Wave 2 build from runtime source
-revision `58f2c2917ae15fb2299bd13a60a139420bf79690`. The ordered four-file
-artifact total is `10,506,795` bytes; Unity reported a `10,527,304` byte total
-including its surrounding output. The manifest verifies the tracked Unity
-input tree hash and the generated files were checked locally with
-`--build-dir`, while keeping those generated files ignored.
+The current recorded local candidate is the readability build from runtime
+source revision `da74c6a544066a538e7f999f18972d2b6ebe33fb`. Its ordered
+four-file artifact total is `10,508,368` bytes, below the 12 MiB budget. The
+manifest verifies the tracked Unity input tree hash and the generated files
+were checked locally with `--build-dir`, while keeping those generated files
+ignored. The production readback is recorded in
+[Signal Garden readability release](signal-garden-readability-release.md).
 
 ## Local execution record
 
@@ -53,8 +54,9 @@ The Wave 2 local nested preview completed the exact 1920×1080 30-sample check
 at `61.0` mean FPS with a `60.3` one-second minimum, and the local route-smoke
 harness covers `canvas -> Observe -> Verified`. These are local/in-app checks;
 foreground Chrome and Edge performance, time to interactive, and all owner
-gates remain open. Production R2 and Pages readback are recorded in
-[SG-16](sg-16-production-closeout.md).
+gates remain open. The prior Wave 2 production readback is preserved in
+[SG-16](sg-16-production-closeout.md); the current clarity deployment is
+recorded in [Signal Garden readability release](signal-garden-readability-release.md).
 
 ## Clean-checkout evidence
 
