@@ -17,14 +17,14 @@ SG10_RELATIVE_PATH = "docs/sg-10-build-identity.json"
 SG11_RELATIVE_PATH = "docs/sg-11-playtest-evidence.json"
 EXPECTED_GAME = "signal-garden"
 EXPECTED_ISSUE = "GAME-290"
-EXPECTED_BASE_MAIN_COMMIT = "cb3a6cc96bf26dd8ad8da4e6381e04242e34d681"
-EXPECTED_RUNTIME_COMMIT = "58f2c2917ae15fb2299bd13a60a139420bf79690"
-EXPECTED_RUNTIME_MANIFEST_HASH = "EFF50287D191349952B0E8DE86B3609ED102460AAFBF93E160552B6692013155"
-EXPECTED_SITE_COMMIT = "b7adfb44e4bd6989f1b2cee8bcb894fe1c325f65"
-EXPECTED_RELEASE_VERSION = "2026-09-21-58f2c29"
+EXPECTED_BASE_MAIN_COMMIT = "5eb5fc0e2b1ca1545db662ca9a40fe6c6d4c9062"
+EXPECTED_RUNTIME_COMMIT = "da74c6a544066a538e7f999f18972d2b6ebe33fb"
+EXPECTED_RUNTIME_MANIFEST_HASH = "068D5AEF436E349B8E2204910FA2CB8B12611BF100A62352418EDF0824D51E0F"
+EXPECTED_SITE_COMMIT = "bf33bfbc98dcf856c4ee6c3ff685f1930ce22926"
+EXPECTED_RELEASE_VERSION = "2026-09-26-da74c6a"
 EXPECTED_RELEASE_PREFIX = f"signal-garden/{EXPECTED_RELEASE_VERSION}/Build/"
 EXPECTED_PRODUCTION_ROUTE = "https://games.setnessconsulting.com/signal-garden/play/"
-EXPECTED_PAGES_DEPLOYMENT_ID = "aa4cc88e-ef6c-4349-8f36-b530c150ec8f"
+EXPECTED_PAGES_DEPLOYMENT_ID = "9f8f7b53-1912-4c25-b335-27669de09eea"
 EXPECTED_ARTIFACTS = (
     "WebGL.loader.js",
     "WebGL.data.br",
@@ -206,7 +206,7 @@ def validate_production_deployment(deployment: Any, sg10: dict[str, Any] | None)
         return
     if deployment.get("status") != "DEPLOYED":
         fail("productionDeployment.status must be DEPLOYED")
-    if deployment.get("recordedAt") != "2026-09-21":
+    if deployment.get("recordedAt") != "2026-09-26":
         fail("productionDeployment.recordedAt must identify the production readback")
     if deployment.get("runtimeSourceCommit") != EXPECTED_RUNTIME_COMMIT:
         fail("productionDeployment.runtimeSourceCommit must match the frozen runtime")

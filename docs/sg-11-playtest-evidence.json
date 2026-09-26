@@ -4,10 +4,10 @@
   "issue": "GAME-289",
   "status": "NOT_RUN",
   "source": {
-    "candidateReviewCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
+    "candidateReviewCommit": "da74c6a544066a538e7f999f18972d2b6ebe33fb",
     "runtimeBuildIdentity": "docs/sg-10-build-identity.json",
-    "runtimeBuildIdentitySha256": "EFF50287D191349952B0E8DE86B3609ED102460AAFBF93E160552B6692013155",
-    "runtimeBuildSourceCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690"
+    "runtimeBuildIdentitySha256": "068D5AEF436E349B8E2204910FA2CB8B12611BF100A62352418EDF0824D51E0F",
+    "runtimeBuildSourceCommit": "da74c6a544066a538e7f999f18972d2b6ebe33fb"
   },
   "target": {
     "browser": "Desktop Chrome or Edge",
@@ -51,7 +51,7 @@
   "findings": [],
   "ownerReview": {
     "status": "PENDING",
-    "reason": "Five uncoached fresh-player sessions must be observed against the replacement candidate and recorded by the owner or an approved facilitator. No participant identity or private information belongs in this repository."
+    "reason": "Five uncoached fresh-player sessions must be observed against the current readability release candidate and recorded by the owner or an approved facilitator. No participant identity or private information belongs in this repository."
   },
   "provenance": {
     "originalWork": true,

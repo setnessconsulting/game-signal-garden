@@ -3,9 +3,9 @@
   "game": "signal-garden",
   "issue": "GAME-288",
   "source": {
-    "commit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
-    "commitRole": "Wave 2 production-hardening revision: deterministic recovery traces, one-time pan guidance, unmistakable success reaction, WebGL decorative-cost tuning, and a local route-smoke harness while preserving the existing puzzle, controls, and accessibility contract.",
-    "unityInputTreeSha256": "261846CBEEFAD73EFB3C54A62B39F57BF9ED9017F46A355F29908199A089C411",
+    "commit": "da74c6a544066a538e7f999f18972d2b6ebe33fb",
+    "commitRole": "Readability fix: raise the browser render scale to the configured 0.8 ceiling and enlarge HUD text and panels so the objective, instructions, and state feedback remain legible.",
+    "unityInputTreeSha256": "87F69A9BC58C91CAE2CB2AA39DE8A3B0AC2B3E8F765A50A6412E7F099A9CA6B0",
     "scene": "Assets/Scenes/SignalGarden.unity",
     "packagesLock": "Packages/packages-lock.json",
     "packagesLockSha256": "60E10C79BC5920DE75236CB939688B7BBA27EA4246A5171DDA556D3C7E173A22",
@@ -34,7 +34,7 @@
     "threading": "single",
     "outputPrefix": "signal-garden/<version>/Build/",
     "assetBasePattern": "<assetBase>/Build/<filename>",
-    "totalBytes": 10506795,
+    "totalBytes": 10508368,
     "compressedBudgetBytes": 12582912,
     "budgetApprovalStatus": "PENDING_OWNER_SIGN_OFF",
     "status": "PASS_LOCAL",
@@ -52,8 +52,8 @@
         "role": "data",
         "filename": "WebGL.data.br",
         "relativePath": "Build/WebGL.data.br",
-        "bytes": 3596130,
-        "sha256": "EE0353821921BB4341179F556C79E98811DB29011AE9867F5B327557C9848235",
+        "bytes": 3593229,
+        "sha256": "27AD4EFEE4947E4D7A9D1E41F95E88E1E981B1CBABCB1CD7503F568A322EE1D6",
         "contentType": "application/octet-stream",
         "contentEncoding": "br"
       },
@@ -70,14 +70,14 @@
         "role": "wasm",
         "filename": "WebGL.wasm.br",
         "relativePath": "Build/WebGL.wasm.br",
-        "bytes": 6816117,
-        "sha256": "53571DE49A16115595AAB3390F3A36FBBD8EFDCCCECB8EF7EA5D8F08BF2BA0D8",
+        "bytes": 6820591,
+        "sha256": "BBD5A40ACE03C784E30E087EA02225CC2E4B68C6B6291D073F50E7FDD642F95A",
         "contentType": "application/wasm",
         "contentEncoding": "br"
       }
     ],
-    "releaseVersion": "2026-09-21-58f2c29",
-    "releasePrefix": "signal-garden/2026-09-21-58f2c29/Build/"
+    "releaseVersion": "2026-09-26-da74c6a",
+    "releasePrefix": "signal-garden/2026-09-26-da74c6a/Build/"
   },
   "verification": {
     "provenance": {
@@ -85,34 +85,34 @@
       "evidence": "docs/sg-05-asset-record.md and the SG-05 editor validator"
     },
     "unityEditMode": {
-      "status": "PASS_RECORDED",
-      "evidence": "Artifacts/wave2-editmode-final.xml (24/24 local Unity run)"
+      "status": "NOT_RUN",
+      "evidence": "Not rerun for readability source commit da74c6a; earlier Wave 2 test results remain historical."
     },
     "unityPlayMode": {
-      "status": "PASS_RECORDED",
-      "evidence": "Artifacts/wave2-playmode-final.xml (12/12 local Unity run)"
+      "status": "NOT_RUN",
+      "evidence": "Not rerun for readability source commit da74c6a; earlier Wave 2 test results remain historical."
     },
     "webglBuild": {
       "status": "PASS_LOCAL",
-      "evidence": "Artifacts/wave2-webgl-final-build.log (Unity Success, four artifact hashes, Brotli/MIME readback)"
+      "evidence": "Unity 6000.6.0f1 build from da74c6a; all four artifact sizes and SHA-256 values were matched locally against this identity."
     },
     "nestedBrowserPreview": {
       "status": "PASS_LOCAL",
-      "evidence": "tests/host-preview/README.md and local nested preview (1920x1080 route-smoke harness)"
+      "evidence": "Local nested preview of da74c6a rendered at 1920x1080 and completed the valid coral-to-blue route; see docs/signal-garden-readability-release.md."
     },
     "hostedCredentialFree": {
-      "status": "NOT_RUN",
-      "evidence": "Credential-free Repository integrity workflow for the Wave 2 release PR"
+      "status": "PASS_RECORDED",
+      "evidence": "GitHub Actions Repository integrity check passed on merged game PR #23 (run 36270350160)."
     },
     "cleanCheckout": {
       "status": "PASS_RECORDED",
-      "evidence": "docs/sg-13-webgl-rendering-fix.md and scripts/ci/check_clean_checkout.py"
+      "evidence": "GitHub Actions Repository integrity check passed on merged game PR #23 (run 36270350160)."
     }
   },
   "releaseGates": {
     "inAppBrowserFrameRate": {
       "status": "PASS_LOCAL",
-      "reason": "Visible nested preview completed 30 focused samples at exact 1920x1080: minimum 60.3 fps, mean 61.0 fps, 30/30 seconds. This is local in-app evidence, not independent desktop Chrome/Edge qualification."
+      "reason": "The local 1920x1080 nested preview completed 30 focused samples on the readability build at 61.18 mean FPS and 60.46 minimum one-second FPS. This is local evidence, not independent foreground Chrome/Edge or owner qualification."
     },
     "desktopChromeForeground": {
       "status": "NOT_RUN",
@@ -148,15 +148,15 @@
     },
     "productionCdn": {
       "status": "PASS_RECORDED",
-      "reason": "Wave 2 production route and immutable R2 artifact readback completed after the explicit owner-authorized promotion.",
-      "recordedAt": "2026-09-21",
-      "runtimeSourceCommit": "58f2c2917ae15fb2299bd13a60a139420bf79690",
-      "gameMergeCommit": "cb3a6cc96bf26dd8ad8da4e6381e04242e34d681",
-      "siteMergeCommit": "b7adfb44e4bd6989f1b2cee8bcb894fe1c325f65",
-      "pagesDeploymentId": "aa4cc88e-ef6c-4349-8f36-b530c150ec8f",
-      "pagesDeploymentUrl": "https://aa4cc88e.games-site-7pn.pages.dev",
+      "reason": "On 2026-09-26 the production route loaded the readability build, all four immutable R2 assets returned HTTP 200 with Brotli and expected MIME/cache headers, the three precompressed bodies matched the local build hashes, and a browser route smoke completed. Formal owner qualification remains open.",
+      "recordedAt": "2026-09-26",
+      "runtimeSourceCommit": "da74c6a544066a538e7f999f18972d2b6ebe33fb",
+      "gameMergeCommit": "5eb5fc0e2b1ca1545db662ca9a40fe6c6d4c9062",
+      "siteMergeCommit": "bf33bfbc98dcf856c4ee6c3ff685f1930ce22926",
+      "pagesDeploymentId": "9f8f7b53-1912-4c25-b335-27669de09eea",
+      "pagesDeploymentUrl": "https://9f8f7b53.games-site-7pn.pages.dev",
       "route": "https://games.setnessconsulting.com/signal-garden/play/",
-      "r2Prefix": "signal-garden/2026-09-21-58f2c29/Build/",
+      "r2Prefix": "signal-garden/2026-09-26-da74c6a/Build/",
       "requestAcceptEncoding": "br",
       "artifacts": [
         {
@@ -172,8 +172,8 @@
         },
         {
           "filename": "WebGL.data.br",
-          "bytes": 3596130,
-          "sha256": "EE0353821921BB4341179F556C79E98811DB29011AE9867F5B327557C9848235",
+          "bytes": 3593229,
+          "sha256": "27AD4EFEE4947E4D7A9D1E41F95E88E1E981B1CBABCB1CD7503F568A322EE1D6",
           "r2ContentType": "application/octet-stream",
           "r2ContentEncoding": "br",
           "httpStatus": 200,
@@ -194,8 +194,8 @@
         },
         {
           "filename": "WebGL.wasm.br",
-          "bytes": 6816117,
-          "sha256": "53571DE49A16115595AAB3390F3A36FBBD8EFDCCCECB8EF7EA5D8F08BF2BA0D8",
+          "bytes": 6820591,
+          "sha256": "BBD5A40ACE03C784E30E087EA02225CC2E4B68C6B6291D073F50E7FDD642F95A",
           "r2ContentType": "application/wasm",
           "r2ContentEncoding": "br",
           "httpStatus": 200,
@@ -203,7 +203,15 @@
           "httpContentEncoding": "br",
           "cacheControl": "public, max-age=31536000, immutable"
         }
-      ]
+      ],
+      "browserSmoke": {
+        "assetBase": "/game-assets/signal-garden/2026-09-26-da74c6a",
+        "canvasCssPixels": "1178x589",
+        "webglError": 0,
+        "readyStatus": "Ready. Drag from the coral source to begin.",
+        "routeStatus": "Signal received. The garden is awake. Choose Play again for the next turn.",
+        "classification": "PRODUCTION_SMOKE_ONLY; does not satisfy owner qualification gates"
+      }
     }
   }
 }
