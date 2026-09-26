@@ -1,5 +1,46 @@
 # Local build evidence
 
+## Maintenance validation (2026-09-25)
+
+The authoritative checkout was fetched at origin/main commit
+276ac44ca636c0ff6d2a10aa56e7dcc0f0bd982b. Validation began in a separate
+worktree. Unity 6000.6.0f1 passed **97/97 EditMode** and **12/12
+PlayMode** tests. The WebGL build completed with Build Finished, Result:
+Success; Unity reported 10,524,693 bytes.
+
+Unity reserialized two tracked receiver materials during the run. Their
+generated contents matched the preserved SG-06 material-reserialization branch
+at `39b8d68`; both were restored to the validation base afterward.
+
+The generated loader and framework matched the recorded production identity.
+The data and WebAssembly files did not:
+
+| Artifact | Local bytes | Local SHA-256 | Recorded release bytes |
+| --- | ---: | --- | ---: |
+| WebGL.data.br | 3,589,087 | 5a369e968d30f8567f9110a16b7556c88a3843ded45136b598f4d69e10e60453 | 3,596,130 |
+| WebGL.wasm.br | 6,820,549 | a2b56f9e227dbf8fcf4234fa224f00062b25e25bd687d7d9c25bfc12c53cef00 | 6,816,117 |
+
+python scripts/ci/validate_release_evidence.py --build-dir Builds/WebGL/Build
+therefore fails on those two artifacts. The generated directory remains
+ignored; this output is not the immutable production artifact.
+
+The local nested preview reached Ready with a 1920x1080 canvas, but the
+garden geometry was absent. The WebGL context reported INVALID_OPERATION
+(1282), and the ?sg-render=1920x1080&sg-smoke=route run timed out waiting
+for a pointer drag to begin. This is a local end-to-end failure. A graphics-
+enabled repeat stopped at a Unity Burst compiler-server queue timeout and
+produced no second build result.
+
+The deployed route at
+https://games.setnessconsulting.com/signal-garden/play/ loaded the current
+2026-09-21-58f2c29 release and rendered the garden. In browser automation,
+an invalid route entered Recovery with the blind-spur retry message, a valid
+source-to-receiver route reached Verified, Play again reset the turn, and Esc
+paused and resumed. No blocking production browser errors were recorded. This
+verifies the deployed artifact only; it does not qualify the new local build or
+close the independent desktop-browser, screen-reader, focus-loss, working-set,
+human benchmark, or owner-approval gates.
+
 ## Current production reconciliation (2026-09-20)
 
 The current runtime candidate is deployed at
