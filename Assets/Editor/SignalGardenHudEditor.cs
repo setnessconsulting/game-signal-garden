@@ -177,21 +177,21 @@ namespace SignalGarden.Editor
             var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
 
             var objectivePanel = CreatePanel(canvasRect, "Objective Panel", PanelColor, true);
-            SetTopLeft(objectivePanel.rectTransform, 26f, 26f, 560f, 164f);
+            SetTopLeft(objectivePanel.rectTransform, 26f, 26f, 650f, 164f);
             var objectiveAccent = CreatePanel(objectivePanel.rectTransform, "Objective Accent", TealColor, false);
             SetAnchored(objectiveAccent.rectTransform, new Vector2(0f, 0.12f), new Vector2(0f, 0.88f), new Vector2(0f, 0.5f), new Vector2(4f, 0f), new Vector2(2f, 0f));
-            CreateText(objectivePanel.rectTransform, "Eyebrow", "SIGNAL GARDEN  /  FIELD STUDY 01", font, 13, TealColor, FontStyle.Bold, TextAnchor.MiddleLeft,
+            CreateText(objectivePanel.rectTransform, "Eyebrow", "SIGNAL GARDEN  /  FIELD STUDY 01", font, 18, TealColor, FontStyle.Bold, TextAnchor.MiddleLeft,
                 new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(-44f, 26f), new Vector2(22f, -14f));
-            CreateText(objectivePanel.rectTransform, "Title", "Wake the garden with one clear line.", font, 25, TextColor, FontStyle.Bold, TextAnchor.MiddleLeft,
+            CreateText(objectivePanel.rectTransform, "Title", "Wake the garden with one clear line.", font, 32, TextColor, FontStyle.Bold, TextAnchor.MiddleLeft,
                 new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(-44f, 48f), new Vector2(22f, -48f));
-            CreateText(objectivePanel.rectTransform, "Instruction", "Drag coral to blue along the gold stones. Optional: WASD pans the view. Esc cancels or pauses.", font, 15, MutedTextColor, FontStyle.Normal, TextAnchor.UpperLeft,
+            CreateText(objectivePanel.rectTransform, "Instruction", "Drag coral to blue along the gold stones. Optional: WASD pans the view. Esc cancels or pauses.", font, 22, MutedTextColor, FontStyle.Normal, TextAnchor.UpperLeft,
                 new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(-44f, 58f), new Vector2(22f, -94f));
 
             var soundButton = CreateButton(canvasRect, "Sound Cues Button", "Sound cues: Off", font, 168f, 56f, Vector2.zero);
             SetTopRight(soundButton.GetComponent<RectTransform>(), 210f, 26f);
             var motionButton = CreateButton(canvasRect, "Reduced Motion Button", "Motion: Full", font, 172f, 56f, Vector2.zero);
             SetTopRight(motionButton.GetComponent<RectTransform>(), 26f, 26f);
-            var soundVolumeLabel = CreateText(canvasRect, "Sound Volume Label", "CUE VOLUME  55%", font, 12, MutedTextColor, FontStyle.Bold, TextAnchor.MiddleRight,
+            var soundVolumeLabel = CreateText(canvasRect, "Sound Volume Label", "CUE VOLUME  55%", font, 18, MutedTextColor, FontStyle.Bold, TextAnchor.MiddleRight,
                 Vector2.one, Vector2.one, Vector2.one, new Vector2(352f, 24f), new Vector2(-26f, -88f));
             var soundVolumeSlider = CreateSlider(canvasRect, "Sound Volume Slider", 352f, 48f, new Vector2(-26f, -116f));
             var soundButtonLabel = soundButton.GetComponentInChildren<Text>(true);
@@ -199,9 +199,9 @@ namespace SignalGarden.Editor
 
             var statusPanel = CreatePanel(canvasRect, "Status Panel", PanelColor, true);
             SetBottomStretch(statusPanel.rectTransform, 26f, 26f, 26f, 76f);
-            var phaseLabel = CreateText(statusPanel.rectTransform, "Phase Label", "OBSERVE  /  FIND THE PATH", font, 12, TealColor, FontStyle.Bold, TextAnchor.MiddleLeft,
+            var phaseLabel = CreateText(statusPanel.rectTransform, "Phase Label", "OBSERVE  /  FIND THE PATH", font, 18, TealColor, FontStyle.Bold, TextAnchor.MiddleLeft,
                 new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(-238f, 25f), new Vector2(22f, -10f));
-            var statusLabel = CreateText(statusPanel.rectTransform, "Status Label", "Ready. Drag from the coral source to begin.", font, 16, TextColor, FontStyle.Normal, TextAnchor.MiddleLeft,
+            var statusLabel = CreateText(statusPanel.rectTransform, "Status Label", "Ready. Drag from the coral source to begin.", font, 22, TextColor, FontStyle.Normal, TextAnchor.MiddleLeft,
                 new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0f, 0.5f), new Vector2(-238f, -42f), new Vector2(22f, 4f));
             var retryButton = CreateButton(statusPanel.rectTransform, "Try Again Button", "Try again", font, 158f, 52f, Vector2.zero);
             SetRightCenter(retryButton.GetComponent<RectTransform>(), 18f, 52f, 0f);
@@ -210,11 +210,11 @@ namespace SignalGarden.Editor
             SetStretch(overlay.rectTransform, 0f, 0f, 0f, 0f);
             var overlayCard = CreatePanel(overlay.rectTransform, "State Card", PanelColor, true);
             SetCenter(overlayCard.rectTransform, 480f, 310f);
-            var overlayEyebrow = CreateText(overlayCard.rectTransform, "Overlay Eyebrow", "GARDEN AT REST", font, 13, TealColor, FontStyle.Bold, TextAnchor.MiddleLeft,
+            var overlayEyebrow = CreateText(overlayCard.rectTransform, "Overlay Eyebrow", "GARDEN AT REST", font, 18, TealColor, FontStyle.Bold, TextAnchor.MiddleLeft,
                 new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(-68f, 34f), new Vector2(34f, -22f));
-            var overlayTitle = CreateText(overlayCard.rectTransform, "Overlay Title", "Paused", font, 27, TextColor, FontStyle.Bold, TextAnchor.MiddleLeft,
+            var overlayTitle = CreateText(overlayCard.rectTransform, "Overlay Title", "Paused", font, 34, TextColor, FontStyle.Bold, TextAnchor.MiddleLeft,
                 new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(-68f, 52f), new Vector2(34f, -65f));
-            var overlayBody = CreateText(overlayCard.rectTransform, "Overlay Body", "Your turn is safe. Resume, or reset the garden for the next player.", font, 16, MutedTextColor, FontStyle.Normal, TextAnchor.UpperLeft,
+            var overlayBody = CreateText(overlayCard.rectTransform, "Overlay Body", "Your turn is safe. Resume, or reset the garden for the next player.", font, 22, MutedTextColor, FontStyle.Normal, TextAnchor.UpperLeft,
                 new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(-68f, 80f), new Vector2(34f, -130f));
             var overlayPrimaryButton = CreateButton(overlayCard.rectTransform, "Overlay Primary Button", "Resume  /  Esc", font, 412f, 52f, Vector2.zero);
             SetBottomLeft(overlayPrimaryButton.GetComponent<RectTransform>(), 34f, 38f, 52f, 412f);
@@ -262,7 +262,7 @@ namespace SignalGarden.Editor
             if (volumeLabelTransform == null && volumeSliderTransform == null)
             {
                 var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-                CreateText(root, "Sound Volume Label", "CUE VOLUME  55%", font, 12, MutedTextColor, FontStyle.Bold, TextAnchor.MiddleRight,
+                CreateText(root, "Sound Volume Label", "CUE VOLUME  55%", font, 18, MutedTextColor, FontStyle.Bold, TextAnchor.MiddleRight,
                     Vector2.one, Vector2.one, Vector2.one, new Vector2(352f, 24f), new Vector2(-26f, -88f));
                 CreateSlider(root, "Sound Volume Slider", 352f, 48f, new Vector2(-26f, -116f));
             }
@@ -370,7 +370,7 @@ namespace SignalGarden.Editor
             button.colors = colors;
             button.navigation = new Navigation { mode = Navigation.Mode.Automatic };
             SetAnchored(buttonObject, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(width, height), anchoredPosition);
-            CreateText(buttonObject, "Label", label, font, 15, TextColor, FontStyle.Bold, TextAnchor.MiddleCenter,
+            CreateText(buttonObject, "Label", label, font, 20, TextColor, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
             return button;
         }

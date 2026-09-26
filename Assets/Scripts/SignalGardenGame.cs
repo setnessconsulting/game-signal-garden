@@ -19,7 +19,7 @@ namespace SignalGarden
         private const float GardenReactionDuration = 1.80f;
         private const float GardenReactionLift = 0.16f;
         private const float GardenReactionScale = 0.42f;
-        private const float WebGlRenderScale = 0.60f;
+        private const float WebGlRenderScale = 0.80f;
         private const int FeedbackSampleRate = 22050;
 
         private enum FeedbackCue
@@ -596,8 +596,8 @@ namespace SignalGarden
                            GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset;
             if (pipeline != null)
             {
-                // Keep the browser canvas at 1920x1080 while reducing only the internal
-                // color/depth buffers. Route markers and UI remain at the exact target size.
+                // Raise the previous 0.6 browser scale to the mobile asset's 0.8 ceiling.
+                // Keeping the configured ceiling avoids allocating larger WebGL buffers.
                 pipeline.renderScale = Mathf.Min(pipeline.renderScale, WebGlRenderScale);
             }
             QualitySettings.shadows = UnityEngine.ShadowQuality.Disable;
