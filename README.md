@@ -8,6 +8,12 @@ The first playable is one WebGL scene, SignalGarden, built for desktop Chrome an
 
 The playable target is hosted at https://games.setnessconsulting.com/signal-garden/play/. This repository owns the Unity project, source, tests, and build evidence. The games site owns the catalog and release pointer.
 
+## Current maintenance status
+
+**Not maintenance ready (2026-09-25).** The production release, 2026-09-21-58f2c29, renders and its browser journey was verified. A fresh Unity build from main also completed, but its local nested preview showed the HUD without the garden and the WebGL context reported INVALID_OPERATION; its data and WebAssembly files did not match the immutable production build identity. Do not promote that local output.
+
+The remaining maintenance gates are to make a fresh local build render the garden and pass the nested route smoke, then complete foreground desktop Chrome and Edge performance checks, screen-reader and physical focus-loss review, the five-player benchmark, and owner sign-off. See the current [local build evidence](docs/local-build-evidence.md) for exact results. Reopen active implementation only to fix the reproduced build/render issue or satisfy an approved V1 requirement; otherwise keep changes to routine maintenance or explicitly approved future scope.
+
 ## Open in Unity
 
 1. Install Unity 6000.6.0f1 with the WebGL Build Support module.
@@ -29,6 +35,10 @@ Run these from PowerShell after Unity has opened the project once and resolved p
     & $unity -batchmode -quit -projectPath $project -executeMethod SignalGarden.Editor.SignalGardenProjectSetup.BuildWebGL -logFile "$project\Temp\webgl-build.log"
 
 The WebGL build is written under ignored Builds/WebGL/. Never commit the generated build. The tests/host-preview harness serves the build at /signal-garden/play/ and uses the same /game-assets/signal-garden/<version>/Build/ asset-base shape as the games site. See docs/local-build-evidence.md for the most recent local build identity and checks.
+
+To run the production-shaped local preview, build first, then run **node tests/host-preview/serve.mjs --port 4173** and open **http://127.0.0.1:4173/signal-garden/play/**. The ?sg-render=1920x1080&sg-smoke=route query runs the exact-size pointer route smoke. Signal Garden is a Unity WebGL canvas that loads the loader, data, framework, and WebAssembly files from the host-supplied asset base; a static index.html under the asset prefix is not part of this release contract.
+
+The runtime is split between SignalGardenGame for input and phase coordination, GardenRunState and RouteRules for deterministic route decisions, SignalGardenHud for the accessible UGUI state surface, and the WebGL browser bridge for status announcements and pointer capture. The declared browser target is desktop Chrome and Edge.
 
 GitHub Actions runs credential-free repository checks on pull requests. See [docs/ci-validation.md](docs/ci-validation.md) for the hosted coverage and the Unity/WebGL checks it classifies as `NOT_RUN`.
 

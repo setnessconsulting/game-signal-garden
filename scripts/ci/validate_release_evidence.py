@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import re
 import subprocess
@@ -104,13 +105,16 @@ def git(*arguments: str) -> str | None:
     return result.stdout.strip()
 
 
-def tracked_unity_inputs() -> list[str]:
+def tracked_unity_inputs(commit: str) -> list[tuple[str, str]]:
     try:
         result = subprocess.run(
             [
                 "git",
-                "ls-files",
+                "ls-tree",
+                "-r",
                 "-z",
+                "--full-tree",
+                commit,
                 "--",
                 "Assets",
                 "Packages",
@@ -122,24 +126,62 @@ def tracked_unity_inputs() -> list[str]:
             capture_output=True,
         )
     except (OSError, subprocess.CalledProcessError) as exc:
-        fail(f"Could not list Unity input files: {exc}")
+        fail(f"Could not list Unity input files from source commit {commit}: {exc}")
         return []
-    return sorted(path for path in result.stdout.decode("utf-8").split("\0") if path)
+    inputs: list[tuple[str, str]] = []
+    for record in result.stdout.split(b"\0"):
+        if not record:
+            continue
+        try:
+            metadata, path_bytes = record.split(b"\t", 1)
+            _, object_type, object_id = metadata.decode("ascii").split()
+            if object_type == "blob":
+                inputs.append((path_bytes.decode("utf-8"), object_id))
+        except (UnicodeDecodeError, ValueError) as exc:
+            fail(f"Could not parse Unity input tree entry: {exc}")
+            return []
+    return sorted(inputs)
 
 
-def unity_input_tree_sha256() -> str:
-    """Hash tracked Unity inputs as ``path NUL bytes NUL`` records."""
+def unity_input_tree_sha256(commit: str) -> str:
+    """Hash Unity inputs at ``commit`` as ``path NUL bytes NUL`` records."""
+
+    inputs = tracked_unity_inputs(commit)
+    if not inputs:
+        fail(f"No tracked Unity inputs found in source commit {commit}")
+        return ""
+    request = b"".join(object_id.encode("ascii") + b"\n" for _, object_id in inputs)
+    try:
+        result = subprocess.run(
+            ["git", "cat-file", "--batch"],
+            cwd=ROOT,
+            input=request,
+            check=True,
+            capture_output=True,
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        fail(f"Could not read Unity inputs from source commit {commit}: {exc}")
+        return ""
 
     digest = hashlib.sha256()
-    for relative_path in tracked_unity_inputs():
-        path = repo_file(relative_path)
-        if path is None:
-            continue
+    stream = io.BytesIO(result.stdout)
+    for relative_path, object_id in inputs:
+        header = stream.readline().decode("ascii", errors="replace").strip().split()
+        if len(header) != 3 or header[0] != object_id or header[1] != "blob":
+            fail(f"Git returned an invalid Unity input blob for {relative_path}")
+            return ""
+        try:
+            size = int(header[2])
+        except ValueError:
+            fail(f"Git returned an invalid Unity input size for {relative_path}")
+            return ""
+        contents = stream.read(size)
+        if len(contents) != size or stream.read(1) != b"\n":
+            fail(f"Git returned incomplete Unity input contents for {relative_path}")
+            return ""
         digest.update(relative_path.replace("\\", "/").encode("utf-8"))
         digest.update(b"\0")
-        with path.open("rb") as stream:
-            for block in iter(lambda: stream.read(1024 * 1024), b""):
-                digest.update(block)
+        digest.update(contents)
         digest.update(b"\0")
     return digest.hexdigest().upper()
 
@@ -176,7 +218,7 @@ def validate_source(manifest: dict[str, Any]) -> None:
     if tree_hash is not None:
         if not HEX_64.fullmatch(tree_hash):
             fail("source.unityInputTreeSha256 must be a SHA-256")
-        elif tree_hash.upper() != unity_input_tree_sha256():
+        elif commit is not None and tree_hash.upper() != unity_input_tree_sha256(commit):
             fail("source.unityInputTreeSha256 does not match tracked Unity inputs")
 
     scene = require_string(source, "scene", "source.scene")

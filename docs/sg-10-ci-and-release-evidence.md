@@ -21,9 +21,11 @@ WebGL performance work. Formal owner qualification remains separate.
   Brotli and MIME metadata, the immutable R2 prefix pattern, and the proposed
   compressed-build budget.
 - `scripts/ci/validate_release_evidence.py` validates that record in a clean
-  checkout. With `--build-dir <path>` it also hashes the generated loader,
-  data, framework, and WASM files. Without that option it explicitly reports
-  generated-artifact verification as `NOT_RUN`.
+  checkout and hashes the tracked Unity inputs from the manifest's declared
+  source.commit. This keeps later Editor-only test files from changing the
+  identity of an older immutable build. With `--build-dir <path>` it also
+  hashes the generated loader, data, framework, and WASM files. Without that
+  option it explicitly reports generated-artifact verification as `NOT_RUN`.
 - `scripts/ci/check_clean_checkout.py` fails on any tracked or untracked
   checkout change and rejects tracked `Build/`, `Builds/`, or `Artifacts/`
   output.
