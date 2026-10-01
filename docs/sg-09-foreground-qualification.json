@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "game": "signal-garden",
+  "issue": "GAME-287",
+  "relatedIssue": "GAME-315",
+  "record": "SG-09 foreground desktop qualification",
+  "classification": "AUTOMATED_FOREGROUND_DESKTOP; not owner qualification and not a production sign-off",
+  "source": {
+    "commit": "2cf7d1a41c635147d8674edf151a760a2ab7996c",
+    "unityEditor": "6000.6.0f1 (f7f8ed4d1e24)",
+    "command": [
+      "Unity.exe -batchmode -nographics -runTests -projectPath <repo> -testPlatform EditMode",
+      "Unity.exe -batchmode -nographics -runTests -projectPath <repo> -testPlatform PlayMode",
+      "Unity.exe -batchmode -quit -projectPath <repo> -executeMethod SignalGarden.Editor.SignalGardenProjectSetup.BuildWebGL"
+    ],
+    "hostPreview": "node tests/host-preview/serve.mjs --port <port>",
+    "qualification": "node tests/host-preview/qualify.mjs --url=<url> --out=<file> --label=<text>"
+  },
+  "unityTests": {
+    "editMode": {
+      "status": "PASS",
+      "total": 97,
+      "passed": 97,
+      "failed": 0,
+      "durationSeconds": 2.337
+    },
+    "playMode": {
+      "status": "PASS",
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "durationSeconds": 3.101
+    }
+  },
+  "webglBuild": {
+    "status": "PASS_LOCAL",
+    "totalBytes": 10525424,
+    "compressedBudgetBytes": 12582912,
+    "budgetApprovalStatus": "PENDING_OWNER_SIGN_OFF",
+    "artifacts": [
+      {
+        "filename": "WebGL.loader.js",
+        "bytes": 27914,
+        "sha256": "D63926545C10A77F1556D19BCBCB9F6AD9EF1D4A45D6160698CA3F742F84C90F"
+      },
+      {
+        "filename": "WebGL.data.br",
+        "bytes": 3593674,
+        "sha256": "D434AF5F18F152A9978A87291CEF1E9CAFF884BBF46AE7890FE237CB3B150D27"
+      },
+      {
+        "filename": "WebGL.framework.js.br",
+        "bytes": 66634,
+        "sha256": "1186EB45CBF5D43B13C3EEB050FD4B5849B184C3BF1E5C2CAEED5639F32449C3"
+      },
+      {
+        "filename": "WebGL.wasm.br",
+        "bytes": 6816159,
+        "sha256": "898A5153D4154AD162B4E4AD5E78E21F309A6997CA12B23A764BB979F3BDCE0E"
+      }
+    ]
+  },
+  "buildIdentityVariance": {
+    "status": "EXPLAINED",
+    "summary": "WebGL.data.br is not byte-reproducible: Unity writes a random build-guid into the data archive on every build. Two consecutive builds of an identical Unity input tree differ in exactly 28 bytes, all inside the 32-character build-guid field.",
+    "unityInputsChangedDa74c6aToReviewedMain": [],
+    "differingBytes": 28,
+    "decompressedBytes": 11085097,
+    "deterministicArtifacts": [
+      "WebGL.loader.js",
+      "WebGL.framework.js.br",
+      "WebGL.wasm.br"
+    ],
+    "reproduce": [
+      "python3 scripts/ci/compare_webgl_build_identity.py <buildA>/WebGL.data.br <buildB>/WebGL.data.br"
+    ],
+    "note": "The SG-10 identity hash for WebGL.data.br therefore cannot be reproduced by a rebuild. The recorded identity stays authoritative for the promoted release and was not edited."
+  },
+  "foregroundDesktop": {
+    "render": "1920x1080",
+    "harness": "sg-render=1920x1080&sg-stats=1&sg-smoke=route",
+    "warmupSeconds": 5,
+    "requestedSampleSeconds": 30,
+    "meanFramesPerSecondBudget": 60,
+    "browsers": [
+      {
+        "browser": "Chrome-desktop-foreground",
+        "product": "Chrome/153.0.8010.53",
+        "revision": "@792bf6722e73a45aa9e47c163b9901bdc17f3230",
+        "capturedAt": "2026-10-01T20:29:18.731Z",
+        "windowState": "visible|true",
+        "canvasBuffer": [
+          1920,
+          1080
+        ],
+        "exactReferenceRender": true,
+        "meanFramesPerSecond": 123.99,
+        "minimumOneSecondSampleFramesPerSecond": 106.57,
+        "latestFramesPerSecond": 122.39,
+        "samples": 30,
+        "requestedSamples": 30,
+        "meanAtOrAboveBudget": true,
+        "harnessVerdict": true,
+        "focusedAtSampleEnd": true,
+        "timeToInteractiveMilliseconds": 2865,
+        "readyAfterMilliseconds": 2749,
+        "webglContextCreated": true,
+        "invalidOperation": false,
+        "contextLost": false,
+        "realPointerRouteVerified": true,
+        "routeSmokePassed": true,
+        "routeSmokeStages": {
+          "canvasReady": true,
+          "observeSeen": true,
+          "tracingSeen": true,
+          "verifiedSeen": true
+        },
+        "finalStatus": "Signal received. The garden is awake. Choose Play again for the next turn.",
+        "status": "RECORDED",
+        "classification": "AUTOMATED_FOREGROUND_DESKTOP"
+      }
+    ]
+  },
+  "timeToInteractive": {
+    "budgetMilliseconds": 10000,
+    "runs": [
+      {
+        "browser": "Chrome/153.0.8010.53",
+        "coldProfileMilliseconds": 2865,
+        "withinBudget": true,
+        "note": "each run used a fresh browser profile, so this is a cold-cache local preview"
+      }
+    ]
+  },
+  "console": {
+    "gameConsoleErrors": 0,
+    "gameFailedRequests": 0,
+    "pageErrors": 0,
+    "harnessNoise": "preview harness serves no favicon, so /favicon.ico returns HTTP 404",
+    "allowListedWarnings": [
+      "Unity persistentDataPath autoSync deprecation",
+      "URP Edge Adaptive Spatial Upsampling (FSR) stripped from build"
+    ],
+    "autoplayWarnings": "Web Audio AudioContext is suspended until a user gesture; the game starts muted"
+  },
+  "accessibility": {
+    "domReachableFocusableCount": 2,
+    "domReachableInteractiveControlCount": 0,
+    "accessibilityTreeRoles": {
+      "RootWebArea": 1,
+      "none": 2,
+      "status": 2,
+      "main": 1,
+      "StaticText": 2,
+      "generic": 1,
+      "InlineTextBox": 2,
+      "Canvas": 1
+    },
+    "langAttribute": "en",
+    "mainLandmarkPresent": true,
+    "statusRegion": {
+      "tag": "div",
+      "id": "signal-garden-accessible-status",
+      "role": "status",
+      "ariaLabel": null,
+      "ariaLive": "polite",
+      "tabIndex": 0,
+      "text": "Signal received. The garden is awake. Choose Play again for the next turn."
+    },
+    "canvas": {
+      "tag": "canvas",
+      "id": "unity-canvas",
+      "role": null,
+      "ariaLabel": "Signal Garden game canvas",
+      "ariaLive": null,
+      "tabIndex": 0,
+      "text": ""
+    },
+    "finding": "The Unity HUD (sound, motion, volume, try again) is drawn inside the canvas and is not present in the browser accessibility tree. Keyboard operation works inside Unity via the UGUI event system and status changes are announced through the role=status live region, but a DOM-based screen reader cannot reach the in-canvas controls. This requires an explicit owner accessibility decision and is not claimed as defect-free."
+  },
+  "recoveryProbe": {
+    "path": "RouteRules.DeadEndSpur",
+    "enteredRecovery": true,
+    "namesRetryAction": true,
+    "statusBeforeRelease": "Tracing the signal. Stay on the gold stones and release at the blue receiver. Esc cancels.",
+    "finalStatus": "The blind spur has no receiver. Follow the gold stones from coral to blue and try again."
+  },
+  "ownerGatesStillOpen": [
+    "independent external screen-reader operation",
+    "browser-tab working set",
+    "cold-cache time to interactive and production CDN timing",
+    "physical window and tab focus interruption",
+    "the five-session fresh-player human benchmark (GAME-289 / SG-11)",
+    "owner sign-off on the 12 MiB and 512 MiB provisional budgets"
+  ]
+}
