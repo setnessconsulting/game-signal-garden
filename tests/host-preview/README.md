@@ -30,3 +30,33 @@ real browser pointer drag through the gold route and records
 `window.signalGardenSmokeResult`. A passing result proves the local
 `canvas -> Observe -> Verified` path; it does not add a production API or
 auto-solve behavior to the game.
+
+## Foreground qualification driver
+
+`qualify.mjs` performs the desktop foreground checks that a tester would otherwise
+have to run by hand. It uses only the Node standard library and drives a real,
+non-headless browser window through the Chrome DevTools Protocol.
+
+    $env:SG_BROWSER = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+    node tests/host-preview/qualify.mjs --url="http://127.0.0.1:4173/signal-garden/play/?sg-render=1920x1080&sg-stats=1&sg-smoke=route" --out=chrome.json --label="Chrome-desktop-foreground"
+
+Point `SG_BROWSER` at `chrome.exe` or `msedge.exe`. The driver waits until the page is
+genuinely visible and focused, records readiness and time-to-interactive, drives the
+real pointer path from coral to blue through the documented route, and then reads the
+harness frame-rate result. It also records WebGL state, console output, failed
+requests, and the accessibility tree, and separates `/favicon.ico` noise from real
+failures.
+
+Useful flags:
+
+* `--invalid-route` drives the blind dead-end spur to observe Recovery behaviour.
+* `--skip-drag` omits the pointer route.
+* `--cdp-port=<n>` avoids a port collision.
+
+Two behaviours are worth knowing. The harness only advances a sample while the page
+is active, so a completed 30-sample run is itself evidence of continuous visible and
+focused running. If the window cannot hold focus under automation the driver reports
+the sample as not-run and records how many polls were unfocused, rather than
+reporting a failure. The driver records observations only; `scripts/ci/` validators
+and owner qualification decide PASS/FAIL.
+
