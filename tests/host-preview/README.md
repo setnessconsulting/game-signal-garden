@@ -59,4 +59,3 @@ focused running. If the window cannot hold focus under automation the driver rep
 the sample as not-run and records how many polls were unfocused, rather than
 reporting a failure. The driver records observations only; `scripts/ci/` validators
 and owner qualification decide PASS/FAIL.
-
